@@ -1,0 +1,157 @@
+/* ============================================================
+   MediCitas — hoja de estilos global
+   Paleta: verde clínico profundo + marfil + acento coral suave
+   ============================================================ */
+:root {
+  --tinta: #10322b;
+  --verde: #0e7c66;
+  --verde-osc: #0a5c4c;
+  --menta: #e3f2ec;
+  --marfil: #fbfaf6;
+  --coral: #e2725b;
+  --gris: #6b7a76;
+  --borde: #dbe5e0;
+  --blanco: #ffffff;
+  --sombra: 0 2px 12px rgba(16, 50, 43, 0.08);
+  --radio: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--marfil);
+  color: var(--tinta);
+  line-height: 1.55;
+}
+
+h1, h2, h3 { font-family: 'Sora', 'Inter', sans-serif; letter-spacing: -0.02em; }
+
+a { color: var(--verde); text-decoration: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--verde);
+  outline-offset: 2px;
+}
+
+.contenedor { max-width: 1080px; margin: 0 auto; padding: 24px 20px 64px; }
+
+/* ---------- Barra de navegación ---------- */
+.navbar {
+  background: var(--blanco);
+  border-bottom: 1px solid var(--borde);
+  position: sticky; top: 0; z-index: 1000;
+}
+.navbar-inner {
+  max-width: 1080px; margin: 0 auto; padding: 12px 20px;
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.logo { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--tinta); }
+.logo span { color: var(--verde); }
+.nav-links { display: flex; gap: 4px; flex-wrap: wrap; margin-left: auto; align-items: center; }
+.nav-links a {
+  padding: 8px 12px; border-radius: 8px; color: var(--tinta); font-weight: 500; font-size: 0.92rem;
+}
+.nav-links a:hover, .nav-links a.activo { background: var(--menta); color: var(--verde-osc); }
+.chip-rol {
+  background: var(--tinta); color: #fff; font-size: 0.72rem; padding: 3px 10px;
+  border-radius: 999px; text-transform: uppercase; letter-spacing: 0.06em;
+}
+
+/* ---------- Tarjetas y paneles ---------- */
+.tarjeta {
+  background: var(--blanco); border: 1px solid var(--borde);
+  border-radius: var(--radio); padding: 20px; box-shadow: var(--sombra);
+}
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+
+/* ---------- Formularios ---------- */
+.formulario { display: grid; gap: 14px; max-width: 420px; }
+label { font-weight: 600; font-size: 0.88rem; display: grid; gap: 6px; }
+input, select {
+  padding: 10px 12px; border: 1px solid var(--borde); border-radius: 8px;
+  font: inherit; background: var(--blanco); width: 100%;
+}
+input:focus, select:focus { border-color: var(--verde); }
+
+.boton {
+  background: var(--verde); color: #fff; border: none; padding: 11px 18px;
+  border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer;
+  transition: background 0.15s ease;
+}
+.boton:hover { background: var(--verde-osc); }
+.boton:disabled { opacity: 0.55; cursor: not-allowed; }
+.boton-secundario { background: var(--menta); color: var(--verde-osc); }
+.boton-secundario:hover { background: #d2e9df; }
+.boton-peligro { background: transparent; color: var(--coral); border: 1px solid var(--coral); }
+.boton-peligro:hover { background: #fdf0ed; }
+.boton-mini { padding: 6px 12px; font-size: 0.85rem; }
+
+/* ---------- Mensajes ---------- */
+.alerta { padding: 12px 14px; border-radius: 8px; font-size: 0.92rem; }
+.alerta-error { background: #fdecec; color: #a13333; border: 1px solid #f3c9c9; }
+.alerta-exito { background: var(--menta); color: var(--verde-osc); border: 1px solid #bfe0d3; }
+
+/* ---------- Encabezados de sección ---------- */
+.encabezado { margin-bottom: 22px; }
+.encabezado h1 { font-size: 1.7rem; margin-bottom: 4px; }
+.encabezado p { color: var(--gris); max-width: 60ch; }
+.etiqueta-seccion {
+  color: var(--verde); font-size: 0.78rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+
+/* ---------- Médicos / horas ---------- */
+.tarjeta-medico h3 { font-size: 1.05rem; }
+.tarjeta-medico .especialidad { color: var(--verde-osc); font-weight: 600; font-size: 0.9rem; }
+.tarjeta-medico .detalle { color: var(--gris); font-size: 0.87rem; margin-top: 6px; }
+.horas { display: flex; flex-wrap: wrap; gap: 8px; }
+.hora-btn {
+  border: 1px solid var(--borde); background: var(--blanco); border-radius: 8px;
+  padding: 8px 12px; font: inherit; font-size: 0.9rem; cursor: pointer;
+}
+.hora-btn:hover { border-color: var(--verde); color: var(--verde-osc); }
+.hora-btn.seleccionada { background: var(--verde); color: #fff; border-color: var(--verde); }
+
+/* ---------- Tablas ---------- */
+.tabla { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+.tabla th, .tabla td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--borde); }
+.tabla th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gris); }
+.estado {
+  padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 600;
+}
+.estado-pendiente  { background: #fff4dc; color: #8a6410; }
+.estado-confirmada { background: var(--menta); color: var(--verde-osc); }
+.estado-atendida   { background: #e7ecf5; color: #2d4a7a; }
+.estado-cancelada  { background: #fdecec; color: #a13333; }
+
+/* ---------- Mapa ---------- */
+.mapa-contenedor { height: 440px; border-radius: var(--radio); overflow: hidden; border: 1px solid var(--borde); }
+.lista-distancias li {
+  list-style: none; display: flex; justify-content: space-between; gap: 12px;
+  padding: 10px 0; border-bottom: 1px dashed var(--borde); font-size: 0.92rem;
+}
+.distancia { color: var(--verde-osc); font-weight: 700; white-space: nowrap; }
+
+/* ---------- Portada ---------- */
+.portada { padding: 48px 0 24px; }
+.portada h1 { font-size: clamp(1.9rem, 4vw, 2.8rem); max-width: 22ch; }
+.portada h1 em { font-style: normal; color: var(--verde); }
+.portada p { color: var(--gris); max-width: 56ch; margin: 14px 0 24px; }
+.pasos { counter-reset: paso; margin-top: 40px; }
+.paso { position: relative; padding-left: 52px; }
+.paso::before {
+  counter-increment: paso; content: counter(paso, decimal-leading-zero);
+  position: absolute; left: 0; top: 0;
+  font-family: 'Sora', sans-serif; font-weight: 700; color: var(--verde);
+  border: 1px solid var(--borde); border-radius: 8px; padding: 4px 8px; font-size: 0.85rem;
+  background: var(--blanco);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+@media (max-width: 640px) {
+  .nav-links { width: 100%; }
+}
