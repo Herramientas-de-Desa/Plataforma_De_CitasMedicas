@@ -1,6 +1,6 @@
 # MediCitas — Plataforma Inteligente de Recomendación de Citas Médicas
 
-Proyecto del curso **JavaScript** — Facultad de Ingeniería de Sistemas (2026, Ica – Perú).
+Proyecto del curso **herramienta de desarrollo** — Facultad de Ingeniería de Sistemas (2026, Ica – Perú).
 Implementa lo solicitado en el documento del proyecto, con **arquitectura de componentes y services**, **reutilización de APIs** y **Supabase** como base de datos.
 
 ## Tecnologías
