@@ -1,0 +1,71 @@
+appointment_date,specialty,predicted_appointments
+2022-02-26,enf,0.0
+2022-02-27,enf,0.08995866
+2022-02-28,enf,0.3443068
+2022-03-01,enf,0.06861033
+2022-03-02,enf,0.08064925
+2022-03-03,enf,0.08064925
+2022-03-04,enf,0.196129
+2022-03-05,enf,0.02843843
+2022-03-06,enf,0.02843843
+2022-03-07,enf,0.12846692
+2022-03-08,enf,0.21735573
+2022-03-09,enf,0.22939464
+2022-03-10,enf,0.22939464
+2022-03-11,enf,0.45014763
+2022-02-26,occupational therapy,1.143606
+2022-02-27,occupational therapy,1.1338627
+2022-02-28,occupational therapy,4.473009
+2022-03-01,occupational therapy,4.135909
+2022-03-02,occupational therapy,4.0382867
+2022-03-03,occupational therapy,3.5179753
+2022-03-04,occupational therapy,4.560158
+2022-03-05,occupational therapy,0.5801006
+2022-03-06,occupational therapy,0.57955295
+2022-03-07,occupational therapy,2.8282197
+2022-03-08,occupational therapy,1.989325
+2022-03-09,occupational therapy,1.8924786
+2022-03-10,occupational therapy,1.3976825
+2022-03-11,occupational therapy,2.8285992
+2022-02-26,physiotherapy,0.0
+2022-02-27,physiotherapy,0.0
+2022-02-28,physiotherapy,3.7027538
+2022-03-01,physiotherapy,4.0588408
+2022-03-02,physiotherapy,3.8485272
+2022-03-03,physiotherapy,3.7734916
+2022-03-04,physiotherapy,4.069044
+2022-03-05,physiotherapy,0.0
+2022-03-06,physiotherapy,0.0
+2022-03-07,physiotherapy,2.2034333
+2022-03-08,physiotherapy,1.3767062
+2022-03-09,physiotherapy,1.7811894
+2022-03-10,physiotherapy,2.2424684
+2022-03-11,physiotherapy,2.3466284
+2022-02-26,psychotherapy,2.9096012
+2022-02-27,psychotherapy,2.908772
+2022-02-28,psychotherapy,6.0558777
+2022-03-01,psychotherapy,6.185715
+2022-03-02,psychotherapy,5.637411
+2022-03-03,psychotherapy,5.5748873
+2022-03-04,psychotherapy,5.7822347
+2022-03-05,psychotherapy,2.302517
+2022-03-06,psychotherapy,2.3016877
+2022-03-07,psychotherapy,2.029411
+2022-03-08,psychotherapy,1.6302584
+2022-03-09,psychotherapy,1.6812699
+2022-03-10,psychotherapy,1.9041349
+2022-03-11,psychotherapy,2.4855638
+2022-02-26,speech therapy,3.766447
+2022-02-27,speech therapy,3.766447
+2022-02-28,speech therapy,6.9693737
+2022-03-01,speech therapy,6.686
+2022-03-02,speech therapy,6.5140877
+2022-03-03,speech therapy,5.97814
+2022-03-04,speech therapy,6.348343
+2022-03-05,speech therapy,2.9720743
+2022-03-06,speech therapy,2.9720743
+2022-03-07,speech therapy,4.033557
+2022-03-08,speech therapy,4.2663636
+2022-03-09,speech therapy,4.3758817
+2022-03-10,speech therapy,4.085102
+2022-03-11,speech therapy,4.4535046

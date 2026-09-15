@@ -1,0 +1,6 @@
+specialty,rmse,mae,train_rows,validation_rows,test_rows,model_file
+enf,0.835363044405374,0.24930518735796103,1768,60,63,enf.json
+occupational therapy,3.4609023952885396,2.6693763416562533,1832,60,185,occupational_therapy.json
+physiotherapy,5.129288289295757,3.820980748171742,1832,60,185,physiotherapy.json
+psychotherapy,5.337282872256647,3.8697159960865974,1832,60,185,psychotherapy.json
+speech therapy,4.983223962654669,3.9330665824179714,1832,60,185,speech_therapy.json
