@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { especialidadesService } from '../services/especialidadesService';
 import { medicosService } from '../services/medicosService';
+import { prediccionesService } from '../services/prediccionesService';
 import TarjetaMedico from './TarjetaMedico';
 
 export default function BuscadorEspecialistas() {
@@ -10,11 +11,16 @@ export default function BuscadorEspecialistas() {
   const [especialidadId, setEspecialidadId] = useState('');
   const [texto, setTexto] = useState('');
   const [medicos, setMedicos] = useState([]);
+  const [predicciones, setPredicciones] = useState({});
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     especialidadesService.listar().then(setEspecialidades).catch((e) => setError(e.message));
+    prediccionesService.listarUltimas()
+      .then((filas) => setPredicciones(Object.fromEntries(filas.map((p) => [p.medico_id, p]))))
+      // La analítica es complementaria: un fallo no bloquea la búsqueda.
+      .catch(() => setPredicciones({}));
   }, []);
 
   useEffect(() => {
@@ -58,7 +64,13 @@ export default function BuscadorEspecialistas() {
         <div className="tarjeta">No se encontraron médicos con esos filtros. Prueba con otra especialidad.</div>
       ) : (
         <div className="grid grid-2">
-          {medicos.map((m) => <TarjetaMedico key={m.id_medico} medico={m} />)}
+          {medicos.map((m) => (
+            <TarjetaMedico
+              key={m.id_medico}
+              medico={m}
+              prediccion={predicciones[m.id_medico]}
+            />
+          ))}
         </div>
       )}
     </div>

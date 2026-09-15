@@ -3,11 +3,14 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabaseClient';
 import { citasService } from '../services/citasService';
+import { prediccionesService } from '../services/prediccionesService';
+import PrediccionDisponibilidad from './PrediccionDisponibilidad';
 
 export default function PanelMedico() {
   const { perfil } = useAuth();
   const [medico, setMedico] = useState(null);
   const [citas, setCitas] = useState([]);
+  const [prediccion, setPrediccion] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -22,7 +25,12 @@ export default function PanelMedico() {
         return;
       }
       setMedico(data);
-      setCitas(await citasService.agendaMedico(data.id_medico));
+      const [agenda, estimacion] = await Promise.all([
+        citasService.agendaMedico(data.id_medico),
+        prediccionesService.obtenerUltima(data.id_medico).catch(() => null),
+      ]);
+      setCitas(agenda);
+      setPrediccion(estimacion);
     }
     cargar().catch((e) => setError(e.message));
   }, [perfil.id_usuario]);
@@ -40,8 +48,13 @@ export default function PanelMedico() {
       </div>
       {error && <p className="alerta alerta-error">{error}</p>}
       {medico && (
-        <div className="tarjeta" style={{ overflowX: 'auto' }}>
-          <table className="tabla">
+        <>
+          <div className="tarjeta resumen-demanda">
+            <h3>Carga futura</h3>
+            <PrediccionDisponibilidad prediccion={prediccion} mostrarDemanda />
+          </div>
+          <div className="tarjeta" style={{ overflowX: 'auto', marginTop: 16 }}>
+            <table className="tabla">
             <thead>
               <tr><th>Fecha</th><th>Hora</th><th>Paciente</th><th>Estado</th><th>Acciones</th></tr>
             </thead>
@@ -64,8 +77,9 @@ export default function PanelMedico() {
               ))}
               {citas.length === 0 && <tr><td colSpan="5">Sin citas programadas.</td></tr>}
             </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
+        </>
       )}
     </div>
   );

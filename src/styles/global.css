@@ -134,6 +134,35 @@ input:focus, select:focus { border-color: var(--verde); }
 }
 .distancia { color: var(--verde-osc); font-weight: 700; white-space: nowrap; }
 
+/* ---------- IA: demanda y disponibilidad ---------- */
+.prediccion {
+  margin-top: 14px; padding: 12px; border-radius: 10px;
+  background: var(--menta); color: var(--verde-osc);
+}
+.prediccion-cabecera {
+  display: flex; justify-content: space-between; gap: 12px; align-items: center;
+  font-size: 0.9rem; text-transform: capitalize;
+}
+.prediccion-barra {
+  height: 7px; margin: 8px 0; overflow: hidden; border-radius: 999px;
+  background: rgba(14, 124, 102, 0.16);
+}
+.prediccion-barra span { display: block; height: 100%; background: var(--verde); }
+.prediccion p { margin: 4px 0; color: var(--tinta); font-size: 0.82rem; }
+.prediccion small { color: var(--gris); }
+.prediccion-vacia { margin-top: 12px; color: var(--gris); font-size: 0.82rem; }
+.resumen-demanda { max-width: 520px; }
+.encabezado-tabla { margin-bottom: 14px; }
+.encabezado-tabla .detalle { color: var(--gris); font-size: 0.88rem; }
+.nivel-demanda {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 0.8rem; font-weight: 700; text-transform: capitalize;
+}
+.nivel-baja { background: var(--menta); color: var(--verde-osc); }
+.nivel-media { background: #fff4dc; color: #8a6410; }
+.nivel-alta { background: #fde8df; color: #a24c2f; }
+.nivel-saturada { background: #fdecec; color: #a13333; }
+
 /* ---------- Portada ---------- */
 .portada { padding: 48px 0 24px; }
 .portada h1 { font-size: clamp(1.9rem, 4vw, 2.8rem); max-width: 22ch; }

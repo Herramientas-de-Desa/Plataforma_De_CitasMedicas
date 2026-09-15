@@ -17,6 +17,13 @@ Implementa lo solicitado en el documento del proyecto, con **arquitectura de com
 | OpenStreetMap (tiles) + Leaflet | Mapa interactivo de clínicas — RF07 |
 | Nominatim (OSM) | Búsqueda de direcciones (geocodificación) |
 
+## Inteligencia artificial (Kaggle)
+
+El módulo `ml/` cubre la **demanda por médico** y la **predicción de
+disponibilidad**. El modelo se entrena y evalúa en Kaggle con datos agregados;
+sus resultados se almacenan en Supabase y se muestran en las tarjetas de
+médicos y en los paneles por rol. Consulta `ml/README.md` para ejecutar el flujo.
+
 ## Estructura (componentes + services)
 ```
 src/

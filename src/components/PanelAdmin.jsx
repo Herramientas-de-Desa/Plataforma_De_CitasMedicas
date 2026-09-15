@@ -6,6 +6,7 @@ import { medicosService } from '../services/medicosService';
 import { especialidadesService } from '../services/especialidadesService';
 import { clinicasService } from '../services/clinicasService';
 import { citasService } from '../services/citasService';
+import PanelDemandaMedicos from './PanelDemandaMedicos';
 
 export default function PanelAdmin() {
   const [pestania, setPestania] = useState('usuarios');
@@ -64,6 +65,7 @@ export default function PanelAdmin() {
     ['medicos', 'Médicos'],
     ['especialidades', 'Especialidades'],
     ['citas', 'Citas'],
+    ['demanda-medicos', 'Demanda por médico'],
   ];
 
   return (
@@ -225,6 +227,8 @@ export default function PanelAdmin() {
           </table>
         </div>
       )}
+
+      {pestania === 'demanda-medicos' && <PanelDemandaMedicos />}
     </div>
   );
 }

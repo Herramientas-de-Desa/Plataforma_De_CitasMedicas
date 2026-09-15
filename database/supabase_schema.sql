@@ -80,9 +80,14 @@ create table if not exists public.citas (
   hora        time not null,
   estado      text not null default 'pendiente'
               check (estado in ('pendiente', 'confirmada', 'atendida', 'cancelada')),
-  creado_en   timestamptz not null default now(),
-  unique (medico_id, fecha, hora)
+  creado_en   timestamptz not null default now()
 );
+
+-- Solo las citas activas bloquean el horario. Una cita cancelada permite
+-- reservar nuevamente la misma fecha y hora.
+create unique index if not exists citas_horario_activo_unico_idx
+  on public.citas (medico_id, fecha, hora)
+  where estado <> 'cancelada';
 
 -- ------------------------------------------------------------
 -- 7. VISTA: historial_citas  (entidad Historial de Citas)
@@ -239,3 +244,44 @@ where m.id_medico % 2 = 0;
 -- Para convertir un usuario en ADMIN después de registrarlo:
 --   update public.usuarios set rol = 'admin' where correo = 'admin@demo.com';
 -- ------------------------------------------------------------
+
+-- ------------------------------------------------------------
+-- 11. PREDICCIONES IA: puntos 3 y 5
+--     Resultados agregados generados por el notebook de Kaggle.
+-- ------------------------------------------------------------
+create table if not exists public.predicciones_medicos (
+  id_prediccion              bigserial primary key,
+  medico_id                  int not null references public.medicos(id_medico) on delete cascade,
+  fecha_generacion           timestamptz not null default now(),
+  fecha_inicio               date not null,
+  fecha_fin                  date not null,
+  horizonte_dias             int not null default 14 check (horizonte_dias between 1 and 90),
+  demanda_estimada           numeric(5,2) not null check (demanda_estimada between 0 and 100),
+  disponibilidad_estimada    numeric(5,2) not null check (disponibilidad_estimada between 0 and 100),
+  nivel_demanda              text not null check (nivel_demanda in ('baja', 'media', 'alta', 'saturada')),
+  version_modelo             text not null,
+  origen_datos               text not null default 'historico',
+  mae_modelo                 numeric(8,4),
+  check (fecha_fin >= fecha_inicio),
+  check (abs((demanda_estimada + disponibilidad_estimada) - 100) <= 0.10),
+  unique (medico_id, fecha_inicio, fecha_fin, version_modelo)
+);
+
+create index if not exists predicciones_medicos_busqueda_idx
+  on public.predicciones_medicos (medico_id, horizonte_dias, fecha_generacion desc);
+
+alter table public.predicciones_medicos enable row level security;
+
+create policy "predicciones_medicos_select" on public.predicciones_medicos
+  for select using (true);
+create policy "predicciones_medicos_admin_insert" on public.predicciones_medicos
+  for insert with check (public.rol_actual() = 'admin');
+create policy "predicciones_medicos_admin_update" on public.predicciones_medicos
+  for update using (public.rol_actual() = 'admin')
+  with check (public.rol_actual() = 'admin');
+create policy "predicciones_medicos_admin_delete" on public.predicciones_medicos
+  for delete using (public.rol_actual() = 'admin');
+
+grant select on public.predicciones_medicos to anon, authenticated;
+grant insert, update, delete on public.predicciones_medicos to authenticated;
+grant usage, select on sequence public.predicciones_medicos_id_prediccion_seq to authenticated;
