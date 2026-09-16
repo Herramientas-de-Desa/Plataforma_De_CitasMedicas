@@ -19,10 +19,9 @@ export default function Navbar() {
     navegar('/');
   }
 
-  const clase = ({ isActive }) => (isActive ? 'activo' : undefined);
+  const clase = ({ isActive }) => (isActive ? 'activo' : undefined); // para resaltar el enlace activo
 
-  if (ubicacion.pathname === '/login' || ubicacion.pathname === '/registro') return null;
-
+  
   return (
     <nav className="navbar">
       <div className="navbar-inner">
