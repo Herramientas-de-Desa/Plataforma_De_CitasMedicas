@@ -54,18 +54,18 @@ export default function PanelMedico() {
             <PrediccionDisponibilidad prediccion={prediccion} mostrarDemanda />
           </div>
           <div className="tarjeta" style={{ overflowX: 'auto', marginTop: 16 }}>
-            <table className="tabla">
+            <table className="tabla tabla-tarjetas">
             <thead>
               <tr><th>Fecha</th><th>Hora</th><th>Paciente</th><th>Estado</th><th>Acciones</th></tr>
             </thead>
             <tbody>
               {citas.map((c) => (
                 <tr key={c.id_cita}>
-                  <td>{c.fecha}</td>
-                  <td>{c.hora.slice(0, 5)}</td>
-                  <td>{c.paciente}</td>
-                  <td><span className={`estado estado-${c.estado}`}>{c.estado}</span></td>
-                  <td style={{ display: 'flex', gap: 8 }}>
+                  <td data-label="Fecha">{c.fecha}</td>
+                  <td data-label="Hora">{c.hora.slice(0, 5)}</td>
+                  <td data-label="Paciente">{c.paciente}</td>
+                  <td data-label="Estado"><span className={`estado estado-${c.estado}`}>{c.estado}</span></td>
+                  <td data-label="Acciones" className="acciones-tabla">
                     {c.estado === 'pendiente' && (
                       <button className="boton boton-mini" onClick={() => marcar(c.id_cita, 'confirmada')}>Confirmar</button>
                     )}

@@ -26,7 +26,7 @@ export default function PanelDemandaMedicos() {
           <p className="detalle">Carga futura estimada por el modelo entrenado en Kaggle.</p>
         </div>
       </div>
-      <table className="tabla">
+      <table className="tabla tabla-tarjetas">
         <thead>
           <tr>
             <th>Médico</th><th>Especialidad</th><th>Clínica</th>
@@ -36,16 +36,16 @@ export default function PanelDemandaMedicos() {
         <tbody>
           {predicciones.map((p) => (
             <tr key={p.id_prediccion}>
-              <td>{p.medico?.nombre || `Médico ${p.medico_id}`}</td>
-              <td>{p.medico?.especialidad?.nombre || '—'}</td>
-              <td>{p.medico?.clinica?.nombre || '—'}</td>
-              <td>
+              <td data-label="Médico">{p.medico?.nombre || `Médico ${p.medico_id}`}</td>
+              <td data-label="Especialidad">{p.medico?.especialidad?.nombre || '—'}</td>
+              <td data-label="Clínica">{p.medico?.clinica?.nombre || '—'}</td>
+              <td data-label="Demanda">
                 <span className={`nivel-demanda nivel-${p.nivel_demanda}`}>
                   {p.demanda_estimada.toFixed(0)}% · {p.nivel_demanda}
                 </span>
               </td>
-              <td>{p.disponibilidad_estimada.toFixed(0)}%</td>
-              <td>{p.fecha_inicio} — {p.fecha_fin}</td>
+              <td data-label="Disponibilidad">{p.disponibilidad_estimada.toFixed(0)}%</td>
+              <td data-label="Periodo">{p.fecha_inicio} — {p.fecha_fin}</td>
             </tr>
           ))}
           {predicciones.length === 0 && (

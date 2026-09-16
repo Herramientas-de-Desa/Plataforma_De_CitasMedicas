@@ -45,20 +45,20 @@ export default function MisCitas() {
         <div className="tarjeta">Aún no tienes citas registradas. Busca un especialista para reservar la primera.</div>
       ) : (
         <div className="tarjeta" style={{ overflowX: 'auto' }}>
-          <table className="tabla">
+          <table className="tabla tabla-tarjetas">
             <thead>
               <tr><th>Fecha</th><th>Hora</th><th>Médico</th><th>Especialidad</th><th>Clínica</th><th>Estado</th><th></th></tr>
             </thead>
             <tbody>
               {citas.map((c) => (
                 <tr key={c.id_cita}>
-                  <td>{c.fecha}</td>
-                  <td>{c.hora.slice(0, 5)}</td>
-                  <td>{c.medico}</td>
-                  <td>{c.especialidad}</td>
-                  <td>{c.clinica}</td>
-                  <td><span className={`estado estado-${c.estado}`}>{c.estado}</span></td>
-                  <td>
+                  <td data-label="Fecha">{c.fecha}</td>
+                  <td data-label="Hora">{c.hora.slice(0, 5)}</td>
+                  <td data-label="Médico">{c.medico}</td>
+                  <td data-label="Especialidad">{c.especialidad}</td>
+                  <td data-label="Clínica">{c.clinica}</td>
+                  <td data-label="Estado"><span className={`estado estado-${c.estado}`}>{c.estado}</span></td>
+                  <td data-label="Acciones">
                     {(c.estado === 'pendiente' || c.estado === 'confirmada') && (
                       <button className="boton boton-peligro boton-mini" onClick={() => cancelar(c.id_cita)}>
                         Cancelar

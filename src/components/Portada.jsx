@@ -12,7 +12,7 @@ export default function Portada() {
         Busca especialistas, revisa sus horarios reales, reserva tu cita y
         encuentra la clínica más cercana a ti con el mapa interactivo.
       </p>
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+      <div className="portada-acciones">
         <Link to="/especialistas" className="boton">Buscar especialistas</Link>
         <Link to="/clinicas" className="boton boton-secundario">Ver clínicas cercanas</Link>
         {!perfil && <Link to="/registro" className="boton boton-secundario">Crear mi cuenta</Link>}
