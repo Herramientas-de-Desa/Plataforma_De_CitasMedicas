@@ -1,7 +1,8 @@
 // Componente: acceso y recuperación de contraseña con Supabase Auth.
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import doctor from '../assets/login-doctor.svg';
+import AuthIcon from './AuthIcon';
+import AuthVisual from './AuthVisual';
 import { authService } from '../services/authService';
 
 function correoRecordado() {
@@ -10,23 +11,6 @@ function correoRecordado() {
   } catch {
     return '';
   }
-}
-
-function Icono({ nombre, size = 18 }) {
-  const trazos = {
-    correo: <><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></>,
-    candado: <><rect x="5" y="10" width="14" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3" /></>,
-    ojo: <><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z" /><circle cx="12" cy="12" r="2.5" /></>,
-    ojoCerrado: <><path d="M3 3 21 21M10.5 6.1A12.5 12.5 0 0 1 12 6c6.5 0 10 6 10 6a16 16 0 0 1-3.1 3.5M6.2 6.2C3.5 8 2 12 2 12s3.5 6 10 6c1.3 0 2.5-.2 3.5-.6" /><path d="M10 10a3 3 0 0 0 4 4" /></>,
-    flecha: <><path d="M4 12h16m-6-6 6 6-6 6" /></>,
-  };
-
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {trazos[nombre]}
-    </svg>
-  );
 }
 
 export default function FormularioLogin() {
@@ -101,22 +85,10 @@ export default function FormularioLogin() {
 
   return (
     <section className="login-page">
-      <aside className="login-visual">
-        <div className="login-visual-contenido">
-          <Link to="/" className="login-brand-badge">✦ Tu salud, más cerca</Link>
-          <h1>Bienvenido a<br />nuestra plataforma</h1>
-          <p>Gestiona tus citas, encuentra especialistas y lleva el control de tu atención de una manera sencilla.</p>
-          <div className="login-ilustracion" aria-hidden="true">
-            <span className="login-circulo login-circulo-grande" />
-            <span className="login-circulo login-circulo-pequeno" />
-            <span className="login-anillo login-anillo-uno" />
-            <span className="login-anillo login-anillo-dos" />
-            <img src={doctor} alt="" />
-            <span className="login-flotante login-flotante-cita"><b>✓</b> Cita confirmada</span>
-            <span className="login-flotante login-flotante-atencion"><b>♡</b> Atención personalizada</span>
-          </div>
-        </div>
-      </aside>
+      <AuthVisual
+        titulo={<>Bienvenido a<br />nuestra plataforma</>}
+        descripcion="Gestiona tus citas, encuentra especialistas y lleva el control de tu atención de una manera sencilla."
+      />
 
       <main className="login-panel">
         <div className="login-contenido">
@@ -133,7 +105,7 @@ export default function FormularioLogin() {
             {modo !== 'nueva' && (
               <label htmlFor="login-correo">Correo electrónico
                 <span className="login-campo">
-                  <Icono nombre="correo" />
+                  <AuthIcon nombre="correo" />
                   <input id="login-correo" name="correo" type="email" autoComplete="email"
                     value={datos.correo} onChange={cambiar} aria-invalid={Boolean(error && !datos.correo.trim())} />
                 </span>
@@ -143,14 +115,14 @@ export default function FormularioLogin() {
             {modo !== 'recuperar' && (
               <label htmlFor="login-password">{modo === 'nueva' ? 'Nueva contraseña' : 'Contraseña'}
                 <span className="login-campo">
-                  <Icono nombre="candado" />
+                  <AuthIcon nombre="candado" />
                   <input id="login-password" name="password" type={mostrarPassword ? 'text' : 'password'}
                     autoComplete={modo === 'nueva' ? 'new-password' : 'current-password'}
                     value={datos.password} onChange={cambiar} />
                   <button type="button" className="login-ver-password"
                     aria-label={mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                     aria-pressed={mostrarPassword} onClick={() => setMostrarPassword((visible) => !visible)}>
-                    <Icono nombre={mostrarPassword ? 'ojoCerrado' : 'ojo'} />
+                    <AuthIcon nombre={mostrarPassword ? 'ojoCerrado' : 'ojo'} />
                   </button>
                 </span>
               </label>
@@ -159,7 +131,7 @@ export default function FormularioLogin() {
             {modo === 'nueva' && (
               <label htmlFor="login-confirmacion">Confirmar contraseña
                 <span className="login-campo">
-                  <Icono nombre="candado" />
+                  <AuthIcon nombre="candado" />
                   <input id="login-confirmacion" type="password" autoComplete="new-password"
                     value={confirmacion} onChange={(e) => setConfirmacion(e.target.value)} />
                 </span>
@@ -183,7 +155,7 @@ export default function FormularioLogin() {
             {mensaje && <p className="alerta alerta-exito" role="status">{mensaje}</p>}
             <button className="login-enviar" type="submit" disabled={enviando}>
               {enviando ? 'Espera un momento…' : modo === 'entrar' ? 'Entrar' : modo === 'recuperar' ? 'Enviar enlace' : 'Guardar contraseña'}
-              {!enviando && <Icono nombre="flecha" />}
+              {!enviando && <AuthIcon nombre="flecha" />}
             </button>
           </form>
 

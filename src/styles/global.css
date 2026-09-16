@@ -1296,6 +1296,10 @@ select:focus {
   width: min(100%, 366px);
 }
 
+.registro-page .login-contenido {
+  width: min(100%, 420px);
+}
+
 .login-encabezado {
   display: flex;
   align-items: center;

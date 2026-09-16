@@ -21,7 +21,7 @@ export default function Navbar() {
 
   const clase = ({ isActive }) => (isActive ? 'activo' : undefined);
 
-  if (ubicacion.pathname === '/login') return null;
+  if (ubicacion.pathname === '/login' || ubicacion.pathname === '/registro') return null;
 
   return (
     <nav className="navbar">
