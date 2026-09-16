@@ -6,12 +6,11 @@ export default function AuthVisual({ titulo, descripcion }) {
   return (
     <aside className="login-visual">
       <div className="login-visual-contenido">
-        <div className="login-visual-nav">
-          <Link to="/" className="login-volver-inicio" aria-label="Volver al inicio">
-            <AuthIcon nombre="volver" size={19} />
-          </Link>
-          <span className="login-brand-badge">✦ Tu salud, más cerca</span>
-        </div>
+        <span className="login-brand-badge">✦ Tu salud, más cerca</span>
+        <Link to="/" className="login-volver-inicio">
+          <AuthIcon nombre="volver" size={19} />
+          <span>Presiona para regresar al inicio</span>
+        </Link>
         <h1>{titulo}</h1>
         <p>{descripcion}</p>
         <div className="login-ilustracion" aria-hidden="true">

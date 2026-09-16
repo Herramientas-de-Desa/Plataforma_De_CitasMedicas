@@ -1137,6 +1137,7 @@ select:focus {
 
 /* ---------- Inicio de sesión ---------- */
 .login-page {
+  position: relative;
   display: grid;
   grid-template-columns: 53.2% 46.8%;
   min-height: 100dvh;
@@ -1156,30 +1157,32 @@ select:focus {
   margin: 0 auto;
 }
 
-.login-visual-nav {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .login-volver-inicio {
-  display: grid;
-  flex: 0 0 34px;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.14);
-  color: #fff;
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1px solid #cfe0de;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(16, 50, 43, 0.1);
+  color: #175e5a;
+  font-size: 0.83rem;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .login-volver-inicio:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: #eaf4f2;
 }
 
-.login-volver-inicio:focus-visible {
-  outline-color: #fff;
+.login-volver-inicio svg {
+  flex: 0 0 19px;
 }
 
 .login-brand-badge {
@@ -1534,7 +1537,7 @@ select:focus {
   }
 
   .login-visual {
-    padding: 28px 24px 30px;
+    padding: 84px 24px 30px;
   }
 
   .login-visual-contenido {
@@ -1566,7 +1569,12 @@ select:focus {
 
 @media (max-width: 420px) {
   .login-visual {
-    padding: 24px 20px 27px;
+    padding: 82px 20px 27px;
+  }
+
+  .login-volver-inicio {
+    top: 20px;
+    right: 20px;
   }
 
   .login-panel {
