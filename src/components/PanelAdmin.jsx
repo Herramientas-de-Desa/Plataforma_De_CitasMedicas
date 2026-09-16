@@ -78,12 +78,13 @@ const pestanas = [
         <h1>Panel de control</h1>
       </div>
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 18, flexWrap: 'wrap' }}>
+      <div className="admin-pestanas" aria-label="Secciones de administración">
         {pestanas.map(([clave, titulo]) => (
           <button
             key={clave}
             className={`boton boton-mini ${pestania === clave ? '' : 'boton-secundario'}`}
             onClick={() => setPestania(clave)}
+            aria-pressed={pestania === clave}
           >
             {titulo}
           </button>
@@ -93,15 +94,15 @@ const pestanas = [
 
       {pestania === 'usuarios' && (
         <div className="tarjeta" style={{ overflowX: 'auto' }}>
-          <table className="tabla">
+          <table className="tabla tabla-tarjetas">
             <thead><tr><th>Nombres</th><th>Correo</th><th>Rol</th><th>Cambiar rol</th></tr></thead>
             <tbody>
               {usuarios.map((u) => (
                 <tr key={u.id_usuario}>
-                  <td>{u.nombres}</td>
-                  <td>{u.correo}</td>
-                  <td><span className="chip-rol">{u.rol}</span></td>
-                  <td>
+                  <td data-label="Nombres">{u.nombres}</td>
+                  <td data-label="Correo">{u.correo}</td>
+                  <td data-label="Rol"><span className="chip-rol">{u.rol}</span></td>
+                  <td data-label="Cambiar rol">
                     <select
                       value={u.rol}
                       onChange={async (e) => { await usuariosService.cambiarRol(u.id_usuario, e.target.value); cargarTodo(); }}
@@ -154,15 +155,15 @@ const pestanas = [
           </div>
 
           <div className="tarjeta" style={{ overflowX: 'auto' }}>
-            <table className="tabla">
+            <table className="tabla tabla-tarjetas">
               <thead><tr><th>Nombre</th><th>Especialidad</th><th>Clínica</th><th>Disponible</th><th></th></tr></thead>
               <tbody>
                 {medicos.map((m) => (
                   <tr key={m.id_medico}>
-                    <td>{m.nombre}</td>
-                    <td>{m.especialidad?.nombre}</td>
-                    <td>{m.clinica?.nombre}</td>
-                    <td>
+                    <td data-label="Nombre">{m.nombre}</td>
+                    <td data-label="Especialidad">{m.especialidad?.nombre}</td>
+                    <td data-label="Clínica">{m.clinica?.nombre}</td>
+                    <td data-label="Disponible">
                       <button
                         className={`boton boton-mini ${m.disponible ? 'boton-secundario' : 'boton-peligro'}`}
                         onClick={async () => { await medicosService.cambiarDisponibilidad(m.id_medico, !m.disponible); cargarTodo(); }}
@@ -170,7 +171,7 @@ const pestanas = [
                         {m.disponible ? 'Sí' : 'No'}
                       </button>
                     </td>
-                    <td>
+                    <td data-label="Acciones">
                       <button className="boton boton-peligro boton-mini"
                         onClick={async () => { if (confirm('¿Eliminar médico?')) { await medicosService.eliminar(m.id_medico); cargarTodo(); } }}>
                         Eliminar
@@ -190,14 +191,14 @@ const pestanas = [
             <input placeholder="Nueva especialidad" value={nuevaEsp} onChange={(e) => setNuevaEsp(e.target.value)} />
             <button className="boton" onClick={crearEspecialidad}>Agregar</button>
           </div>
-          <table className="tabla">
+          <table className="tabla tabla-tarjetas">
             <thead><tr><th>ID</th><th>Nombre</th><th></th></tr></thead>
             <tbody>
               {especialidades.map((e) => (
                 <tr key={e.id_especialidad}>
-                  <td>{e.id_especialidad}</td>
-                  <td>{e.nombre}</td>
-                  <td>
+                  <td data-label="ID">{e.id_especialidad}</td>
+                  <td data-label="Nombre">{e.nombre}</td>
+                  <td data-label="Acciones">
                     <button className="boton boton-peligro boton-mini"
                       onClick={async () => { if (confirm('¿Eliminar especialidad?')) { await especialidadesService.eliminar(e.id_especialidad); cargarTodo(); } }}>
                       Eliminar
@@ -212,17 +213,17 @@ const pestanas = [
 
       {pestania === 'citas' && (
         <div className="tarjeta" style={{ overflowX: 'auto' }}>
-          <table className="tabla">
+          <table className="tabla tabla-tarjetas">
             <thead><tr><th>Fecha</th><th>Hora</th><th>Paciente</th><th>Médico</th><th>Clínica</th><th>Estado</th></tr></thead>
             <tbody>
               {citas.map((c) => (
                 <tr key={c.id_cita}>
-                  <td>{c.fecha}</td>
-                  <td>{c.hora.slice(0, 5)}</td>
-                  <td>{c.paciente}</td>
-                  <td>{c.medico}</td>
-                  <td>{c.clinica}</td>
-                  <td><span className={`estado estado-${c.estado}`}>{c.estado}</span></td>
+                  <td data-label="Fecha">{c.fecha}</td>
+                  <td data-label="Hora">{c.hora.slice(0, 5)}</td>
+                  <td data-label="Paciente">{c.paciente}</td>
+                  <td data-label="Médico">{c.medico}</td>
+                  <td data-label="Clínica">{c.clinica}</td>
+                  <td data-label="Estado"><span className={`estado estado-${c.estado}`}>{c.estado}</span></td>
                 </tr>
               ))}
               {citas.length === 0 && <tr><td colSpan="6">No hay citas registradas.</td></tr>}
