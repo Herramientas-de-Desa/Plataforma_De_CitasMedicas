@@ -12,6 +12,7 @@ import MapaClinicas from './components/MapaClinicas';
 import PerfilUsuario from './components/PerfilUsuario';
 import PanelMedico from './components/PanelMedico';
 import PanelAdmin from './components/PanelAdmin';
+import RecomendadorInteligente from './components/RecomendadorInteligente';
 import RutaProtegida from './components/RutaProtegida';
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/login" element={<FormularioLogin />} />
           <Route path="/especialistas" element={<BuscadorEspecialistas />} />
           <Route path="/clinicas" element={<MapaClinicas />} />
+          <Route path="/recomendacion-inteligente" element={<RecomendadorInteligente />} />
           <Route path="/reservar/:idMedico" element={
             <RutaProtegida><ReservaCita /></RutaProtegida>
           } />

@@ -21,6 +21,7 @@ export default function Navbar() {
         <div className="nav-links">
           <NavLink to="/especialistas" className={clase}>Especialistas</NavLink>
           <NavLink to="/clinicas" className={clase}>Clínicas cercanas</NavLink>
+          <NavLink to="/recomendacion-inteligente" className={clase}>🎯 Recomendación IA</NavLink>
           {perfil && <NavLink to="/mis-citas" className={clase}>Mis citas</NavLink>}
           {perfil?.rol === 'medico' && <NavLink to="/panel-medico" className={clase}>Mi agenda</NavLink>}
           {perfil?.rol === 'admin' && <NavLink to="/admin" className={clase}>Administración</NavLink>}
