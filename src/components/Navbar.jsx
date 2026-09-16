@@ -21,6 +21,8 @@ export default function Navbar() {
 
   const clase = ({ isActive }) => (isActive ? 'activo' : undefined);
 
+  if (ubicacion.pathname === '/login') return null;
+
   return (
     <nav className="navbar">
       <div className="navbar-inner">
