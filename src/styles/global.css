@@ -1156,6 +1156,32 @@ select:focus {
   margin: 0 auto;
 }
 
+.login-visual-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.login-volver-inicio {
+  display: grid;
+  flex: 0 0 34px;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.login-volver-inicio:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.login-volver-inicio:focus-visible {
+  outline-color: #fff;
+}
+
 .login-brand-badge {
   display: inline-flex;
   align-items: center;
@@ -1166,10 +1192,6 @@ select:focus {
   color: #275c62;
   font-size: 0.83rem;
   font-weight: 600;
-}
-
-.login-brand-badge:hover {
-  background: #fff;
 }
 
 .login-visual h1 {
