@@ -7,6 +7,7 @@ import { especialidadesService } from '../services/especialidadesService';
 import { clinicasService } from '../services/clinicasService';
 import { citasService } from '../services/citasService';
 import PanelDemandaMedicos from './PanelDemandaMedicos';
+import PanelDemandaEspecialidades from './PanelDemandaEspecialidades';
 
 export default function PanelAdmin() {
   const [pestania, setPestania] = useState('usuarios');
@@ -60,13 +61,15 @@ export default function PanelAdmin() {
     } catch (e) { setError(e.message); }
   }
 
-  const pestanas = [
-    ['usuarios', 'Usuarios'],
-    ['medicos', 'Médicos'],
-    ['especialidades', 'Especialidades'],
-    ['citas', 'Citas'],
-    ['demanda-medicos', 'Demanda por médico'],
-  ];
+const pestanas = [
+  ['usuarios', 'Usuarios'],
+  ['medicos', 'Médicos'],
+  ['especialidades', 'Especialidades'],
+  ['citas', 'Citas'],
+  ['demanda-medicos', 'Demanda por médico'],
+  ['demanda-especialidades', 'Demanda por especialidad'],
+  ['recomendacion-citas', 'Recomendación inteligente'],
+];
 
   return (
     <div className="contenedor">
@@ -228,7 +231,14 @@ export default function PanelAdmin() {
         </div>
       )}
 
-      {pestania === 'demanda-medicos' && <PanelDemandaMedicos />}
+{pestania === 'demanda-medicos' && (
+  <PanelDemandaMedicos />
+)}
+
+{pestania === 'demanda-especialidades' && (
+  <PanelDemandaEspecialidades />
+)}
+
     </div>
   );
 }
