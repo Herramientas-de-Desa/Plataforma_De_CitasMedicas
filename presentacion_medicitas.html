@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediCitas — Presentación del Proyecto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --verde-oscuro: #0b2e26;
+      --verde-principal: #0e7c66;
+      --verde-claro: #14a085;
+      --menta: #e3f2ec;
+      --fondo: #fbfaf6;
+      --blanco: #ffffff;
+      --gris: #6b7a76;
+      --coral: #e2725b;
+      --sombra: 0 8px 32px rgba(14, 124, 102, 0.12);
+      --sombra-fuerte: 0 16px 48px rgba(11, 46, 38, 0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--verde-oscuro);
+      color: var(--verde-oscuro);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* ====== SLIDESHOW ====== */
+    .slideshow {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 80px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s ease, transform 0.6s ease;
+      transform: translateX(40px);
+      background: var(--fondo);
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    .slide.exit {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+
+    /* ====== PORTADA ====== */
+    .slide-portada {
+      background: linear-gradient(145deg, var(--verde-oscuro) 0%, #145c4a 50%, var(--verde-principal) 100%);
+      color: var(--blanco);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-portada::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .slide-portada::after {
+      content: '';
+      position: absolute;
+      bottom: -150px;
+      left: -80px;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .portada-icono {
+      font-size: 64px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+    }
+
+    .portada-titulo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 56px;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .portada-subtitulo {
+      font-size: 22px;
+      font-weight: 400;
+      opacity: 0.85;
+      margin-bottom: 40px;
+      max-width: 650px;
+    }
+
+    .portada-linea {
+      width: 80px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--coral);
+      margin-bottom: 32px;
+    }
+
+    .portada-meta {
+      font-size: 15px;
+      opacity: 0.6;
+      line-height: 1.8;
+    }
+
+    /* ====== SLIDE CONTENIDO ====== */
+    .slide-contenido {
+      align-items: flex-start;
+      padding: 50px 90px;
+    }
+
+    .slide-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .slide-numero {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 48px;
+      color: var(--verde-principal);
+      opacity: 0.2;
+      line-height: 1;
+    }
+
+    .slide-titulo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 38px;
+      color: var(--verde-oscuro);
+      line-height: 1.2;
+    }
+
+    .slide-subtitulo-linea {
+      width: 60px;
+      height: 3px;
+      background: var(--verde-principal);
+      border-radius: 2px;
+      margin-bottom: 32px;
+    }
+
+    .slide-texto {
+      font-size: 19px;
+      line-height: 1.75;
+      color: #3a4a46;
+      max-width: 900px;
+    }
+
+    .slide-texto p { margin-bottom: 18px; }
+
+    .slide-texto strong {
+      color: var(--verde-oscuro);
+      font-weight: 600;
+    }
+
+    /* ====== GRIDS Y TARJETAS ====== */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 18px;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .tarjeta {
+      background: var(--blanco);
+      border-radius: 16px;
+      padding: 28px 24px;
+      box-shadow: var(--sombra);
+      border: 1px solid rgba(14, 124, 102, 0.08);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .tarjeta:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--sombra-fuerte);
+    }
+
+    .tarjeta-icono {
+      font-size: 36px;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .tarjeta h3 {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--verde-oscuro);
+      margin-bottom: 10px;
+    }
+
+    .tarjeta p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--gris);
+    }
+
+    /* ====== LISTAS ====== */
+    .lista-puntos {
+      list-style: none;
+      padding: 0;
+    }
+
+    .lista-puntos li {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 16px;
+      font-size: 18px;
+      line-height: 1.6;
+      color: #3a4a46;
+    }
+
+    .lista-puntos li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--verde-principal);
+    }
+
+    .lista-puntos li strong {
+      color: var(--verde-oscuro);
+    }
+
+    /* ====== TABLA ====== */
+    .tabla-presentacion {
+      width: 100%;
+      max-width: 900px;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+      font-size: 15px;
+    }
+
+    .tabla-presentacion thead th {
+      background: var(--verde-principal);
+      color: var(--blanco);
+      padding: 14px 20px;
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .tabla-presentacion tbody td {
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(14,124,102,0.08);
+      color: #3a4a46;
+    }
+
+    .tabla-presentacion tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabla-presentacion tbody tr:nth-child(even) {
+      background: var(--menta);
+    }
+
+    /* ====== BADGES ====== */
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-verde { background: #d4edda; color: #155724; }
+    .badge-azul { background: #d1ecf1; color: #0c5460; }
+    .badge-naranja { background: #fff3cd; color: #856404; }
+
+    /* ====== DIAGRAMA FLUJO ====== */
+    .flujo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .flujo-paso {
+      background: var(--blanco);
+      border: 2px solid var(--verde-principal);
+      border-radius: 12px;
+      padding: 18px 22px;
+      text-align: center;
+      min-width: 140px;
+      box-shadow: 0 4px 12px rgba(14,124,102,0.08);
+    }
+
+    .flujo-paso .paso-num {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 28px;
+      color: var(--verde-principal);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .flujo-paso .paso-txt {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--verde-oscuro);
+    }
+
+    .flujo-flecha {
+      font-size: 28px;
+      color: var(--verde-principal);
+      opacity: 0.5;
+    }
+
+    /* ====== SLIDE CIERRE ====== */
+    .slide-cierre {
+      background: linear-gradient(145deg, var(--verde-oscuro) 0%, #145c4a 60%, var(--verde-claro) 100%);
+      color: var(--blanco);
+      text-align: center;
+    }
+
+    .slide-cierre .portada-titulo { font-size: 44px; }
+
+    /* ====== CONTROLES ====== */
+    .controles {
+      position: fixed;
+      bottom: 28px;
+      right: 40px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .btn-nav {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: none;
+      background: var(--verde-principal);
+      color: var(--blanco);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(14,124,102,0.3);
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .btn-nav:hover { background: var(--verde-oscuro); transform: scale(1.08); }
+    .btn-nav:active { transform: scale(0.95); }
+
+    .progreso {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--verde-principal), var(--verde-claro));
+      transition: width 0.4s ease;
+      z-index: 100;
+    }
+
+    .contador {
+      position: fixed;
+      bottom: 36px;
+      left: 40px;
+      font-family: 'Sora', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--verde-principal);
+      opacity: 0.6;
+      z-index: 100;
+    }
+
+    .slide-portada ~ .contador,
+    .slide-cierre ~ .contador { color: var(--blanco); }
+
+    /* ====== ARQUITECTURA VISUAL ====== */
+    .arq-capa {
+      width: 100%;
+      max-width: 800px;
+      border-radius: 14px;
+      padding: 20px 28px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .arq-capa-titulo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      min-width: 140px;
+    }
+
+    .arq-capa-detalle {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #3a4a46;
+    }
+
+    .arq-frontend { background: #e8f5e9; border-left: 4px solid #43a047; }
+    .arq-frontend .arq-capa-titulo { color: #2e7d32; }
+
+    .arq-servicios { background: #e3f2fd; border-left: 4px solid #1976d2; }
+    .arq-servicios .arq-capa-titulo { color: #1565c0; }
+
+    .arq-backend { background: #fff3e0; border-left: 4px solid #ef6c00; }
+    .arq-backend .arq-capa-titulo { color: #e65100; }
+
+    .arq-bd { background: #fce4ec; border-left: 4px solid #c62828; }
+    .arq-bd .arq-capa-titulo { color: #b71c1c; }
+
+    .arq-flecha-down {
+      text-align: center;
+      font-size: 22px;
+      color: var(--gris);
+      opacity: 0.4;
+      margin: 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="progreso" id="progreso"></div>
+
+<div class="slideshow" id="slideshow">
+
+  <!-- ========== SLIDE 1: PORTADA ========== -->
+  <div class="slide slide-portada active" data-slide="0">
+    <div class="portada-icono">🏥</div>
+    <h1 class="portada-titulo">MediCitas</h1>
+    <p class="portada-subtitulo">Plataforma Inteligente de Recomendación y Gestión de Citas Médicas</p>
+    <div class="portada-linea"></div>
+    <p class="portada-meta">
+      Curso de JavaScript — Facultad de Ingeniería de Sistemas<br>
+      Universidad Nacional San Luis Gonzaga · Ica, Perú · 2026
+    </p>
+  </div>
+
+  <!-- ========== SLIDE 2: EL PROBLEMA ========== -->
+  <div class="slide slide-contenido" data-slide="1">
+    <div class="slide-header">
+      <span class="slide-numero">01</span>
+      <h2 class="slide-titulo">¿Cuál es el problema?</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="slide-texto">
+      <p>En muchas ciudades del Perú, y especialmente en Ica, conseguir una cita médica sigue siendo un proceso lento y tedioso. Los pacientes tienen que llamar por teléfono a varias clínicas, preguntar qué especialistas están disponibles, averiguar los horarios y, muchas veces, acercarse en persona solo para apartar un turno.</p>
+      <p>Esto genera varios problemas concretos:</p>
+      <ul class="lista-puntos">
+        <li><strong>Pérdida de tiempo</strong> tanto para el paciente como para el personal administrativo de la clínica.</li>
+        <li><strong>Falta de información centralizada:</strong> no existe un solo lugar donde comparar especialistas, ubicaciones y horarios.</li>
+        <li><strong>Doble reserva y desorganización</strong> cuando los registros se llevan de forma manual o en cuadernos.</li>
+        <li><strong>Dificultad para encontrar la clínica más cercana,</strong> sobre todo para personas que no conocen bien la ciudad.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 3: ¿QUÉ ES MEDICITAS? ========== -->
+  <div class="slide slide-contenido" data-slide="2">
+    <div class="slide-header">
+      <span class="slide-numero">02</span>
+      <h2 class="slide-titulo">¿Qué es MediCitas?</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="slide-texto">
+      <p>MediCitas es una <strong>plataforma web</strong> que le permite a cualquier persona buscar médicos por especialidad, ver sus horarios en tiempo real y reservar una cita desde la comodidad de su celular o computadora, sin necesidad de hacer llamadas ni desplazarse.</p>
+      <p>Pero no se queda solo en la reserva. La plataforma también integra un <strong>mapa interactivo</strong> que detecta la ubicación del usuario y le muestra qué clínicas tiene más cerca, ordenadas por distancia. De esta forma, el paciente puede tomar una decisión informada: no solo elige al especialista que necesita, sino que también considera cuál le queda más conveniente geográficamente.</p>
+      <p>Además, el sistema contempla <strong>tres roles distintos</strong> — paciente, médico y administrador — lo que permite que cada actor del proceso de salud tenga su propio panel con las herramientas que necesita.</p>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 4: OBJETIVO ========== -->
+  <div class="slide slide-contenido" data-slide="3">
+    <div class="slide-header">
+      <span class="slide-numero">03</span>
+      <h2 class="slide-titulo">Objetivos del proyecto</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="slide-texto">
+      <p style="font-size: 20px; font-weight: 600; color: var(--verde-principal); margin-bottom: 22px;">Objetivo general</p>
+      <p>Desarrollar una plataforma web funcional que simplifique y agilice el proceso de búsqueda, recomendación y reserva de citas médicas en centros de salud de la ciudad de Ica, integrando geolocalización y gestión de horarios en tiempo real.</p>
+      <p style="font-size: 20px; font-weight: 600; color: var(--verde-principal); margin-bottom: 18px; margin-top: 28px;">Objetivos específicos</p>
+      <ul class="lista-puntos">
+        <li>Implementar un sistema de registro e inicio de sesión seguro con autenticación JWT y cifrado de contraseñas.</li>
+        <li>Construir un buscador que permita filtrar médicos por especialidad y nombre, mostrando solo profesionales disponibles.</li>
+        <li>Integrar un mapa interactivo con la ubicación GPS del usuario para recomendar las clínicas más cercanas.</li>
+        <li>Desarrollar un módulo de reservas que valide horarios y prevenga la doble asignación de turnos.</li>
+        <li>Ofrecer paneles diferenciados para pacientes, médicos y administradores del sistema.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 5: ¿PARA QUIÉN ES? ========== -->
+  <div class="slide slide-contenido" data-slide="4">
+    <div class="slide-header">
+      <span class="slide-numero">04</span>
+      <h2 class="slide-titulo">¿Para quién está diseñado?</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="grid-3" style="margin-top: 8px;">
+      <div class="tarjeta">
+        <span class="tarjeta-icono">👤</span>
+        <h3>Paciente</h3>
+        <p>Cualquier persona que necesite atención médica. Puede registrarse, buscar especialistas, ver las clínicas en el mapa, reservar citas y llevar un historial de todas sus consultas desde un solo lugar.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">🩺</span>
+        <h3>Médico</h3>
+        <p>El profesional de salud accede a su propia agenda, ve la lista de pacientes que tienen cita con él, puede confirmar la asistencia y marcar una consulta como atendida una vez que termina.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">⚙️</span>
+        <h3>Administrador</h3>
+        <p>Tiene control total sobre el sistema: gestiona usuarios y sus roles, registra nuevos médicos, administra el catálogo de especialidades y supervisa todas las citas de la plataforma.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 6: FUNCIONALIDADES PRINCIPALES ========== -->
+  <div class="slide slide-contenido" data-slide="5">
+    <div class="slide-header">
+      <span class="slide-numero">05</span>
+      <h2 class="slide-titulo">Funcionalidades principales</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="grid-2">
+      <div class="tarjeta">
+        <span class="tarjeta-icono">🔐</span>
+        <h3>Registro y autenticación segura</h3>
+        <p>Cuentas protegidas con tokens JWT y contraseñas cifradas automáticamente. Cada sesión es validada en cada acción.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">🔍</span>
+        <h3>Búsqueda inteligente de especialistas</h3>
+        <p>Filtra por especialidad médica o escribe el nombre del doctor. Solo se muestran médicos que están disponibles y activos.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">📅</span>
+        <h3>Reserva de citas en tiempo real</h3>
+        <p>El sistema cruza los horarios del médico con las citas ya ocupadas y muestra únicamente las horas libres, en bloques de 30 minutos.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">🗺️</span>
+        <h3>Mapa y geolocalización</h3>
+        <p>Mapa interactivo con OpenStreetMap. Detecta tu ubicación por GPS y ordena las clínicas de la más cercana a la más lejana usando la fórmula de Haversine.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">📋</span>
+        <h3>Historial y gestión de citas</h3>
+        <p>Los pacientes ven todas sus citas con estados claros (pendiente, confirmada, atendida, cancelada) y pueden cancelar si lo necesitan.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">🛡️</span>
+        <h3>Panel de administración completo</h3>
+        <p>Gestión centralizada de usuarios, médicos, especialidades y supervisión de todas las citas del sistema desde un solo lugar.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 7: FLUJO DEL USUARIO ========== -->
+  <div class="slide slide-contenido" data-slide="6">
+    <div class="slide-header">
+      <span class="slide-numero">06</span>
+      <h2 class="slide-titulo">¿Cómo funciona para el paciente?</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="slide-texto">
+      <p>El flujo que sigue un paciente dentro de la plataforma es directo y sin complicaciones:</p>
+    </div>
+    <div class="flujo" style="margin-top: 24px;">
+      <div class="flujo-paso">
+        <span class="paso-num">1</span>
+        <span class="paso-txt">Se registra<br>con su correo</span>
+      </div>
+      <span class="flujo-flecha">→</span>
+      <div class="flujo-paso">
+        <span class="paso-num">2</span>
+        <span class="paso-txt">Busca un<br>especialista</span>
+      </div>
+      <span class="flujo-flecha">→</span>
+      <div class="flujo-paso">
+        <span class="paso-num">3</span>
+        <span class="paso-txt">Ve los horarios<br>disponibles</span>
+      </div>
+      <span class="flujo-flecha">→</span>
+      <div class="flujo-paso">
+        <span class="paso-num">4</span>
+        <span class="paso-txt">Elige fecha<br>y hora</span>
+      </div>
+      <span class="flujo-flecha">→</span>
+      <div class="flujo-paso">
+        <span class="paso-num">5</span>
+        <span class="paso-txt">Confirma<br>su cita</span>
+      </div>
+      <span class="flujo-flecha">→</span>
+      <div class="flujo-paso">
+        <span class="paso-num">6</span>
+        <span class="paso-txt">Acude a la<br>consulta</span>
+      </div>
+    </div>
+    <div class="slide-texto" style="margin-top: 28px;">
+      <p>En cualquier momento puede revisar su historial, cancelar una cita que ya no necesite o buscar clínicas cercanas en el mapa para decidir a cuál le conviene ir.</p>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 8: TECNOLOGÍAS ========== -->
+  <div class="slide slide-contenido" data-slide="7">
+    <div class="slide-header">
+      <span class="slide-numero">07</span>
+      <h2 class="slide-titulo">Tecnologías utilizadas</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="grid-4">
+      <div class="tarjeta" style="text-align: center;">
+        <span class="tarjeta-icono">⚛️</span>
+        <h3>React 18</h3>
+        <p>Librería principal para construir la interfaz con componentes reutilizables y estado reactivo.</p>
+      </div>
+      <div class="tarjeta" style="text-align: center;">
+        <span class="tarjeta-icono">⚡</span>
+        <h3>Vite</h3>
+        <p>Herramienta de desarrollo ultrarrápida. Compila y recarga los cambios al instante durante el desarrollo.</p>
+      </div>
+      <div class="tarjeta" style="text-align: center;">
+        <span class="tarjeta-icono">🔗</span>
+        <h3>React Router</h3>
+        <p>Maneja la navegación entre páginas sin recargar el navegador. Incluye rutas protegidas por rol.</p>
+      </div>
+      <div class="tarjeta" style="text-align: center;">
+        <span class="tarjeta-icono">🗄️</span>
+        <h3>Supabase</h3>
+        <p>Backend completo: base de datos PostgreSQL, autenticación JWT, API REST automática y seguridad por filas.</p>
+      </div>
+      <div class="tarjeta" style="text-align: center;">
+        <span class="tarjeta-icono">🗺️</span>
+        <h3>Leaflet + OSM</h3>
+        <p>Mapa interactivo de código abierto con marcadores para las clínicas y la posición del usuario.</p>
+      </div>
+      <div class="tarjeta" style="text-align: center;">
+        <span class="tarjeta-icono">📍</span>
+        <h3>Geolocation API</h3>
+        <p>API nativa del navegador que obtiene las coordenadas GPS del dispositivo del usuario.</p>
+      </div>
+      <div class="tarjeta" style="text-align: center;">
+        <span class="tarjeta-icono">🌐</span>
+        <h3>Nominatim</h3>
+        <p>Servicio gratuito de OpenStreetMap para convertir direcciones de texto a coordenadas geográficas.</p>
+      </div>
+      <div class="tarjeta" style="text-align: center;">
+        <span class="tarjeta-icono">🎨</span>
+        <h3>CSS propio</h3>
+        <p>Diseño responsivo hecho a mano con variables CSS, tipografías Google Fonts y paleta personalizada.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 9: ARQUITECTURA ========== -->
+  <div class="slide slide-contenido" data-slide="8">
+    <div class="slide-header">
+      <span class="slide-numero">08</span>
+      <h2 class="slide-titulo">Arquitectura del sistema</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="slide-texto">
+      <p>El proyecto sigue una arquitectura de <strong>tres capas</strong> bien separadas, lo que facilita el mantenimiento y la escalabilidad:</p>
+    </div>
+    <div style="margin-top: 20px; width: 100%;">
+      <div class="arq-capa arq-frontend">
+        <span class="arq-capa-titulo">📱 Interfaz (UI)</span>
+        <span class="arq-capa-detalle">13 componentes React organizados por funcionalidad: formularios, buscadores, paneles, mapa. Cada componente maneja su propia vista y estado local.</span>
+      </div>
+      <div class="arq-flecha-down">▼</div>
+      <div class="arq-capa arq-servicios">
+        <span class="arq-capa-titulo">🔧 Servicios</span>
+        <span class="arq-capa-detalle">7 módulos JavaScript que encapsulan toda la lógica de acceso a datos: autenticación, médicos, citas, clínicas, especialidades, usuarios y geolocalización.</span>
+      </div>
+      <div class="arq-flecha-down">▼</div>
+      <div class="arq-capa arq-backend">
+        <span class="arq-capa-titulo">☁️ Backend (API)</span>
+        <span class="arq-capa-detalle">Supabase genera automáticamente una API REST sobre la base de datos. La autenticación emite y valida tokens JWT en cada solicitud.</span>
+      </div>
+      <div class="arq-flecha-down">▼</div>
+      <div class="arq-capa arq-bd">
+        <span class="arq-capa-titulo">💾 Base de Datos</span>
+        <span class="arq-capa-detalle">PostgreSQL con 6 tablas, 1 vista, triggers automáticos y políticas de seguridad por fila (RLS) que controlan el acceso según el rol del usuario.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 10: BASE DE DATOS ========== -->
+  <div class="slide slide-contenido" data-slide="9">
+    <div class="slide-header">
+      <span class="slide-numero">09</span>
+      <h2 class="slide-titulo">Modelo de base de datos</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <table class="tabla-presentacion">
+      <thead>
+        <tr>
+          <th>Tabla</th>
+          <th>Descripción</th>
+          <th>Campos principales</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>usuarios</strong></td>
+          <td>Perfiles vinculados a la autenticación</td>
+          <td>id, nombres, correo, teléfono, rol</td>
+        </tr>
+        <tr>
+          <td><strong>especialidades</strong></td>
+          <td>Catálogo de áreas médicas</td>
+          <td>id, nombre (único)</td>
+        </tr>
+        <tr>
+          <td><strong>clinicas</strong></td>
+          <td>Centros de salud con ubicación GPS</td>
+          <td>id, nombre, dirección, latitud, longitud</td>
+        </tr>
+        <tr>
+          <td><strong>medicos</strong></td>
+          <td>Profesionales asignados a clínica y especialidad</td>
+          <td>id, nombre, especialidad, clínica, disponible</td>
+        </tr>
+        <tr>
+          <td><strong>horarios</strong></td>
+          <td>Disponibilidad semanal de cada médico</td>
+          <td>médico, día de semana, hora inicio, hora fin</td>
+        </tr>
+        <tr>
+          <td><strong>citas</strong></td>
+          <td>Reservas con protección contra duplicados</td>
+          <td>paciente, médico, fecha, hora, estado</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="slide-texto" style="margin-top: 24px;">
+      <p>Además, el sistema incluye una <strong>vista desnormalizada</strong> llamada <em>historial_citas</em> que combina todas las tablas para consultas rápidas, y un <strong>trigger automático</strong> que crea el perfil del usuario en el momento del registro.</p>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 11: APIs ========== -->
+  <div class="slide slide-contenido" data-slide="10">
+    <div class="slide-header">
+      <span class="slide-numero">10</span>
+      <h2 class="slide-titulo">APIs y servicios externos</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="slide-texto">
+      <p>El proyecto reutiliza <strong>cinco APIs</strong> para resolver diferentes necesidades sin reinventar la rueda:</p>
+    </div>
+    <table class="tabla-presentacion" style="margin-top: 16px;">
+      <thead>
+        <tr>
+          <th>API / Servicio</th>
+          <th>Qué resuelve</th>
+          <th>Cómo se usa</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Supabase Auth</strong></td>
+          <td>Registro y login seguro</td>
+          <td>Genera tokens JWT, cifra contraseñas y valida cada sesión automáticamente</td>
+        </tr>
+        <tr>
+          <td><strong>Supabase REST</strong></td>
+          <td>Acceso a la base de datos</td>
+          <td>API auto-generada sobre PostgreSQL para todas las operaciones CRUD</td>
+        </tr>
+        <tr>
+          <td><strong>Geolocation API</strong></td>
+          <td>Posición del usuario</td>
+          <td>Obtiene coordenadas GPS del dispositivo para calcular cercanía</td>
+        </tr>
+        <tr>
+          <td><strong>OpenStreetMap + Leaflet</strong></td>
+          <td>Mapa interactivo</td>
+          <td>Renderiza el mapa con marcadores para clínicas y la ubicación del paciente</td>
+        </tr>
+        <tr>
+          <td><strong>Nominatim (OSM)</strong></td>
+          <td>Geocodificación</td>
+          <td>Convierte direcciones escritas en texto a coordenadas (latitud, longitud)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== SLIDE 12: SEGURIDAD ========== -->
+  <div class="slide slide-contenido" data-slide="11">
+    <div class="slide-header">
+      <span class="slide-numero">11</span>
+      <h2 class="slide-titulo">Seguridad del sistema</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="slide-texto">
+      <p>La seguridad no se trató como algo secundario, sino como un pilar del diseño desde el inicio:</p>
+    </div>
+    <div class="grid-2" style="margin-top: 16px;">
+      <div class="tarjeta">
+        <span class="tarjeta-icono">🔑</span>
+        <h3>Contraseñas cifradas</h3>
+        <p>Supabase Auth aplica hash criptográfico a todas las contraseñas antes de almacenarlas. En ningún momento se guardan en texto plano.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">🎫</span>
+        <h3>Tokens JWT</h3>
+        <p>Cada sesión activa se valida con un token JSON Web Token. Si el token expira o es inválido, se cierra el acceso automáticamente.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">🚧</span>
+        <h3>Row Level Security (RLS)</h3>
+        <p>Cada tabla tiene políticas que verifican, a nivel de base de datos, que el usuario solo puede ver y modificar lo que su rol le permite.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">🛤️</span>
+        <h3>Rutas protegidas</h3>
+        <p>En el frontend, un componente wrapper verifica la autenticación y el rol antes de permitir el acceso a cualquier página restringida.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 13: DATOS DE PRUEBA ========== -->
+  <div class="slide slide-contenido" data-slide="12">
+    <div class="slide-header">
+      <span class="slide-numero">12</span>
+      <h2 class="slide-titulo">Datos precargados para demostración</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="slide-texto">
+      <p>La base de datos incluye información de prueba realista, basada en clínicas y ubicaciones reales de Ica, para poder demostrar todas las funcionalidades desde el primer momento:</p>
+    </div>
+    <div class="grid-2" style="margin-top: 16px;">
+      <div class="tarjeta">
+        <span class="tarjeta-icono">🏥</span>
+        <h3>4 clínicas con ubicación real</h3>
+        <p>Clínica Santa Rosa de Ica, Centro Médico El Carmen, Policlínico La Angostura y Clínica San José — con sus coordenadas GPS exactas para el mapa.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">👨‍⚕️</span>
+        <h3>8 médicos especialistas</h3>
+        <p>Distribuidos entre las 4 clínicas y asignados a diferentes especialidades como Cardiología, Pediatría, Dermatología, Traumatología, entre otras.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">📂</span>
+        <h3>8 especialidades médicas</h3>
+        <p>Medicina General, Pediatría, Cardiología, Dermatología, Ginecología, Traumatología, Oftalmología y Odontología.</p>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta-icono">🕐</span>
+        <h3>52 bloques de horarios</h3>
+        <p>Turnos de mañana (8:00 a 13:00 hrs) de lunes a viernes para todos, y turnos de tarde (15:00 a 19:00 hrs) los lunes, miércoles y viernes para algunos médicos.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 14: REQUERIMIENTOS CUBIERTOS ========== -->
+  <div class="slide slide-contenido" data-slide="13">
+    <div class="slide-header">
+      <span class="slide-numero">13</span>
+      <h2 class="slide-titulo">Requerimientos cubiertos</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <table class="tabla-presentacion" style="font-size: 14px;">
+      <thead>
+        <tr>
+          <th style="width: 80px;">Código</th>
+          <th>Descripción</th>
+          <th style="width: 100px;">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>RF01</strong></td>
+          <td>Registro de nuevos usuarios con validación de datos</td>
+          <td><span class="badge badge-verde">✓ Cumplido</span></td>
+        </tr>
+        <tr>
+          <td><strong>RF02</strong></td>
+          <td>Inicio de sesión seguro con credenciales cifradas</td>
+          <td><span class="badge badge-verde">✓ Cumplido</span></td>
+        </tr>
+        <tr>
+          <td><strong>RF03</strong></td>
+          <td>Búsqueda de médicos por especialidad y nombre</td>
+          <td><span class="badge badge-verde">✓ Cumplido</span></td>
+        </tr>
+        <tr>
+          <td><strong>RF04</strong></td>
+          <td>Consulta de horarios disponibles por fecha</td>
+          <td><span class="badge badge-verde">✓ Cumplido</span></td>
+        </tr>
+        <tr>
+          <td><strong>RF05 / RF06</strong></td>
+          <td>Reservar, cancelar y actualizar el estado de citas</td>
+          <td><span class="badge badge-verde">✓ Cumplido</span></td>
+        </tr>
+        <tr>
+          <td><strong>RF07</strong></td>
+          <td>Mapa de clínicas con geolocalización y distancia</td>
+          <td><span class="badge badge-verde">✓ Cumplido</span></td>
+        </tr>
+        <tr>
+          <td><strong>RF08</strong></td>
+          <td>Panel de administración con gestión integral</td>
+          <td><span class="badge badge-verde">✓ Cumplido</span></td>
+        </tr>
+        <tr>
+          <td><strong>RNF01</strong></td>
+          <td>Contraseñas con hash + políticas de seguridad RLS</td>
+          <td><span class="badge badge-verde">✓ Cumplido</span></td>
+        </tr>
+        <tr>
+          <td><strong>RNF03/05</strong></td>
+          <td>Interfaz responsiva, intuitiva y adaptable</td>
+          <td><span class="badge badge-verde">✓ Cumplido</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== SLIDE 15: CONCLUSIONES ========== -->
+  <div class="slide slide-contenido" data-slide="14">
+    <div class="slide-header">
+      <span class="slide-numero">14</span>
+      <h2 class="slide-titulo">Conclusiones</h2>
+    </div>
+    <div class="slide-subtitulo-linea"></div>
+    <div class="slide-texto">
+      <p>MediCitas demuestra que con las herramientas adecuadas es posible construir una solución real a un problema cotidiano. No se trata de un ejercicio teórico: es una plataforma funcional que resuelve la desorganización en la gestión de citas médicas y le devuelve al paciente el control sobre su propia salud.</p>
+      <p>A lo largo del desarrollo aprendimos a integrar múltiples APIs y servicios externos de forma coherente, a diseñar una base de datos relacional con seguridad incorporada desde el esquema, y a estructurar un proyecto frontend de manera que cada pieza — componente, servicio, contexto — tenga una responsabilidad clara.</p>
+      <p>El resultado es un sistema que no solo cumple con los requerimientos del curso, sino que podría adaptarse y desplegarse en un entorno real con ajustes mínimos. Esa fue siempre la intención: que lo que construimos sirva para algo más que una nota.</p>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 16: CIERRE ========== -->
+  <div class="slide slide-portada slide-cierre" data-slide="15">
+    <div class="portada-icono">🏥</div>
+    <h1 class="portada-titulo">¡Gracias!</h1>
+    <p class="portada-subtitulo">¿Preguntas o comentarios?</p>
+    <div class="portada-linea"></div>
+    <p class="portada-meta">
+      MediCitas — Plataforma Inteligente de Citas Médicas<br>
+      Facultad de Ingeniería de Sistemas · 2026
+    </p>
+  </div>
+
+</div>
+
+<div class="contador" id="contador">1 / 16</div>
+
+<div class="controles">
+  <button class="btn-nav" id="btnAnterior" title="Anterior">←</button>
+  <button class="btn-nav" id="btnSiguiente" title="Siguiente">→</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const progreso = document.getElementById('progreso');
+  const contador = document.getElementById('contador');
+  const totalSlides = slides.length;
+  let actual = 0;
+
+  function mostrarSlide(n) {
+    if (n < 0 || n >= totalSlides) return;
+    slides[actual].classList.remove('active');
+    slides[actual].classList.add('exit');
+    setTimeout(() => slides[actual === n ? actual : (actual)].classList.remove('exit'), 300);
+    actual = n;
+    slides[actual].classList.add('active');
+    progreso.style.width = ((actual + 1) / totalSlides * 100) + '%';
+    contador.textContent = (actual + 1) + ' / ' + totalSlides;
+
+    // Ajustar color del contador según slide oscuro o claro
+    const esOscuro = slides[actual].classList.contains('slide-portada');
+    contador.style.color = esOscuro ? 'rgba(255,255,255,0.5)' : '';
+  }
+
+  document.getElementById('btnAnterior').addEventListener('click', () => mostrarSlide(actual - 1));
+  document.getElementById('btnSiguiente').addEventListener('click', () => mostrarSlide(actual + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); mostrarSlide(actual + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); mostrarSlide(actual - 1); }
+    if (e.key === 'Home') { e.preventDefault(); mostrarSlide(0); }
+    if (e.key === 'End') { e.preventDefault(); mostrarSlide(totalSlides - 1); }
+  });
+
+  // Inicializar barra de progreso
+  progreso.style.width = (1 / totalSlides * 100) + '%';
+</script>
+
+</body>
+</html>
