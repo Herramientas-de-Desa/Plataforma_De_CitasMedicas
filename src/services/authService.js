@@ -27,6 +27,17 @@ export const authService = {
     return data.user;
   },
 
+  async solicitarRecuperacion(correo) {
+    const redirectTo = new URL('/login?recuperar=1', window.location.origin).toString();
+    const { error } = await supabase.auth.resetPasswordForEmail(correo, { redirectTo });
+    if (error) throw new Error(traducirError(error.message));
+  },
+
+  async cambiarPassword(password) {
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) throw new Error(traducirError(error.message));
+  },
+
   async cerrarSesion() {
     const { error } = await supabase.auth.signOut();
     if (error) throw new Error(error.message);
