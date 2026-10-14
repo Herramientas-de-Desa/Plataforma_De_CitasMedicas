@@ -16,6 +16,7 @@ function formatearFecha(fecha) {
 
 export default function PanelDemandaMedicos() {
   const [predicciones, setPredicciones] = useState([]);
+  const [especialidad, setEspecialidad] = useState('');
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
 
@@ -30,45 +31,72 @@ export default function PanelDemandaMedicos() {
   if (cargando) return <p>Cargando predicciones…</p>;
   if (error) return <p className="alerta alerta-error">{error}</p>;
 
-  const promedioDemanda = predicciones.length
-    ? predicciones.reduce((total, p) => total + p.demanda_estimada, 0) / predicciones.length
+  const especialidades = [...new Set(
+    predicciones.map((p) => p.medico?.especialidad?.nombre).filter(Boolean),
+  )].sort((a, b) => a.localeCompare(b, 'es'));
+  const prediccionesVisibles = predicciones
+    .filter((p) => !especialidad || p.medico?.especialidad?.nombre === especialidad)
+    .sort((a, b) => b.demanda_estimada - a.demanda_estimada
+      || (a.medico?.nombre || '').localeCompare(b.medico?.nombre || '', 'es'));
+  const promedioDemanda = prediccionesVisibles.length
+    ? prediccionesVisibles.reduce((total, p) => total + p.demanda_estimada, 0) / prediccionesVisibles.length
     : 0;
-  const mayorDemanda = predicciones.reduce(
-    (mayor, p) => (!mayor || p.demanda_estimada > mayor.demanda_estimada ? p : mayor),
-    null,
-  );
+  const mayorDemanda = prediccionesVisibles[0];
+  const periodos = new Set(prediccionesVisibles.map((p) => `${p.fecha_inicio}|${p.fecha_fin}`));
+  const periodo = periodos.size === 1
+    ? `${formatearFecha(prediccionesVisibles[0].fecha_inicio)} – ${formatearFecha(prediccionesVisibles[0].fecha_fin)}`
+    : 'Los periodos varían según el médico';
 
   return (
     <section className="tarjeta panel-demanda-medicos" aria-labelledby="demanda-medicos-titulo">
       <div className="encabezado-tabla demanda-medicos-cabecera">
         <div>
-          <p className="etiqueta-seccion">Predicción de los próximos 14 días</p>
+          <p className="etiqueta-seccion">Predicciones por médico</p>
           <h3 id="demanda-medicos-titulo">Demanda por médico</h3>
           <p className="detalle">Carga futura estimada por el modelo entrenado en Kaggle.</p>
+          {prediccionesVisibles.length > 0 && (
+            <p className="demanda-medicos-periodo"><strong>Periodo:</strong> {periodo}</p>
+          )}
         </div>
         {predicciones.length > 0 && (
-          <span className="demanda-medicos-total">{predicciones.length} médicos analizados</span>
+          <span className="demanda-medicos-total">{prediccionesVisibles.length} médicos analizados</span>
         )}
       </div>
 
       {predicciones.length > 0 && (
-        <div className="demanda-medicos-resumen" aria-label="Resumen de las predicciones">
-          <article className="demanda-resumen-item">
-            <span>Médicos evaluados</span>
-            <strong>{predicciones.length}</strong>
-            <small>Con predicción vigente</small>
-          </article>
-          <article className="demanda-resumen-item">
-            <span>Demanda promedio</span>
-            <strong>{promedioDemanda.toFixed(0)}%</strong>
-            <small>Durante el periodo</small>
-          </article>
-          <article className="demanda-resumen-item demanda-resumen-destacado">
-            <span>Mayor demanda</span>
-            <strong>{mayorDemanda?.demanda_estimada.toFixed(0)}%</strong>
-            <small>{mayorDemanda?.medico?.nombre || `Médico ${mayorDemanda?.medico_id}`}</small>
-          </article>
-        </div>
+        <>
+          <div className="demanda-medicos-filtros">
+            <label htmlFor="filtro-especialidad-demanda">Especialidad</label>
+            <select
+              id="filtro-especialidad-demanda"
+              value={especialidad}
+              onChange={(evento) => setEspecialidad(evento.target.value)}
+            >
+              <option value="">Todas las especialidades</option>
+              {especialidades.map((nombre) => (
+                <option key={nombre} value={nombre}>{nombre}</option>
+              ))}
+            </select>
+            <span>Ordenados de mayor a menor demanda</span>
+          </div>
+          <div className="demanda-medicos-resumen" aria-label="Resumen de las predicciones">
+            <article className="demanda-resumen-item">
+              <span>Médicos evaluados</span>
+              <strong>{prediccionesVisibles.length}</strong>
+              <small>Con predicción vigente</small>
+            </article>
+            <article className="demanda-resumen-item">
+              <span>Demanda promedio</span>
+              <strong>{promedioDemanda.toFixed(0)}%</strong>
+              <small>Durante el periodo</small>
+            </article>
+            <article className="demanda-resumen-item demanda-resumen-destacado">
+              <span>Mayor demanda</span>
+              <strong>{mayorDemanda?.demanda_estimada.toFixed(0)}%</strong>
+              <small>{mayorDemanda?.medico?.nombre || `Médico ${mayorDemanda?.medico_id}`}</small>
+            </article>
+          </div>
+        </>
       )}
 
       <div className="demanda-medicos-tabla-contenedor">
@@ -80,7 +108,7 @@ export default function PanelDemandaMedicos() {
             </tr>
           </thead>
           <tbody>
-            {predicciones.map((p) => (
+            {prediccionesVisibles.map((p) => (
               <tr key={p.id_prediccion}>
                 <td data-label="Médico">
                   <strong className="demanda-medico-nombre">

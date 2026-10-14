@@ -532,6 +532,16 @@ select:focus {
   font-size: 1.3rem;
 }
 
+.demanda-medicos-periodo {
+  margin-top: 10px;
+  color: var(--gris);
+  font-size: 0.86rem;
+}
+
+.demanda-medicos-periodo strong {
+  color: var(--verde-osc);
+}
+
 .demanda-medicos-total {
   flex: 0 0 auto;
   padding: 7px 12px;
@@ -541,6 +551,31 @@ select:focus {
   font-size: 0.78rem;
   font-weight: 700;
   white-space: nowrap;
+}
+
+.demanda-medicos-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 24px 0;
+}
+
+.demanda-medicos-filtros label {
+  color: var(--tinta);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.demanda-medicos-filtros select {
+  width: min(100%, 260px);
+  min-width: 0;
+}
+
+.demanda-medicos-filtros span {
+  margin-left: auto;
+  color: var(--gris);
+  font-size: 0.78rem;
 }
 
 .demanda-medicos-resumen {
@@ -1038,6 +1073,20 @@ select:focus {
 
   .demanda-medicos-total {
     justify-self: start;
+  }
+
+  .demanda-medicos-filtros {
+    display: grid;
+    gap: 7px;
+    padding: 16px 16px 0;
+  }
+
+  .demanda-medicos-filtros select {
+    width: 100%;
+  }
+
+  .demanda-medicos-filtros span {
+    margin-left: 0;
   }
 
   .demanda-medicos-resumen {
