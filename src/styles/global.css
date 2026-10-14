@@ -283,6 +283,190 @@ select:focus {
   letter-spacing: 0.1em;
 }
 
+/* ---------- Perfil de usuario ---------- */
+.perfil-pagina {
+  max-width: 1000px;
+}
+
+.perfil-identidad {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 24px;
+  margin-bottom: 18px;
+  background: linear-gradient(110deg, var(--blanco), #f1f8f4);
+}
+
+.perfil-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: var(--verde);
+  color: var(--blanco);
+  font-family: 'Sora', 'Inter', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.perfil-identidad-texto {
+  min-width: 0;
+}
+
+.perfil-identidad-etiqueta {
+  color: var(--verde-osc);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.perfil-identidad h2 {
+  font-size: clamp(1.15rem, 3vw, 1.45rem);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.perfil-identidad-texto > p:last-child {
+  color: var(--gris);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.perfil-rol {
+  flex: none;
+  margin-left: auto;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.perfil-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.perfil-panel {
+  padding: 26px;
+}
+
+.perfil-panel-encabezado {
+  margin-bottom: 24px;
+}
+
+.perfil-panel-encabezado h2 {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.perfil-panel-encabezado p,
+.perfil-ayuda,
+.perfil-cuenta-nota {
+  color: var(--gris);
+  font-size: 0.88rem;
+}
+
+.perfil-formulario {
+  max-width: none;
+  gap: 18px;
+}
+
+.perfil-opcional {
+  color: var(--gris);
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.perfil-ayuda {
+  margin-top: -13px;
+}
+
+.perfil-acciones {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--borde);
+}
+
+.perfil-detalles > div {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--borde);
+}
+
+.perfil-detalles > div:first-child {
+  padding-top: 0;
+}
+
+.perfil-detalles dt {
+  margin-bottom: 5px;
+  color: var(--gris);
+  font-size: 0.8rem;
+}
+
+.perfil-detalles dd {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.perfil-rol-detalle {
+  display: inline-block;
+  margin-left: 0;
+}
+
+.perfil-cuenta-nota {
+  margin-top: 18px;
+}
+
+@media (max-width: 700px) {
+  .perfil-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .perfil-identidad {
+    flex-wrap: wrap;
+  }
+
+  .perfil-identidad > .perfil-rol {
+    margin-left: 82px;
+  }
+}
+
+@media (max-width: 480px) {
+  .perfil-identidad {
+    gap: 12px;
+    padding: 18px;
+  }
+
+  .perfil-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    font-size: 1.1rem;
+  }
+
+  .perfil-identidad > .perfil-rol {
+    margin-left: 64px;
+  }
+
+  .perfil-panel {
+    padding: 20px;
+  }
+
+  .perfil-acciones .boton {
+    width: 100%;
+  }
+}
+
 /* ---------- Médicos / horas ---------- */
 .especialistas-filtros {
   margin-bottom: 20px;
