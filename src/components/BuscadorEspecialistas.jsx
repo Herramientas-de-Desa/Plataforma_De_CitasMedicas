@@ -1,10 +1,12 @@
 // Componente: búsqueda de médicos por especialidad y nombre (RF03).
 // Reutiliza especialidadesService y medicosService.
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { especialidadesService } from '../services/especialidadesService';
 import { medicosService } from '../services/medicosService';
 import { prediccionesService } from '../services/prediccionesService';
 import TarjetaMedico from './TarjetaMedico';
+import ReservaModal from './ReservaModal';
 
 export default function BuscadorEspecialistas() {
   const [especialidades, setEspecialidades] = useState([]);
@@ -14,6 +16,24 @@ export default function BuscadorEspecialistas() {
   const [predicciones, setPredicciones] = useState({});
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
+  const [parametros, setParametros] = useSearchParams();
+  const medicoReserva = Number(parametros.get('reservar'));
+  const reservaAbierta = Number.isSafeInteger(medicoReserva) && medicoReserva > 0;
+  const fechaInicial = parametros.get('fecha') || '';
+
+  function abrirReserva(idMedico) {
+    const siguientes = new URLSearchParams(parametros);
+    siguientes.set('reservar', String(idMedico));
+    siguientes.delete('fecha');
+    setParametros(siguientes);
+  }
+
+  function cerrarReserva() {
+    const siguientes = new URLSearchParams(parametros);
+    siguientes.delete('reservar');
+    siguientes.delete('fecha');
+    setParametros(siguientes, { replace: true });
+  }
 
   useEffect(() => {
     especialidadesService.listar().then(setEspecialidades).catch((e) => setError(e.message));
@@ -75,9 +95,18 @@ export default function BuscadorEspecialistas() {
               key={m.id_medico}
               medico={m}
               prediccion={predicciones[m.id_medico]}
+              onReservar={abrirReserva}
             />
           ))}
         </div>
+      )}
+      {reservaAbierta && (
+        <ReservaModal
+          key={medicoReserva}
+          medicoId={medicoReserva}
+          fechaInicial={fechaInicial}
+          onClose={cerrarReserva}
+        />
       )}
     </div>
   );

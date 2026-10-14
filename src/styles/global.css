@@ -395,6 +395,169 @@ select:focus {
   border-color: var(--verde);
 }
 
+/* ---------- Reserva rápida y página de reserva ---------- */
+.reserva-modal {
+  position: fixed;
+  inset: 0;
+  width: min(94vw, 780px);
+  max-height: 90dvh;
+  margin: auto;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-radius: 16px;
+  background: var(--marfil);
+  color: var(--tinta);
+  font: inherit;
+  box-shadow: 0 24px 70px rgba(16, 50, 43, 0.25);
+}
+
+.reserva-modal::backdrop {
+  background: rgba(8, 32, 26, 0.58);
+}
+
+.reserva-modal-barra {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 22px;
+  border-bottom: 1px solid var(--borde);
+  background: var(--blanco);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.reserva-modal-barra button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font: inherit;
+  cursor: pointer;
+}
+
+.reserva-modal-barra button span {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.reserva-contenido {
+  max-width: 760px;
+}
+
+.reserva-contenido-modal {
+  padding: 22px;
+}
+
+.reserva-encabezado {
+  margin-bottom: 18px;
+}
+
+.reserva-encabezado p:last-child {
+  overflow-wrap: anywhere;
+}
+
+.reserva-flujo {
+  display: grid;
+  gap: 14px;
+}
+
+.reserva-paso-cabecera {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.reserva-paso-cabecera > span {
+  display: grid;
+  flex: 0 0 30px;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--verde);
+  color: var(--blanco);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.reserva-paso-cabecera h2 {
+  font-size: 1.1rem;
+}
+
+.reserva-paso-cabecera p,
+.reserva-horas .detalle {
+  color: var(--gris);
+  font-size: 0.86rem;
+}
+
+.reserva-fecha {
+  max-width: 280px;
+}
+
+.reserva-horas {
+  margin-top: 20px;
+}
+
+.reserva-horas h3 {
+  margin-bottom: 10px;
+  font-size: 0.96rem;
+}
+
+.reserva-eleccion {
+  margin-top: 17px;
+  color: var(--verde-osc);
+  font-size: 0.86rem;
+}
+
+.reserva-seleccion .alerta {
+  margin-top: 14px;
+}
+
+.reserva-acciones {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 18px;
+}
+
+.reserva-acciones small {
+  color: var(--gris);
+  font-size: 0.76rem;
+}
+
+.reserva-horario-semanal summary {
+  color: var(--verde-osc);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reserva-horario-semanal .detalle,
+.reserva-horario-tabla {
+  margin-top: 12px;
+}
+
+.reserva-horario-tabla {
+  overflow-x: auto;
+}
+
+.reserva-cargando {
+  padding: 30px 22px;
+  color: var(--gris);
+}
+
 /* ---------- Tablas ---------- */
 .tabla {
   width: 100%;
@@ -1312,6 +1475,32 @@ select:focus {
 }
 
 @media (max-width: 640px) {
+  .reserva-modal {
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .reserva-modal-barra {
+    padding: 10px 16px;
+  }
+
+  .reserva-contenido-modal {
+    padding: 18px 16px 32px;
+  }
+
+  .reserva-fecha {
+    max-width: none;
+  }
+
+  .reserva-acciones .boton {
+    width: 100%;
+    min-height: 44px;
+  }
+
   .contenedor {
     padding: 20px 16px 48px;
   }

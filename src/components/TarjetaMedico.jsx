@@ -1,8 +1,7 @@
 // Componente reutilizable: tarjeta de médico con acceso a la reserva.
-import { Link } from 'react-router-dom';
 import PrediccionDisponibilidad from './PrediccionDisponibilidad';
 
-export default function TarjetaMedico({ medico, prediccion }) {
+export default function TarjetaMedico({ medico, prediccion, onReservar }) {
   return (
     <article className="tarjeta tarjeta-medico">
       <div className="tarjeta-medico-identidad">
@@ -16,9 +15,9 @@ export default function TarjetaMedico({ medico, prediccion }) {
       </div>
       <PrediccionDisponibilidad prediccion={prediccion} compacto />
       <div className="tarjeta-medico-accion">
-        <Link className="boton" to={`/reservar/${medico.id_medico}`}>
+        <button className="boton" type="button" onClick={() => onReservar(medico.id_medico)}>
           Ver horarios y reservar
-        </Link>
+        </button>
       </div>
     </article>
   );
