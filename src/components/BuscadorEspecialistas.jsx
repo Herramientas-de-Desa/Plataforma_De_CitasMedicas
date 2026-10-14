@@ -34,14 +34,14 @@ export default function BuscadorEspecialistas() {
   }, [especialidadId, texto]);
 
   return (
-    <div className="contenedor">
+    <div className="contenedor buscador-especialistas">
       <div className="encabezado">
         <p className="etiqueta-seccion">Directorio médico</p>
         <h1>Buscar especialistas</h1>
         <p>Filtra por especialidad o escribe el nombre del médico.</p>
       </div>
 
-      <div className="tarjeta" style={{ marginBottom: 20 }}>
+      <div className="tarjeta especialistas-filtros">
         <div className="grid grid-2">
           <label>Especialidad
             <select value={especialidadId} onChange={(e) => setEspecialidadId(e.target.value)}>
@@ -58,12 +58,18 @@ export default function BuscadorEspecialistas() {
       </div>
 
       {error && <p className="alerta alerta-error">{error}</p>}
+      {!cargando && !error && (
+        <div className="especialistas-resultados" aria-live="polite">
+          <h2>Resultados de especialistas</h2>
+          <span>{medicos.length} {medicos.length === 1 ? 'resultado' : 'resultados'}</span>
+        </div>
+      )}
       {cargando ? (
         <p>Buscando médicos…</p>
       ) : medicos.length === 0 ? (
-        <div className="tarjeta">No se encontraron médicos con esos filtros. Prueba con otra especialidad.</div>
+        <div className="tarjeta">No se encontraron médicos con esos filtros. Prueba con otro nombre o especialidad.</div>
       ) : (
-        <div className="grid grid-2">
+        <div className="grid grid-2 especialistas-grid">
           {medicos.map((m) => (
             <TarjetaMedico
               key={m.id_medico}

@@ -284,20 +284,88 @@ select:focus {
 }
 
 /* ---------- Médicos / horas ---------- */
-.tarjeta-medico h3 {
+.especialistas-filtros {
+  margin-bottom: 20px;
+}
+
+.especialistas-resultados {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-bottom: 14px;
+}
+
+.especialistas-resultados h2 {
   font-size: 1.05rem;
 }
 
-.tarjeta-medico .especialidad {
+.especialistas-resultados span {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--menta);
   color: var(--verde-osc);
-  font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
-.tarjeta-medico .detalle {
+.especialistas-grid {
+  align-items: stretch;
+}
+
+.tarjeta-medico {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+}
+
+.tarjeta-medico h3 {
+  font-size: 1.12rem;
+  line-height: 1.3;
+}
+
+.tarjeta-medico .especialidad {
+  display: inline-block;
+  margin-top: 9px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.tarjeta-medico-ubicacion {
+  display: grid;
+  gap: 3px;
+  margin-top: 15px;
+  min-width: 0;
+  font-size: 0.84rem;
+}
+
+.tarjeta-medico-ubicacion strong {
+  color: var(--tinta);
+}
+
+.tarjeta-medico-ubicacion p {
   color: var(--gris);
-  font-size: 0.87rem;
-  margin-top: 6px;
+  overflow-wrap: anywhere;
+}
+
+.tarjeta-medico-accion {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.tarjeta-medico-accion .boton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  text-align: center;
 }
 
 .horas {
@@ -584,10 +652,43 @@ select:focus {
   color: var(--gris);
 }
 
+.prediccion-modelo {
+  display: block;
+  margin-top: 4px;
+}
+
+.demanda-directorio {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.demanda-directorio-baja {
+  color: var(--verde-osc);
+}
+
+.demanda-directorio-media {
+  color: #94631d;
+}
+
+.demanda-directorio-alta {
+  color: #a13333;
+}
+
+.demanda-directorio-sin-datos {
+  color: var(--gris);
+}
+
 .prediccion-vacia {
   margin-top: 12px;
   color: var(--gris);
   font-size: 0.82rem;
+}
+
+.tarjeta-medico .prediccion-vacia {
+  padding: 11px 12px;
+  border-radius: 10px;
+  background: #f3f7f5;
 }
 
 .resumen-demanda {
