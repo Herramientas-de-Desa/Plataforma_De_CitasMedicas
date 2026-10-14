@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthIcon from './AuthIcon';
 import AuthVisual from './AuthVisual';
-import { authService } from '../services/authService';
+import { authService } from '../../services/authService';
 
 export default function FormularioRegistro() {
   const [datos, setDatos] = useState({ nombres: '', correo: '', password: '' });

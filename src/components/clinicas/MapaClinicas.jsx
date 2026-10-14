@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
-import { clinicasService } from '../services/clinicasService';
+import { clinicasService } from '../../services/clinicasService';
 
 // Corrige la ruta de los íconos por defecto de Leaflet en bundlers
 delete L.Icon.Default.prototype._getIconUrl;

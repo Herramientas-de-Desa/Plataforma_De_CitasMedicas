@@ -1,9 +1,9 @@
 // Componente: búsqueda de médicos por especialidad y nombre (RF03).
 // Reutiliza especialidadesService y medicosService.
 import { useEffect, useState } from 'react';
-import { especialidadesService } from '../services/especialidadesService';
-import { medicosService } from '../services/medicosService';
-import { prediccionesService } from '../services/prediccionesService';
+import { especialidadesService } from '../../services/especialidadesService';
+import { medicosService } from '../../services/medicosService';
+import { prediccionesService } from '../../services/prediccionesService';
 import TarjetaMedico from './TarjetaMedico';
 
 export default function BuscadorEspecialistas() {

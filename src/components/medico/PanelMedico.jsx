@@ -1,10 +1,10 @@
 // Componente: agenda del médico (consultar citas y actualizar su estado).
 import { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { supabase } from '../services/supabaseClient';
-import { citasService } from '../services/citasService';
-import { prediccionesService } from '../services/prediccionesService';
-import PrediccionDisponibilidad from './PrediccionDisponibilidad';
+import { useAuth } from '../../context/AuthContext';
+import { supabase } from '../../services/supabaseClient';
+import { citasService } from '../../services/citasService';
+import { prediccionesService } from '../../services/prediccionesService';
+import PrediccionDisponibilidad from '../disponibilidad/PrediccionDisponibilidad';
 
 export default function PanelMedico() {
   const { perfil } = useAuth();

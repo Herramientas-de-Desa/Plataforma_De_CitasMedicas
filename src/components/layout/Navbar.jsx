@@ -1,8 +1,8 @@
 // Componente: barra de navegación con enlaces según el rol.
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { authService } from '../services/authService';
+import { useAuth } from '../../context/AuthContext';
+import { authService } from '../../services/authService.js';
 
 export default function Navbar() {
   const { perfil } = useAuth();

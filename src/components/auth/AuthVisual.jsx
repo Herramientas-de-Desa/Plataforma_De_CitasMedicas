@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import doctor from '../assets/login-doctor.svg';
+import doctor from '../../assets/login-doctor.svg';
 import AuthIcon from './AuthIcon';
 
 export default function AuthVisual({ titulo, descripcion }) {

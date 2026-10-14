@@ -1,13 +1,13 @@
 // Componente: panel del administrador (RF08).
 // Gestiona usuarios, médicos, especialidades y supervisa citas.
 import { useEffect, useState } from 'react';
-import { usuariosService } from '../services/usuariosService';
-import { medicosService } from '../services/medicosService';
-import { especialidadesService } from '../services/especialidadesService';
-import { clinicasService } from '../services/clinicasService';
-import { citasService } from '../services/citasService';
-import PanelDemandaMedicos from './PanelDemandaMedicos';
-import PanelDemandaEspecialidades from './PanelDemandaEspecialidades';
+import { usuariosService } from '../../services/usuariosService';
+import { medicosService } from '../../services/medicosService';
+import { especialidadesService } from '../../services/especialidadesService';
+import { clinicasService } from '../../services/clinicasService';
+import { citasService } from '../../services/citasService';
+import PanelDemandaMedicos from './demanda/PanelDemandaMedicos';
+import PanelDemandaEspecialidades from './demanda/PanelDemandaEspecialidades';
 
 export default function PanelAdmin() {
   const [pestania, setPestania] = useState('usuarios');

@@ -1,7 +1,7 @@
 // Componente: historial del paciente con cancelación (RF06).
 import { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { citasService } from '../services/citasService';
+import { useAuth } from '../../context/AuthContext';
+import { citasService } from '../../services/citasService';
 
 export default function MisCitas() {
   const { perfil } = useAuth();

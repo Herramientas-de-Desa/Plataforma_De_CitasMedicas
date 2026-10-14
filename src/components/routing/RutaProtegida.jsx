@@ -1,6 +1,6 @@
 // Componente: protege rutas según sesión y rol (navegación protegida).
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 export default function RutaProtegida({ children, roles }) {
   const { perfil, cargando } = useAuth();

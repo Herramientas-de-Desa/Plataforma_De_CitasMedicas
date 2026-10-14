@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   prediccionesEspecialidadesService,
-} from '../services/prediccionesEspecialesService';
+} from '../../../services/prediccionesEspecialesService';
 
 const DIAS_POR_VISTA = {
   dia: 14,

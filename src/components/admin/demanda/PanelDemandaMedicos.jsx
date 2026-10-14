@@ -1,6 +1,6 @@
 // Punto 3: carga futura agregada de cada médico para el administrador.
 import { useEffect, useState } from 'react';
-import { prediccionesService } from '../services/prediccionesService';
+import { prediccionesService } from '../../../services/prediccionesService';
 
 export default function PanelDemandaMedicos() {
   const [predicciones, setPredicciones] = useState([]);

@@ -1,18 +1,18 @@
 // App.jsx — Rutas de la aplicación con protección por rol.
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import Navbar from './components/Navbar';
-import Portada from './components/Portada';
-import FormularioRegistro from './components/FormularioRegistro';
-import FormularioLogin from './components/FormularioLogin';
-import BuscadorEspecialistas from './components/BuscadorEspecialistas';
-import ReservaCita from './components/ReservaCita';
-import MisCitas from './components/MisCitas';
-import MapaClinicas from './components/MapaClinicas';
-import PerfilUsuario from './components/PerfilUsuario';
-import PanelMedico from './components/PanelMedico';
-import PanelAdmin from './components/PanelAdmin';
-import RutaProtegida from './components/RutaProtegida';
+import Navbar from './components/layout/Navbar';
+import Portada from './components/home/Portada';
+import FormularioRegistro from './components/auth/FormularioRegistro';
+import FormularioLogin from './components/auth/FormularioLogin';
+import BuscadorEspecialistas from './components/medicos/BuscadorEspecialistas';
+import ReservaCita from './components/citas/ReservaCita';
+import MisCitas from './components/citas/MisCitas';
+import MapaClinicas from './components/clinicas/MapaClinicas';
+import PerfilUsuario from './components/usuarios/PerfilUsuario';
+import PanelMedico from './components/medico/PanelMedico';
+import PanelAdmin from './components/admin/PanelAdmin';
+import RutaProtegida from './components/routing/RutaProtegida';
 
 export default function App() {
   return (

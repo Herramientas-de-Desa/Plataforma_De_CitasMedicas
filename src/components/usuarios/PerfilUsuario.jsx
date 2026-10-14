@@ -1,7 +1,7 @@
 // Componente: perfil del usuario (actualización de datos).
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { authService } from '../services/authService';
+import { useAuth } from '../../context/AuthContext';
+import { authService } from '../../services/authService';
 
 export default function PerfilUsuario() {
   const { perfil, setPerfil } = useAuth();

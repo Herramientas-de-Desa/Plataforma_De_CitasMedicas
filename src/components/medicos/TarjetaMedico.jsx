@@ -1,6 +1,6 @@
 // Componente reutilizable: tarjeta de médico con acceso a la reserva.
 import { Link } from 'react-router-dom';
-import PrediccionDisponibilidad from './PrediccionDisponibilidad';
+import PrediccionDisponibilidad from '../disponibilidad/PrediccionDisponibilidad';
 
 export default function TarjetaMedico({ medico, prediccion }) {
   return (
