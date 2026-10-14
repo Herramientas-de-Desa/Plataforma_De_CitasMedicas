@@ -14,6 +14,22 @@ function formatearFecha(fecha) {
   return formateadorFecha.format(new Date(`${fecha}T00:00:00Z`)).replace('.', '');
 }
 
+function grupoConMayorPromedio(predicciones, obtenerNombre) {
+  const grupos = new Map();
+  for (const prediccion of predicciones) {
+    const nombre = obtenerNombre(prediccion);
+    if (!nombre) continue;
+    const grupo = grupos.get(nombre) || { nombre, total: 0, medicos: 0 };
+    grupo.total += prediccion.demanda_estimada;
+    grupo.medicos += 1;
+    grupos.set(nombre, grupo);
+  }
+
+  return [...grupos.values()]
+    .sort((a, b) => b.total / b.medicos - a.total / a.medicos
+      || a.nombre.localeCompare(b.nombre, 'es'))[0] || null;
+}
+
 export default function PanelDemandaMedicos() {
   const [predicciones, setPredicciones] = useState([]);
   const [especialidad, setEspecialidad] = useState('');
@@ -42,6 +58,12 @@ export default function PanelDemandaMedicos() {
     ? prediccionesVisibles.reduce((total, p) => total + p.demanda_estimada, 0) / prediccionesVisibles.length
     : 0;
   const mayorDemanda = prediccionesVisibles[0];
+  const clinicaMayorPromedio = grupoConMayorPromedio(
+    prediccionesVisibles, (p) => p.medico?.clinica?.nombre,
+  );
+  const especialidadMayorPromedio = grupoConMayorPromedio(
+    prediccionesVisibles, (p) => p.medico?.especialidad?.nombre,
+  );
   const periodos = new Set(prediccionesVisibles.map((p) => `${p.fecha_inicio}|${p.fecha_fin}`));
   const periodo = periodos.size === 1
     ? `${formatearFecha(prediccionesVisibles[0].fecha_inicio)} – ${formatearFecha(prediccionesVisibles[0].fecha_fin)}`
@@ -134,6 +156,32 @@ export default function PanelDemandaMedicos() {
               <p className="demanda-resumen-nota">La disponibilidad es una estimación, no horarios libres en tiempo real.</p>
             </div>
           </div>
+          {prediccionesVisibles.length > 0 && (
+            <section className="demanda-medicos-agrupacion" aria-label="Comparación por clínica y especialidad">
+              <div className="demanda-medicos-agrupacion-cabecera">
+                <h4>Comparación por grupos</h4>
+                <p>Promedio de demanda estimada de los médicos mostrados, no total de citas.</p>
+              </div>
+              <article className="demanda-grupo-item">
+                <span>Clínica con mayor promedio</span>
+                <strong>{clinicaMayorPromedio?.nombre || 'Sin datos'}</strong>
+                <p>
+                  {clinicaMayorPromedio
+                    ? `${(clinicaMayorPromedio.total / clinicaMayorPromedio.medicos).toFixed(0)}% de demanda · ${clinicaMayorPromedio.medicos} ${clinicaMayorPromedio.medicos === 1 ? 'médico' : 'médicos'}`
+                    : 'No hay clínicas asociadas'}
+                </p>
+              </article>
+              <article className="demanda-grupo-item">
+                <span>Especialidad con mayor promedio</span>
+                <strong>{especialidadMayorPromedio?.nombre || 'Sin datos'}</strong>
+                <p>
+                  {especialidadMayorPromedio
+                    ? `${(especialidadMayorPromedio.total / especialidadMayorPromedio.medicos).toFixed(0)}% de demanda · ${especialidadMayorPromedio.medicos} ${especialidadMayorPromedio.medicos === 1 ? 'médico' : 'médicos'}`
+                    : 'No hay especialidades asociadas'}
+                </p>
+              </article>
+            </section>
+          )}
         </>
       )}
 
