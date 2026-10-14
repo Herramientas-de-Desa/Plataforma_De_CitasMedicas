@@ -46,6 +46,12 @@ export default function PanelDemandaMedicos() {
   const periodo = periodos.size === 1
     ? `${formatearFecha(prediccionesVisibles[0].fecha_inicio)} – ${formatearFecha(prediccionesVisibles[0].fecha_fin)}`
     : 'Los periodos varían según el médico';
+  const origenes = new Set(prediccionesVisibles.map((p) => p.origen_datos));
+  const origen = origenes.size === 1 && origenes.has('sintetico')
+    ? 'Simulación con datos sintéticos'
+    : origenes.size === 1 && origenes.has('historico')
+      ? 'Predicciones basadas en datos históricos'
+      : 'Origen de datos mixto o no verificado';
 
   return (
     <section className="tarjeta panel-demanda-medicos" aria-labelledby="demanda-medicos-titulo">
@@ -55,7 +61,10 @@ export default function PanelDemandaMedicos() {
           <h3 id="demanda-medicos-titulo">Demanda por médico</h3>
           <p className="detalle">Carga futura estimada por el modelo entrenado en Kaggle.</p>
           {prediccionesVisibles.length > 0 && (
-            <p className="demanda-medicos-periodo"><strong>Periodo:</strong> {periodo}</p>
+            <>
+              <p className="demanda-medicos-periodo"><strong>Periodo:</strong> {periodo}</p>
+              <p className="demanda-medicos-origen">{origen}</p>
+            </>
           )}
         </div>
         {predicciones.length > 0 && (
@@ -79,22 +88,51 @@ export default function PanelDemandaMedicos() {
             </select>
             <span>Ordenados de mayor a menor demanda</span>
           </div>
-          <div className="demanda-medicos-resumen" aria-label="Resumen de las predicciones">
-            <article className="demanda-resumen-item">
-              <span>Médicos evaluados</span>
-              <strong>{prediccionesVisibles.length}</strong>
-              <small>Con predicción vigente</small>
-            </article>
-            <article className="demanda-resumen-item">
-              <span>Demanda promedio</span>
-              <strong>{promedioDemanda.toFixed(0)}%</strong>
-              <small>Durante el periodo</small>
-            </article>
-            <article className="demanda-resumen-item demanda-resumen-destacado">
-              <span>Mayor demanda</span>
-              <strong>{mayorDemanda?.demanda_estimada.toFixed(0)}%</strong>
-              <small>{mayorDemanda?.medico?.nombre || `Médico ${mayorDemanda?.medico_id}`}</small>
-            </article>
+          <div className="demanda-medicos-vista">
+            <figure className="demanda-medicos-grafica">
+              <figcaption>
+                <strong>Comparación de demanda</strong>
+                <span>Porcentaje estimado · mayor a menor</span>
+              </figcaption>
+              {prediccionesVisibles.length > 0 ? (
+                <ol className="demanda-grafica-lista">
+                  {prediccionesVisibles.map((p) => (
+                    <li key={p.id_prediccion} className="demanda-grafica-fila">
+                      <span className="demanda-grafica-nombre" title={p.medico?.nombre || `Médico ${p.medico_id}`}>
+                        {p.medico?.nombre || `Médico ${p.medico_id}`}
+                      </span>
+                      <span className="demanda-grafica-pista" aria-hidden="true">
+                        <span
+                          className={`demanda-grafica-barra ${p.demanda_estimada > 50 ? 'demanda-grafica-barra-alta' : ''}`}
+                          style={{ width: `${p.demanda_estimada}%` }}
+                        />
+                      </span>
+                      <strong className="demanda-grafica-valor">{p.demanda_estimada.toFixed(0)}%</strong>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="demanda-grafica-vacia">No hay médicos para la especialidad seleccionada.</p>
+              )}
+            </figure>
+            <div className="demanda-medicos-resumen" aria-label="Resumen de las predicciones">
+              <article className="demanda-resumen-item">
+                <span>Médicos evaluados</span>
+                <strong>{prediccionesVisibles.length}</strong>
+                <small>Con predicción vigente</small>
+              </article>
+              <article className="demanda-resumen-item">
+                <span>Demanda promedio</span>
+                <strong>{promedioDemanda.toFixed(0)}%</strong>
+                <small>Durante el periodo</small>
+              </article>
+              <article className="demanda-resumen-item demanda-resumen-destacado">
+                <span>Mayor demanda</span>
+                <strong>{mayorDemanda ? `${mayorDemanda.demanda_estimada.toFixed(0)}%` : '—'}</strong>
+                <small>{mayorDemanda?.medico?.nombre || (mayorDemanda ? `Médico ${mayorDemanda.medico_id}` : 'Sin datos')}</small>
+              </article>
+              <p className="demanda-resumen-nota">La disponibilidad es una estimación, no horarios libres en tiempo real.</p>
+            </div>
           </div>
         </>
       )}

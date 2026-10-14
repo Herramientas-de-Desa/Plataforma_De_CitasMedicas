@@ -542,6 +542,17 @@ select:focus {
   color: var(--verde-osc);
 }
 
+.demanda-medicos-origen {
+  display: inline-block;
+  margin-top: 9px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fff3df;
+  color: #815617;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
 .demanda-medicos-total {
   flex: 0 0 auto;
   padding: 7px 12px;
@@ -578,11 +589,96 @@ select:focus {
   font-size: 0.78rem;
 }
 
+.demanda-medicos-vista {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(230px, 1fr);
+  gap: 16px;
+  padding: 18px 24px 0;
+}
+
+.demanda-medicos-grafica {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  background: var(--blanco);
+}
+
+.demanda-medicos-grafica figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-bottom: 17px;
+}
+
+.demanda-medicos-grafica figcaption strong {
+  font-family: 'Sora', 'Inter', sans-serif;
+  font-size: 0.96rem;
+}
+
+.demanda-medicos-grafica figcaption span {
+  color: var(--gris);
+  font-size: 0.76rem;
+}
+
+.demanda-grafica-lista {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+}
+
+.demanda-grafica-fila {
+  display: grid;
+  grid-template-columns: minmax(90px, 130px) minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+}
+
+.demanda-grafica-nombre {
+  overflow: hidden;
+  color: var(--tinta);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demanda-grafica-pista {
+  height: 13px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--menta);
+}
+
+.demanda-grafica-barra {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--verde);
+}
+
+.demanda-grafica-barra-alta {
+  background: #d2933a;
+}
+
+.demanda-grafica-valor {
+  color: var(--tinta);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.demanda-grafica-vacia {
+  color: var(--gris);
+  font-size: 0.84rem;
+}
+
 .demanda-medicos-resumen {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  padding: 18px 24px 6px;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  align-content: start;
 }
 
 .demanda-resumen-item {
@@ -616,6 +712,12 @@ select:focus {
 .demanda-resumen-destacado {
   border-color: #eeddb8;
   background: #fffaf0;
+}
+
+.demanda-resumen-nota {
+  color: var(--gris);
+  font-size: 0.76rem;
+  line-height: 1.45;
 }
 
 .demanda-medicos-tabla-contenedor {
@@ -879,6 +981,18 @@ select:focus {
 }
 
 @media (max-width: 900px) {
+  .demanda-medicos-vista {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .demanda-medicos-resumen {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .demanda-resumen-nota {
+    grid-column: 1 / -1;
+  }
+
   .portada-hero {
     grid-template-columns: 1fr;
   }
@@ -1089,10 +1203,23 @@ select:focus {
     margin-left: 0;
   }
 
+  .demanda-medicos-vista {
+    gap: 14px;
+    padding: 14px 16px 0;
+  }
+
+  .demanda-medicos-grafica {
+    padding: 14px;
+  }
+
+  .demanda-grafica-fila {
+    grid-template-columns: minmax(80px, 108px) minmax(0, 1fr) 38px;
+    gap: 7px;
+  }
+
   .demanda-medicos-resumen {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
-    padding: 14px 16px 2px;
   }
 
   .demanda-resumen-item {
