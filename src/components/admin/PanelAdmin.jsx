@@ -7,6 +7,7 @@ import { especialidadesService } from '../../services/especialidadesService';
 import { clinicasService } from '../../services/clinicasService';
 import { citasService } from '../../services/citasService';
 import PanelDemandaMedicos from './demanda/PanelDemandaMedicos';
+import ConfiguracionMedica from '../medico/ConfiguracionMedica';
 import PanelDemandaEspecialidades from './demanda/PanelDemandaEspecialidades';
 
 const formateadorFechaAdmin = new Intl.DateTimeFormat('es-PE', {
@@ -26,9 +27,10 @@ export default function PanelAdmin() {
   const [clinicas, setClinicas] = useState([]);
   const [citas, setCitas] = useState([]);
   const [error, setError] = useState('');
-  const [nuevoMedico, setNuevoMedico] = useState({ nombre: '', telefono: '', especialidad_id: '', clinica_id: '' });
+  const [usuarioMedico, setUsuarioMedico] = useState('');
   const [nuevaEsp, setNuevaEsp] = useState('');
   const [busquedaUsuario, setBusquedaUsuario] = useState('');
+  const [busquedaMedico, setBusquedaMedico] = useState('');
   const [filtroFechaCita, setFiltroFechaCita] = useState('');
   const [filtroEstadoCita, setFiltroEstadoCita] = useState('');
 
@@ -50,20 +52,6 @@ export default function PanelAdmin() {
 
   useEffect(() => { cargarTodo(); }, []);
 
-  async function crearMedico() {
-    const { nombre, especialidad_id, clinica_id } = nuevoMedico;
-    if (!nombre.trim() || !especialidad_id || !clinica_id) return setError('Completa nombre, especialidad y clínica.');
-    try {
-      await medicosService.crear({
-        ...nuevoMedico,
-        especialidad_id: Number(especialidad_id),
-        clinica_id: Number(clinica_id),
-      });
-      setNuevoMedico({ nombre: '', telefono: '', especialidad_id: '', clinica_id: '' });
-      cargarTodo();
-    } catch (e) { setError(e.message); }
-  }
-
   async function crearEspecialidad() {
     if (!nuevaEsp.trim()) return;
     try {
@@ -83,9 +71,16 @@ const pestanas = [
   ['recomendacion-citas', 'Recomendación inteligente'],
 ];
 
+  const cuentasSinMedico = usuarios.filter(u => u.rol !== 'admin' && !medicos.some(m => m.usuario_id === u.id_usuario));
+  const cuentaSeleccionada = cuentasSinMedico.find(u => u.id_usuario === usuarioMedico);
   const busquedaNormalizada = busquedaUsuario.trim().toLocaleLowerCase('es');
   const usuariosVisibles = usuarios.filter((usuario) =>
     `${usuario.nombres || ''} ${usuario.correo || ''}`.toLocaleLowerCase('es').includes(busquedaNormalizada));
+  const busquedaMedicoNormalizada = busquedaMedico.trim().toLocaleLowerCase('es');
+  const medicosVisibles = medicos.filter(m => {
+    const correo = usuarios.find(u => u.id_usuario === m.usuario_id)?.correo || '';
+    return `${m.id_medico} ${m.nombre} ${correo}`.toLocaleLowerCase('es').includes(busquedaMedicoNormalizada);
+  });
   const citasVisibles = citas.filter((cita) =>
     (!filtroFechaCita || cita.fecha === filtroFechaCita)
     && (!filtroEstadoCita || cita.estado === filtroEstadoCita));
@@ -131,7 +126,7 @@ const pestanas = [
               />
             </label>
           </div>
-          <p className="admin-ayuda">Al elegir otro rol, el cambio se guarda inmediatamente.</p>
+          <p className="admin-ayuda">El rol médico se asigna desde la pestaña Médicos junto con la clínica, especialidad y horarios.</p>
           <div className="admin-tabla-contenedor"><table className="tabla tabla-tarjetas admin-tabla">
             <thead><tr><th>Nombres</th><th>Correo</th><th>Rol</th><th>Cambiar rol</th></tr></thead>
             <tbody>
@@ -144,10 +139,11 @@ const pestanas = [
                     <select
                       aria-label={`Cambiar rol de ${u.nombres}`}
                       value={u.rol}
-                      onChange={async (e) => { await usuariosService.cambiarRol(u.id_usuario, e.target.value); cargarTodo(); }}
+                      disabled={medicos.some(m => m.usuario_id === u.id_usuario)}
+                      onChange={async (e) => { try { await usuariosService.cambiarRol(u.id_usuario, e.target.value); await cargarTodo(); } catch (fallo) { setError(fallo.message); } }}
                     >
                       <option value="paciente">paciente</option>
-                      <option value="medico">médico</option>
+                      {u.rol === 'medico' && <option value="medico">médico</option>}
                       <option value="admin">admin</option>
                     </select>
                   </td>
@@ -164,57 +160,36 @@ const pestanas = [
       {pestania === 'medicos' && (
         <div className="grid admin-medicos-layout">
           <section className="tarjeta admin-seccion" aria-labelledby="admin-medicos-form-titulo">
-            <div className="admin-seccion-cabecera">
-              <div>
-                <h2 id="admin-medicos-form-titulo">Registrar médico</h2>
-                <p>Completa sus datos y asigna especialidad y clínica.</p>
-              </div>
-            </div>
-            <div className="grid grid-2 admin-medicos-form">
-              <label>Nombre
-                <input value={nuevoMedico.nombre}
-                  onChange={(e) => setNuevoMedico({ ...nuevoMedico, nombre: e.target.value })} />
-              </label>
-              <label>Teléfono
-                <input value={nuevoMedico.telefono}
-                  onChange={(e) => setNuevoMedico({ ...nuevoMedico, telefono: e.target.value })} />
-              </label>
-              <label>Especialidad
-                <select value={nuevoMedico.especialidad_id}
-                  onChange={(e) => setNuevoMedico({ ...nuevoMedico, especialidad_id: e.target.value })}>
-                  <option value="">Seleccionar</option>
-                  {especialidades.map((es) => (
-                    <option key={es.id_especialidad} value={es.id_especialidad}>{es.nombre}</option>
-                  ))}
-                </select>
-              </label>
-              <label>Clínica
-                <select value={nuevoMedico.clinica_id}
-                  onChange={(e) => setNuevoMedico({ ...nuevoMedico, clinica_id: e.target.value })}>
-                  <option value="">Seleccionar</option>
-                  {clinicas.map((c) => (
-                    <option key={c.id_clinica} value={c.id_clinica}>{c.nombre}</option>
-                  ))}
-                </select>
-              </label>
-            </div>
-            <button className="boton admin-guardar-medico" onClick={crearMedico}>Guardar médico</button>
+            <h2 id="admin-medicos-form-titulo">Asignar perfil médico</h2>
+            <p>Selecciona una cuenta registrada. La asignación inicial del rol, la clínica, la especialidad y los horarios se guarda junta.</p>
+            <label className="admin-seleccionar-medico">Cuenta del profesional
+              <select value={usuarioMedico} onChange={e => setUsuarioMedico(e.target.value)}>
+                <option value="">Seleccionar cuenta</option>
+                {cuentasSinMedico.map(u => <option key={u.id_usuario} value={u.id_usuario}>{u.nombres} · {u.correo}</option>)}
+              </select>
+            </label>
+            {cuentaSeleccionada && <ConfiguracionMedica key={usuarioMedico} modoAdmin usuarioId={usuarioMedico} medico={null} horarios={[]} nombreCuenta={cuentaSeleccionada.nombres} onGuardado={() => { setUsuarioMedico(''); cargarTodo(); }} />}
+            {!cuentasSinMedico.length && <p className="admin-ayuda">No hay cuentas pendientes de asignación.</p>}
           </section>
 
           <section className="tarjeta admin-seccion" aria-labelledby="admin-medicos-lista-titulo">
             <div className="admin-seccion-cabecera">
               <div>
                 <h2 id="admin-medicos-lista-titulo">Médicos registrados</h2>
-                <p>Revisa su clínica, especialidad y disponibilidad.</p>
+                <p>Consulta el ID asignado automáticamente, su clínica y especialidad.</p>
               </div>
-              <span className="admin-seccion-total">{medicos.length} médicos</span>
+              <span className="admin-seccion-total">{medicosVisibles.length} de {medicos.length} médicos</span>
             </div>
+            <div className="admin-filtros"><label htmlFor="admin-buscar-medico">Buscar por ID, nombre o correo
+              <input id="admin-buscar-medico" type="search" value={busquedaMedico} onChange={e => setBusquedaMedico(e.target.value)} placeholder="Ej. 12, María o correo" />
+            </label></div>
             <div className="admin-tabla-contenedor"><table className="tabla tabla-tarjetas admin-tabla">
-              <thead><tr><th>Nombre</th><th>Especialidad</th><th>Clínica</th><th>Disponible</th><th></th></tr></thead>
+              <thead><tr><th>ID</th><th>Nombre</th><th>Especialidad</th><th>Clínica</th><th>Disponible</th><th></th></tr></thead>
               <tbody>
-                {medicos.map((m) => (
+                {medicosVisibles.map((m) => (
                   <tr key={m.id_medico}>
-                    <td data-label="Nombre"><strong>{m.nombre}</strong></td>
+                    <td data-label="ID"><strong>#{m.id_medico}</strong></td>
+                    <td data-label="Nombre"><strong>{m.nombre}</strong><p className="admin-ayuda">{m.usuario_id ? `Cuenta: ${usuarios.find((u) => u.id_usuario === m.usuario_id)?.correo || 'vinculada'}` : 'Sin cuenta vinculada'}</p></td>
                     <td data-label="Especialidad">{m.especialidad?.nombre || '—'}</td>
                     <td data-label="Clínica">{m.clinica?.nombre || '—'}</td>
                     <td data-label="Disponible">
@@ -234,7 +209,7 @@ const pestanas = [
                     </td>
                   </tr>
                 ))}
-                {medicos.length === 0 && <tr><td colSpan="5">No hay médicos registrados.</td></tr>}
+                {medicosVisibles.length === 0 && <tr><td colSpan="6">{medicos.length ? 'No hay médicos que coincidan con la búsqueda.' : 'No hay médicos registrados.'}</td></tr>}
               </tbody>
             </table></div>
           </section>

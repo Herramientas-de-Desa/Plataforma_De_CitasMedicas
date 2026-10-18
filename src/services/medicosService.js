@@ -1,3 +1,4 @@
+import { validarHorarios } from './horariosValidacion';
 // ============================================================
 // medicosService.js — Búsqueda y gestión de médicos
 // (RF03, RF04, RF08 + imágenes)
@@ -29,6 +30,32 @@ const SELECT_MEDICO = `
 `;
 
 export const medicosService = {
+  async guardarMiConfiguracion({ nombre, telefono, especialidad_id, clinica_id, horarios, usuarioId = null }) {
+    const problema = validarHorarios(horarios);
+    if (problema) throw new Error(problema);
+    const { data, error } = await supabase.rpc('guardar_mi_configuracion_medica', {
+      p_usuario_id: usuarioId, p_nombre: nombre.trim(), p_telefono: (telefono || '').trim(),
+      p_especialidad_id: Number(especialidad_id), p_clinica_id: Number(clinica_id),
+      p_horarios: horarios.map(h => ({ dia_semana: Number(h.dia_semana), hora_inicio: h.hora_inicio, hora_fin: h.hora_fin })),
+    });
+    if (error) {
+      if (error.code === 'PGRST202') throw new Error('La configuración médica aún no está habilitada. Solicita al administrador que active esta función.');
+      throw new Error(error.code === 'P0001' ? error.message : 'No pudimos guardar tu atención y horarios. Revisa la conexión e inténtalo nuevamente.');
+    }
+    return data;
+  },
+
+
+  /** Registro profesional vinculado a una cuenta autenticada. */
+  async obtenerPorUsuario(idUsuario) {
+    const { data, error } = await supabase
+      .from('medicos')
+      .select(SELECT_MEDICO)
+      .eq('usuario_id', idUsuario)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return data;
+  },
 
   // ==========================================================
   // RF03: Buscar médicos
@@ -115,7 +142,7 @@ export const medicosService = {
 
     const { data, error } = await supabase
       .from('medicos')
-      .select(SELECT_MEDICO)
+      .select(`${SELECT_MEDICO}, usuario_id`)
       .order('id_medico');
 
     if (error) {
@@ -124,6 +151,7 @@ export const medicosService = {
 
     return data;
   },
+
 
 
   // ==========================================================

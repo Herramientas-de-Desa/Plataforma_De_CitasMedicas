@@ -69,7 +69,7 @@ export default function FormularioLogin() {
           if (recordarCorreo) localStorage.setItem('medicitas-correo-recordado', datos.correo.trim());
           else localStorage.removeItem('medicitas-correo-recordado');
         } catch { /* El acceso también funciona si el navegador bloquea el almacenamiento. */ }
-        navegar(destino, { replace: true });
+        navegar(perfilActualizado?.rol === 'medico' && !regreso ? '/perfil' : destino, { replace: true });
       } else if (modo === 'recuperar') {
         await authService.solicitarRecuperacion(datos.correo.trim());
         setMensaje('Si ese correo está registrado, recibirás un enlace para cambiar tu contraseña.');

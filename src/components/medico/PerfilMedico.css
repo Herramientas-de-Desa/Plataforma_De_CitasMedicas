@@ -1,0 +1,105 @@
+.medico-perfil { padding-top: 36px; }
+.mp-encabezado { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 26px; }
+.mp-encabezado h1 { font-size: clamp(1.6rem, 3vw, 2.1rem); margin-bottom: 6px; }
+.mp-encabezado > div > p:last-child { color: var(--gris); }
+.mp-boton-agenda { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+.mp-identidad { display: flex; align-items: center; gap: 24px; padding: 30px; margin-bottom: 26px; border: 1px solid #c9dfd5; border-radius: 18px; background: linear-gradient(115deg, #edf7f1, #f8fbf9); }
+.mp-avatar { flex-shrink: 0; width: 96px; height: 96px; border: 4px solid white; border-radius: 24px; background: #d3e9df; color: var(--verde-osc); box-shadow: 0 4px 12px #10322b0d; display: grid; place-items: center; overflow: hidden; font-size: 2rem; font-weight: 700; }
+.mp-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.mp-identidad-texto { flex: 1 1 220px; min-width: 0; overflow-wrap: anywhere; }
+.mp-identidad h2 { font-size: 1.55rem; margin: 8px 0 3px; }
+.mp-identidad-texto > p { color: #426056; }
+.mp-insignia { display: inline-flex; gap: 6px; align-items: center; font-size: .72rem; font-weight: 650; letter-spacing: .03em; color: var(--verde-osc); }
+.mp-clinica-nombre { display: flex; align-items: center; gap: 7px; margin-top: 7px; font-size: .85rem; }
+.mp-clinica-nombre svg { flex-shrink: 0; }
+.mp-disponibilidad { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; background: #fff; border: 1px solid var(--borde); border-radius: 24px; font-size: .75rem; color: #566761; }
+.mp-disponibilidad > span { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.mp-disponible { color: #126846; border-color: #c5e2d3; }
+.mp-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.mp-columna { display: grid; gap: 24px; min-width: 0; }
+.mp-panel { padding: 26px; border-radius: 16px; }
+.mp-titulo { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.mp-icono { background: #edf5f0; color: var(--verde); border-radius: 12px; width: 42px; height: 42px; display: grid; place-items: center; flex-shrink: 0; }
+.mp-titulo h2, .mp-ayuda-agenda h2 { font-size: 1.04rem; }
+.mp-titulo p { font-size: .8rem; color: var(--gris); margin-top: 3px; }
+.mp-detalles { display: grid; gap: 16px; }
+.mp-detalles > div { display: grid; grid-template-columns: 145px minmax(0, 1fr); gap: 16px; }
+.mp-detalles dt { color: var(--gris); font-size: .83rem; }
+.mp-detalles dd { font-size: .86rem; font-weight: 550; overflow-wrap: anywhere; }
+.mp-nota { display: flex; align-items: start; gap: 9px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--borde); color: var(--gris); font-size: .76rem; }
+.mp-nota svg { flex-shrink: 0; margin-top: 2px; }
+.mp-horarios > div { display: flex; gap: 16px; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid #edf1ee; font-size: .85rem; }
+.mp-horarios > div:last-child { border-bottom: 0; }
+.mp-horarios dd { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+.mp-horarios dd span { border-radius: 6px; padding: 2px 8px; background: #edf6f1; color: #1f614b; font-size: .79rem; font-variant-numeric: tabular-nums; }
+.mp-dia-libre { color: var(--gris); }
+.mp-pie-horarios { font-size: .75rem; color: var(--gris); margin-top: 14px; }
+.mp-formulario { display: grid; gap: 18px; }
+.mp-formulario label { display: block; font-size: .85rem; font-weight: 550; }
+.mp-formulario input { display: block; width: 100%; margin-top: 7px; }
+.mp-opcional { font-size: .73rem; color: var(--gris); font-weight: 400; margin-left: 4px; }
+.mp-ayuda { font-size: .75rem; color: var(--gris); margin-top: -9px; }
+.mp-correo { display: grid; gap: 5px; padding: 15px; border-radius: 10px; background: #f6f8f6; overflow-wrap: anywhere; }
+.mp-correo span { font-size: .75rem; color: var(--gris); }
+.mp-correo strong { font-size: .85rem; font-weight: 550; }
+.mp-correo small { color: var(--gris); font-size: .71rem; }
+.mp-pendiente { font-size: .8rem; color: #85511b; }
+.mp-acciones { display: flex; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--borde); padding-top: 18px; }
+.mp-ayuda-agenda { padding: 25px; border-radius: 16px; background: #103d32; color: white; }
+.mp-ayuda-agenda > svg { color: #b9dccb; margin-bottom: 10px; }
+.mp-ayuda-agenda p { color: #cee1d7; font-size: .85rem; margin-top: 8px; }
+.mp-ayuda-agenda a { display: inline-flex; align-items: center; gap: 10px; color: white; font-size: .85rem; font-weight: 600; margin-top: 18px; text-decoration: underline; text-underline-offset: 4px; }
+.mp-ayuda-agenda a:focus-visible { outline-color: white; }
+.mp-aviso { display: flex; align-items: flex-start; gap: 14px; padding: 20px; margin-bottom: 24px; background: #fff8ed; border: 1px solid #e9d6b9; border-radius: 12px; color: #725024; }
+.mp-aviso > svg { flex-shrink: 0; }
+.mp-aviso strong { font-size: .88rem; }
+.mp-aviso p { font-size: .82rem; margin-top: 5px; }
+.mp-aviso button { flex-shrink: 0; }
+.mp-vacio, .mp-carga { padding: 18px; border-radius: 10px; background: #f6f8f6; color: #5e7168; font-size: .85rem; }
+.mp-vacio p + p, .mp-vacio button { margin-top: 10px; }
+@media (max-width: 850px) {
+  .mp-identidad { flex-wrap: wrap; }
+  .mp-disponibilidad { margin-left: 120px; }
+  .mp-detalles > div { grid-template-columns: 1fr; gap: 3px; }
+  .mp-grid { gap: 18px; }
+  .mp-panel { padding: 20px; }
+}
+@media (max-width: 640px) {
+  .medico-perfil { padding-top: 24px; }
+  .mp-encabezado { align-items: flex-start; flex-direction: column; gap: 16px; }
+  .mp-grid { grid-template-columns: 1fr; }
+  .mp-identidad { padding: 22px 18px; gap: 16px; }
+  .mp-avatar { width: 72px; height: 72px; border-radius: 20px; font-size: 1.5rem; }
+  .mp-identidad-texto { flex: 1 1 calc(100% - 88px); }
+  .mp-identidad h2 { font-size: 1.25rem; }
+  .mp-disponibilidad { margin-left: 0; }
+  .mp-aviso { flex-wrap: wrap; }
+  .mp-acciones .boton { flex: 1; justify-content: center; }
+}
+
+/* Configuración autónoma de la atención médica */
+.mp-configuracion { margin: 0 0 24px; border-top: 3px solid var(--verde); }
+.mp-configuracion-cabecera { display:flex; justify-content:space-between; align-items:center; gap:20px; }
+.mp-configuracion-cabecera h2 { font-size:1.2rem; }
+.mp-configuracion-cabecera p:last-child { color:var(--gris); font-size:.85rem; margin-top:6px; }
+.mp-configuracion-cabecera > button { flex-shrink:0; }
+.mp-campos-profesionales,.mp-editor-horarios { border:0; padding:0; margin-top:26px; min-width:0; }
+.mp-campos-profesionales legend,.mp-editor-horarios legend { font-weight:650; margin-bottom:16px; font-size:1rem; }
+.mp-campos-profesionales input,.mp-campos-profesionales select { display:block; width:100%; margin-top:7px; }
+.mp-editor-horarios > p { font-size:.82rem; color:var(--gris); margin-bottom:14px; }
+.mp-dia-editor { display:grid; grid-template-columns:125px minmax(0,1fr); gap:20px; padding:16px 0; border-bottom:1px solid var(--borde); align-items:start; }
+.mp-dia-check { display:flex; align-items:center; gap:9px; padding-top:8px; }
+.mp-dia-check input { width:18px; height:18px; accent-color:var(--verde); }
+.mp-turnos { display:grid; gap:10px; justify-items:start; }
+.mp-turno { display:flex; align-items:end; gap:12px; flex-wrap:wrap; width:100%; }
+.mp-turno label { flex:1; font-size:.8rem; min-width:110px; }
+.mp-turno input { width:100%; display:block; margin-top:5px; }
+.mp-turno button { margin-bottom:3px; }
+.mp-sin-turno { color:var(--gris); font-size:.85rem; padding-top:8px; }
+.mp-configuracion form > .mp-ayuda { margin:20px 0; }
+.mp-configuracion .alerta { margin-top:16px; }
+@media(max-width:640px) {
+  .mp-configuracion-cabecera { flex-direction:column; align-items:stretch; }
+  .mp-dia-editor { grid-template-columns:1fr; gap:10px; }
+  .mp-configuracion .grid-2 { grid-template-columns:1fr; }
+}

@@ -49,8 +49,12 @@ export default function FormularioRegistro() {
       });
       const perfilNuevo = await authService.obtenerPerfil().catch(() => null);
       if (perfilNuevo) setPerfil(perfilNuevo);
-      setExito('Cuenta creada. Redirigiendo…');
-      setTimeout(() => navegar(destino, { replace: true }), 900);
+      if (perfilNuevo) {
+        setExito('Cuenta creada. Redirigiendo…');
+        setTimeout(() => navegar(destino, { replace: true }), 900);
+      } else {
+        setExito('Cuenta creada. Revisa tu correo para confirmar el registro y luego inicia sesión.');
+      }
     } catch (e) {
       setError(e.message);
     } finally {
@@ -74,7 +78,7 @@ export default function FormularioRegistro() {
               <h2>Crear cuenta</h2>
             </div>
           </div>
-          <p className="login-descripcion">Regístrate como paciente para empezar.</p>
+          <p className="login-descripcion">Crea tu cuenta para acceder a MediCitas.</p>
 
           <form className="login-formulario" onSubmit={registrar} noValidate>
             <label htmlFor="registro-nombres">Nombres completos

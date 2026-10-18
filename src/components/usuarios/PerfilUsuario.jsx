@@ -2,8 +2,16 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/authService';
+import PerfilMedico from '../medico/PerfilMedico';
 
 export default function PerfilUsuario() {
+  const { perfil } = useAuth();
+  return perfil.rol === 'medico'
+    ? <PerfilMedico key={perfil.id_usuario} />
+    : <PerfilCuenta key={perfil.id_usuario} />;
+}
+
+function PerfilCuenta() {
   const { perfil, setPerfil } = useAuth();
   const [nombres, setNombres] = useState(perfil.nombres);
   const [telefono, setTelefono] = useState(perfil.telefono || '');

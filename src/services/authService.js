@@ -8,6 +8,7 @@ import { supabase } from './supabaseClient';
 export const authService = {
   /** RF01: Registrar un nuevo usuario (rol por defecto: paciente) */
   async registrar({ nombres, correo, password, rol = 'paciente' }) {
+    if (rol !== 'paciente') throw new Error('Tipo de cuenta no permitido.');
     const { data, error } = await supabase.auth.signUp({
       email: correo,
       password,
