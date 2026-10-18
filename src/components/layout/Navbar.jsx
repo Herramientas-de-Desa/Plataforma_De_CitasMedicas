@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { authService } from '../../services/authService.js';
+import { authService } from '../../services/authService';
 
 export default function Navbar() {
   const { perfil } = useAuth();
@@ -19,9 +19,8 @@ export default function Navbar() {
     navegar('/');
   }
 
-  const clase = ({ isActive }) => (isActive ? 'activo' : undefined);
+  const clase = ({ isActive }) => (isActive ? 'activo' : undefined); // para resaltar el enlace activo
 
-  if (ubicacion.pathname === '/login' || ubicacion.pathname === '/registro') return null;
 
   return (
     <nav className="navbar">

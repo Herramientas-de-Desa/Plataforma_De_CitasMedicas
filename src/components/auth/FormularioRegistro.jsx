@@ -1,9 +1,10 @@
 // Componente: registro de usuarios (RF01). Usa authService.
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthIcon from './AuthIcon';
 import AuthVisual from './AuthVisual';
 import { authService } from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
 
 export default function FormularioRegistro() {
   const [datos, setDatos] = useState({ nombres: '', correo: '', password: '' });
@@ -14,6 +15,11 @@ export default function FormularioRegistro() {
   const [exito, setExito] = useState('');
   const [enviando, setEnviando] = useState(false);
   const navegar = useNavigate();
+  const { setPerfil } = useAuth();
+  const ubicacion = useLocation();
+  const regreso = ubicacion.state?.returnTo;
+  const destino = typeof regreso === 'string' && regreso.startsWith('/') && !regreso.startsWith('//')
+    ? regreso : '/especialistas';
 
   const cambiar = (e) => setDatos((actual) => ({ ...actual, [e.target.name]: e.target.value }));
 
@@ -41,8 +47,10 @@ export default function FormularioRegistro() {
         correo: datos.correo.trim(),
         password: datos.password,
       });
+      const perfilNuevo = await authService.obtenerPerfil().catch(() => null);
+      if (perfilNuevo) setPerfil(perfilNuevo);
       setExito('Cuenta creada. Redirigiendo…');
-      setTimeout(() => navegar('/especialistas'), 900);
+      setTimeout(() => navegar(destino, { replace: true }), 900);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -122,7 +130,7 @@ export default function FormularioRegistro() {
             </button>
           </form>
 
-          <p className="login-registro">¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link></p>
+          <p className="login-registro">¿Ya tienes cuenta? <Link to="/login" state={ubicacion.state}>Inicia sesión</Link></p>
           <p className="login-privacidad"><span aria-hidden="true">✦</span> Tus datos están protegidos</p>
         </div>
       </main>

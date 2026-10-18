@@ -1,9 +1,10 @@
 // Componente: acceso y recuperación de contraseña con Supabase Auth.
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthIcon from './AuthIcon';
 import AuthVisual from './AuthVisual';
 import { authService } from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
 
 function correoRecordado() {
   try {
@@ -25,11 +26,16 @@ export default function FormularioLogin() {
   const [mensaje, setMensaje] = useState('');
   const [enviando, setEnviando] = useState(false);
   const navegar = useNavigate();
+  const { setPerfil } = useAuth();
+  const ubicacion = useLocation();
+  const regreso = ubicacion.state?.returnTo;
+  const destino = typeof regreso === 'string' && regreso.startsWith('/') && !regreso.startsWith('//')
+    ? regreso : '/especialistas';
 
   const cambiar = (e) => setDatos((actual) => ({ ...actual, [e.target.name]: e.target.value }));
 
   function cambiarModo(siguiente) {
-    if (modo === 'nueva' && siguiente === 'entrar') navegar('/login', { replace: true });
+    if (modo === 'nueva' && siguiente === 'entrar') navegar('/login', { replace: true, state: ubicacion.state });
     setModo(siguiente);
     setError('');
     setMensaje('');
@@ -57,17 +63,19 @@ export default function FormularioLogin() {
     try {
       if (modo === 'entrar') {
         await authService.iniciarSesion(datos);
+        const perfilActualizado = await authService.obtenerPerfil().catch(() => null);
+        if (perfilActualizado) setPerfil(perfilActualizado);
         try {
           if (recordarCorreo) localStorage.setItem('medicitas-correo-recordado', datos.correo.trim());
           else localStorage.removeItem('medicitas-correo-recordado');
         } catch { /* El acceso también funciona si el navegador bloquea el almacenamiento. */ }
-        navegar('/especialistas');
+        navegar(destino, { replace: true });
       } else if (modo === 'recuperar') {
         await authService.solicitarRecuperacion(datos.correo.trim());
         setMensaje('Si ese correo está registrado, recibirás un enlace para cambiar tu contraseña.');
       } else {
         await authService.cambiarPassword(datos.password);
-        navegar('/especialistas');
+        navegar(destino, { replace: true });
       }
     } catch (e) {
       setError(e.message);
@@ -160,7 +168,7 @@ export default function FormularioLogin() {
           </form>
 
           {modo === 'entrar' ? (
-            <p className="login-registro">¿Aún no tienes cuenta? <Link to="/registro">Regístrate</Link></p>
+            <p className="login-registro">¿Aún no tienes cuenta? <Link to="/registro" state={ubicacion.state}>Regístrate</Link></p>
           ) : (
             <button type="button" className="login-volver login-enlace" onClick={() => cambiarModo('entrar')}>
               Volver a iniciar sesión
