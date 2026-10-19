@@ -1,18 +1,18 @@
 // App.jsx — Rutas de la aplicación con protección por rol.
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import Navbar from './components/layout/Navbar';
-import Portada from './components/home/Portada';
-import FormularioRegistro from './components/auth/FormularioRegistro';
-import FormularioLogin from './components/auth/FormularioLogin';
-import BuscadorEspecialistas from './components/medicos/BuscadorEspecialistas';
-import ReservaCita from './components/citas/ReservaCita';
-import MisCitas from './components/citas/MisCitas';
-import MapaClinicas from './components/clinicas/MapaClinicas';
-import PerfilUsuario from './components/usuarios/PerfilUsuario';
-import PanelMedico from './components/medico/PanelMedico';
-import PanelAdmin from './components/admin/PanelAdmin';
-import RutaProtegida from './components/routing/RutaProtegida';
+import { AuthProvider } from './core/context/AuthContext';
+import Navbar from './layout/Navbar';
+import Portada from './feature/home/pages/Portada';
+import FormularioRegistro from './feature/auth/pages/FormularioRegistro';
+import FormularioLogin from './feature/auth/pages/FormularioLogin';
+import BuscadorEspecialistas from './feature/medicos/pages/BuscadorEspecialistas';
+import ReservaCita from './feature/citas/components/ReservaCita';
+import MisCitas from './feature/citas/pages/MisCitas';
+import MapaClinicas from './feature/clinicas/pages/MapaClinicas';
+import PerfilUsuario from './feature/usuarios/pages/PerfilUsuario';
+import MedicoAgenda from './feature/medicos/pages/MedicoAgenda';
+import PanelAdmin from './feature/admin/pages/PanelAdmin';
+import RutaProtegida from './feature/routing/RutaProtegida';
 
 export default function App() {
   return (
@@ -35,7 +35,7 @@ export default function App() {
             <RutaProtegida><PerfilUsuario /></RutaProtegida>
           } />
           <Route path="/panel-medico" element={
-            <RutaProtegida roles={['medico', 'admin']}><PanelMedico /></RutaProtegida>
+            <RutaProtegida roles={['medico', 'admin']}><MedicoAgenda /></RutaProtegida>
           } />
           <Route path="/admin" element={
             <RutaProtegida roles={['admin']}><PanelAdmin /></RutaProtegida>
