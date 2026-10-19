@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { medicosService } from '../../medicos/services/medicosService';
 import { citasService } from '../../citas/services//citasService';
 import { prediccionesService } from '../../admin/services/prediccionesService';
-import PrediccionDisponibilidad from '../../admin/components/PrediccionDisponibilidad';
+import PrediccionDisponibilidad from '../components/PrediccionDisponibilidad';
 
 export default function MedicoAgenda() {
   const { perfil } = useAuth();
