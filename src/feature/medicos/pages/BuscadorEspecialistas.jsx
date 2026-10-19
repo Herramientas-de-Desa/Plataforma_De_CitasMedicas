@@ -1,17 +1,12 @@
-// Componente: búsqueda de médicos por especialidad y nombre (RF03).
+ // Componente: búsqueda de médicos por especialidad y nombre (RF03).
 // Reutiliza especialidadesService y medicosService.
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { especialidadesService } from '../services/especialidadesService';
 import { medicosService } from '../services/medicosService';
-<<<<<<< HEAD:src/components/BuscadorEspecialistas.jsx
-import { prediccionesService } from '../services/prediccionesService';
-import TarjetaMedico from './TarjetaMedico';
-=======
 import { prediccionesService } from '../../admin/services/prediccionesService';
 import TarjetaMedico from '../components/TarjetaMedico';
 import ReservaModal from '../../citas/components/ReservaModal';
->>>>>>> feature/Filestorage-doctors:src/feature/medicos/pages/BuscadorEspecialistas.jsx
 
 export default function BuscadorEspecialistas() {
   const [especialidades, setEspecialidades] = useState([]);
@@ -22,8 +17,10 @@ export default function BuscadorEspecialistas() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
   const [parametros, setParametros] = useSearchParams();
+
   const medicoReserva = Number(parametros.get('reservar'));
-  const reservaAbierta = Number.isSafeInteger(medicoReserva) && medicoReserva > 0;
+  const reservaAbierta =
+    Number.isSafeInteger(medicoReserva) && medicoReserva > 0;
   const fechaInicial = parametros.get('fecha') || '';
 
   function abrirReserva(idMedico) {
@@ -41,9 +38,18 @@ export default function BuscadorEspecialistas() {
   }
 
   useEffect(() => {
-    especialidadesService.listar().then(setEspecialidades).catch((e) => setError(e.message));
-    prediccionesService.listarUltimas()
-      .then((filas) => setPredicciones(Object.fromEntries(filas.map((p) => [p.medico_id, p]))))
+    especialidadesService
+      .listar()
+      .then(setEspecialidades)
+      .catch((e) => setError(e.message));
+
+    prediccionesService
+      .listarUltimas()
+      .then((filas) =>
+        setPredicciones(
+          Object.fromEntries(filas.map((p) => [p.medico_id, p]))
+        )
+      )
       // La analítica es complementaria: un fallo no bloquea la búsqueda.
       .catch(() => setPredicciones({}));
   }, []);
@@ -51,8 +57,12 @@ export default function BuscadorEspecialistas() {
   useEffect(() => {
     setCargando(true);
     setError('');
+
     medicosService
-      .buscar({ especialidadId: especialidadId || null, texto })
+      .buscar({
+        especialidadId: especialidadId || null,
+        texto,
+      })
       .then(setMedicos)
       .catch((e) => setError(e.message))
       .finally(() => setCargando(false));
@@ -68,50 +78,67 @@ export default function BuscadorEspecialistas() {
 
       <div className="tarjeta especialistas-filtros">
         <div className="grid grid-2">
-          <label>Especialidad
-            <select value={especialidadId} onChange={(e) => setEspecialidadId(e.target.value)}>
+          <label>
+            Especialidad
+            <select
+              value={especialidadId}
+              onChange={(e) => setEspecialidadId(e.target.value)}
+            >
               <option value="">Todas las especialidades</option>
               {especialidades.map((e) => (
-                <option key={e.id_especialidad} value={e.id_especialidad}>{e.nombre}</option>
+                <option
+                  key={e.id_especialidad}
+                  value={e.id_especialidad}
+                >
+                  {e.nombre}
+                </option>
               ))}
             </select>
           </label>
-          <label>Nombre del médico
-            <input value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Ej. Ramos" />
+
+          <label>
+            Nombre del médico
+            <input
+              value={texto}
+              onChange={(e) => setTexto(e.target.value)}
+              placeholder="Ej. Ramos"
+            />
           </label>
         </div>
       </div>
 
       {error && <p className="alerta alerta-error">{error}</p>}
+
       {!cargando && !error && (
         <div className="especialistas-resultados" aria-live="polite">
           <h2>Resultados de especialistas</h2>
-          <span>{medicos.length} {medicos.length === 1 ? 'resultado' : 'resultados'}</span>
+          <span>
+            {medicos.length}{' '}
+            {medicos.length === 1 ? 'resultado' : 'resultados'}
+          </span>
         </div>
       )}
+
       {cargando ? (
         <p>Buscando médicos…</p>
       ) : medicos.length === 0 ? (
-        <div className="tarjeta">No se encontraron médicos con esos filtros. Prueba con otro nombre o especialidad.</div>
+        <div className="tarjeta">
+          No se encontraron médicos con esos filtros. Prueba con otro
+          nombre o especialidad.
+        </div>
       ) : (
-<<<<<<< HEAD:src/components/BuscadorEspecialistas.jsx
-        <div className="grid grid-2">
-=======
         <div className="grid grid-2 especialistas-grid">
->>>>>>> feature/Filestorage-doctors:src/feature/medicos/pages/BuscadorEspecialistas.jsx
           {medicos.map((m) => (
             <TarjetaMedico
               key={m.id_medico}
               medico={m}
               prediccion={predicciones[m.id_medico]}
-<<<<<<< HEAD:src/components/BuscadorEspecialistas.jsx
-=======
               onReservar={abrirReserva}
->>>>>>> feature/Filestorage-doctors:src/feature/medicos/pages/BuscadorEspecialistas.jsx
             />
           ))}
         </div>
       )}
+
       {reservaAbierta && (
         <ReservaModal
           key={medicoReserva}
