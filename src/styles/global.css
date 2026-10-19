@@ -53,6 +53,10 @@ select:focus-visible {
   max-width: 1080px;
   margin: 0 auto;
   padding: 24px 20px 64px;
+<<<<<<< HEAD
+=======
+  min-width: 0;
+>>>>>>> feature/Filestorage-doctors
 }
 
 /* ---------- Barra de navegación ---------- */
@@ -93,6 +97,30 @@ select:focus-visible {
   align-items: center;
 }
 
+<<<<<<< HEAD
+=======
+.boton-menu {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--blanco);
+  color: var(--tinta);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boton-menu:focus-visible {
+  outline: 2px solid var(--verde);
+  outline-offset: 2px;
+}
+
+>>>>>>> feature/Filestorage-doctors
 .nav-links a {
   padding: 8px 12px;
   border-radius: 8px;
@@ -124,6 +152,10 @@ select:focus-visible {
   border-radius: var(--radio);
   padding: 20px;
   box-shadow: var(--sombra);
+<<<<<<< HEAD
+=======
+  min-width: 0;
+>>>>>>> feature/Filestorage-doctors
 }
 
 .grid {
@@ -131,12 +163,25 @@ select:focus-visible {
   gap: 16px;
 }
 
+<<<<<<< HEAD
 .grid-2 {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 .grid-3 {
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+=======
+.grid>* {
+  min-width: 0;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+>>>>>>> feature/Filestorage-doctors
 }
 
 /* ---------- Formularios ---------- */
@@ -161,6 +206,10 @@ select {
   font: inherit;
   background: var(--blanco);
   width: 100%;
+<<<<<<< HEAD
+=======
+  min-width: 0;
+>>>>>>> feature/Filestorage-doctors
 }
 
 input:focus,
@@ -253,6 +302,7 @@ select:focus {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+<<<<<<< HEAD
 }
 
 /* ---------- Médicos / horas ---------- */
@@ -270,6 +320,277 @@ select:focus {
   color: var(--gris);
   font-size: 0.87rem;
   margin-top: 6px;
+=======
+}
+
+/* ---------- Perfil de usuario ---------- */
+.perfil-pagina {
+  max-width: 1000px;
+}
+
+.perfil-identidad {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 24px;
+  margin-bottom: 18px;
+  background: linear-gradient(110deg, var(--blanco), #f1f8f4);
+}
+
+.perfil-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: var(--verde);
+  color: var(--blanco);
+  font-family: 'Sora', 'Inter', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.perfil-identidad-texto {
+  min-width: 0;
+}
+
+.perfil-identidad-etiqueta {
+  color: var(--verde-osc);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.perfil-identidad h2 {
+  font-size: clamp(1.15rem, 3vw, 1.45rem);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.perfil-identidad-texto>p:last-child {
+  color: var(--gris);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.perfil-rol {
+  flex: none;
+  margin-left: auto;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.perfil-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.perfil-panel {
+  padding: 26px;
+}
+
+.perfil-panel-encabezado {
+  margin-bottom: 24px;
+}
+
+.perfil-panel-encabezado h2 {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.perfil-panel-encabezado p,
+.perfil-ayuda,
+.perfil-cuenta-nota {
+  color: var(--gris);
+  font-size: 0.88rem;
+}
+
+.perfil-formulario {
+  max-width: none;
+  gap: 18px;
+}
+
+.perfil-opcional {
+  color: var(--gris);
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.perfil-ayuda {
+  margin-top: -13px;
+}
+
+.perfil-acciones {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--borde);
+}
+
+.perfil-detalles>div {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--borde);
+}
+
+.perfil-detalles>div:first-child {
+  padding-top: 0;
+}
+
+.perfil-detalles dt {
+  margin-bottom: 5px;
+  color: var(--gris);
+  font-size: 0.8rem;
+}
+
+.perfil-detalles dd {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.perfil-rol-detalle {
+  display: inline-block;
+  margin-left: 0;
+}
+
+.perfil-cuenta-nota {
+  margin-top: 18px;
+}
+
+@media (max-width: 700px) {
+  .perfil-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .perfil-identidad {
+    flex-wrap: wrap;
+  }
+
+  .perfil-identidad>.perfil-rol {
+    margin-left: 82px;
+  }
+}
+
+@media (max-width: 480px) {
+  .perfil-identidad {
+    gap: 12px;
+    padding: 18px;
+  }
+
+  .perfil-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    font-size: 1.1rem;
+  }
+
+  .perfil-identidad>.perfil-rol {
+    margin-left: 64px;
+  }
+
+  .perfil-panel {
+    padding: 20px;
+  }
+
+  .perfil-acciones .boton {
+    width: 100%;
+  }
+}
+
+/* ---------- Médicos / horas ---------- */
+.especialistas-filtros {
+  margin-bottom: 20px;
+}
+
+.especialistas-resultados {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-bottom: 14px;
+}
+
+.especialistas-resultados h2 {
+  font-size: 1.05rem;
+}
+
+.especialistas-resultados span {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.especialistas-grid {
+  align-items: stretch;
+}
+
+.tarjeta-medico {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+}
+
+.tarjeta-medico h3 {
+  font-size: 1.12rem;
+  line-height: 1.3;
+}
+
+.tarjeta-medico .especialidad {
+  display: inline-block;
+  margin-top: 9px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.tarjeta-medico-ubicacion {
+  display: grid;
+  gap: 3px;
+  margin-top: 15px;
+  min-width: 0;
+  font-size: 0.84rem;
+}
+
+.tarjeta-medico-ubicacion strong {
+  color: var(--tinta);
+}
+
+.tarjeta-medico-ubicacion p {
+  color: var(--gris);
+  overflow-wrap: anywhere;
+}
+
+.tarjeta-medico-accion {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.tarjeta-medico-accion .boton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  text-align: center;
+>>>>>>> feature/Filestorage-doctors
 }
 
 .horas {
@@ -297,6 +618,172 @@ select:focus {
   background: var(--verde);
   color: #fff;
   border-color: var(--verde);
+<<<<<<< HEAD
+=======
+}
+
+/* ---------- Reserva rápida y página de reserva ---------- */
+.reserva-modal {
+  position: fixed;
+  inset: 0;
+  width: min(94vw, 780px);
+  max-height: 90dvh;
+  margin: auto;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-radius: 16px;
+  background: var(--marfil);
+  color: var(--tinta);
+  font: inherit;
+  box-shadow: 0 24px 70px rgba(16, 50, 43, 0.25);
+}
+
+.reserva-modal::backdrop {
+  background: rgba(8, 32, 26, 0.58);
+}
+
+.reserva-modal-barra {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 22px;
+  border-bottom: 1px solid var(--borde);
+  background: var(--blanco);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.reserva-modal-barra button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font: inherit;
+  cursor: pointer;
+}
+
+.reserva-modal-barra button span {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.reserva-contenido {
+  max-width: 760px;
+}
+
+.reserva-contenido-modal {
+  padding: 22px;
+}
+
+.reserva-encabezado {
+  margin-bottom: 18px;
+}
+
+.reserva-encabezado p:last-child {
+  overflow-wrap: anywhere;
+}
+
+.reserva-flujo {
+  display: grid;
+  gap: 14px;
+}
+
+.reserva-paso-cabecera {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.reserva-paso-cabecera>span {
+  display: grid;
+  flex: 0 0 30px;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--verde);
+  color: var(--blanco);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.reserva-paso-cabecera h2 {
+  font-size: 1.1rem;
+}
+
+.reserva-paso-cabecera p,
+.reserva-horas .detalle {
+  color: var(--gris);
+  font-size: 0.86rem;
+}
+
+.reserva-fecha {
+  max-width: 280px;
+}
+
+.reserva-horas {
+  margin-top: 20px;
+}
+
+.reserva-horas h3 {
+  margin-bottom: 10px;
+  font-size: 0.96rem;
+}
+
+.reserva-eleccion {
+  margin-top: 17px;
+  color: var(--verde-osc);
+  font-size: 0.86rem;
+}
+
+.reserva-seleccion .alerta {
+  margin-top: 14px;
+}
+
+.reserva-acciones {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 18px;
+}
+
+.reserva-acciones small {
+  color: var(--gris);
+  font-size: 0.76rem;
+}
+
+.reserva-horario-semanal summary {
+  color: var(--verde-osc);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reserva-horario-semanal .detalle,
+.reserva-horario-tabla {
+  margin-top: 12px;
+}
+
+.reserva-horario-tabla {
+  overflow-x: auto;
+}
+
+.reserva-cargando {
+  padding: 30px 22px;
+  color: var(--gris);
+>>>>>>> feature/Filestorage-doctors
 }
 
 /* ---------- Tablas ---------- */
@@ -311,6 +798,27 @@ select:focus {
   text-align: left;
   padding: 10px 12px;
   border-bottom: 1px solid var(--borde);
+<<<<<<< HEAD
+=======
+  overflow-wrap: anywhere;
+}
+
+.acciones-tabla {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.admin-pestanas .boton {
+  min-height: 40px;
+>>>>>>> feature/Filestorage-doctors
 }
 
 .tabla th {
@@ -320,6 +828,134 @@ select:focus {
   color: var(--gris);
 }
 
+<<<<<<< HEAD
+=======
+/* ---------- Administración: listados y filtros ---------- */
+.admin-seccion {
+  padding: 22px;
+}
+
+.admin-seccion-cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.admin-seccion-cabecera h2 {
+  font-size: 1.15rem;
+}
+
+.admin-seccion-cabecera p,
+.admin-ayuda {
+  color: var(--gris);
+  font-size: 0.84rem;
+}
+
+.admin-seccion-total {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.admin-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-filtros label {
+  display: grid;
+  gap: 5px;
+  min-width: min(100%, 220px);
+  color: var(--tinta);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.admin-filtros input,
+.admin-filtros select {
+  width: 100%;
+}
+
+.admin-ayuda {
+  margin-bottom: 8px;
+}
+
+.admin-tabla-contenedor {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.admin-tabla td {
+  vertical-align: middle;
+}
+
+.admin-tabla td strong {
+  color: var(--tinta);
+  font-weight: 700;
+}
+
+.admin-rol {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.admin-rol-admin {
+  background: var(--tinta);
+  color: var(--blanco);
+}
+
+.admin-rol-medico {
+  background: var(--menta);
+  color: var(--verde-osc);
+}
+
+.admin-rol-paciente {
+  background: #e7ecf5;
+  color: #2d4a7a;
+}
+
+.admin-medicos-form {
+  margin-top: 4px;
+}
+
+.admin-guardar-medico {
+  margin-top: 16px;
+}
+
+.admin-especialidad-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 7px 10px;
+  max-width: 520px;
+  margin-bottom: 20px;
+}
+
+.admin-especialidad-form label {
+  grid-column: 1 / -1;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.admin-especialidad-form input {
+  width: 100%;
+}
+
+>>>>>>> feature/Filestorage-doctors
 .estado {
   padding: 3px 10px;
   border-radius: 999px;
@@ -349,6 +985,7 @@ select:focus {
 
 /* ---------- Mapa ---------- */
 .mapa-contenedor {
+<<<<<<< HEAD
   height: 440px;
   border-radius: var(--radio);
   overflow: hidden;
@@ -505,7 +1142,663 @@ select:focus {
   border-radius: 8px;
   padding: 4px 8px;
   font-size: 0.85rem;
+=======
+  height: clamp(300px, 48vh, 440px);
+  border-radius: var(--radio);
+  overflow: hidden;
+  border: 1px solid var(--borde);
+}
+
+.lista-distancias li {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--borde);
+  font-size: 0.92rem;
+}
+
+.distancia {
+  color: var(--verde-osc);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ---------- IA: demanda y disponibilidad ---------- */
+.prediccion {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--menta);
+  color: var(--verde-osc);
+}
+
+.prediccion-cabecera {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.prediccion-barra {
+  height: 7px;
+  margin: 8px 0;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(14, 124, 102, 0.16);
+}
+
+.prediccion-barra span {
+  display: block;
+  height: 100%;
+  background: var(--verde);
+}
+
+.prediccion p {
+  margin: 4px 0;
+  color: var(--tinta);
+  font-size: 0.82rem;
+}
+
+.prediccion small {
+  color: var(--gris);
+}
+
+.prediccion-modelo {
+  display: block;
+  margin-top: 4px;
+}
+
+.demanda-directorio {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.demanda-directorio-baja {
+  color: var(--verde-osc);
+}
+
+.demanda-directorio-media {
+  color: #94631d;
+}
+
+.demanda-directorio-alta {
+  color: #a13333;
+}
+
+.demanda-directorio-sin-datos {
+  color: var(--gris);
+}
+
+.prediccion-vacia {
+  margin-top: 12px;
+  color: var(--gris);
+  font-size: 0.82rem;
+}
+
+.tarjeta-medico .prediccion-vacia {
+  padding: 11px 12px;
+  border-radius: 10px;
+  background: #f3f7f5;
+}
+
+.resumen-demanda {
+  max-width: 520px;
+}
+
+.encabezado-tabla {
+  margin-bottom: 14px;
+}
+
+.encabezado-tabla .detalle {
+  color: var(--gris);
+  font-size: 0.88rem;
+}
+
+.nivel-demanda {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.nivel-baja {
+  background: var(--menta);
+  color: var(--verde-osc);
+}
+
+.nivel-media {
+  background: #fff4dc;
+  color: #8a6410;
+}
+
+.nivel-alta {
+  background: #fde8df;
+  color: #a24c2f;
+}
+
+.nivel-saturada {
+  background: #fdecec;
+  color: #a13333;
+}
+
+/* ---------- IA: tabla de demanda por médico ---------- */
+.panel-demanda-medicos {
+  overflow: hidden;
+  padding: 0;
+}
+
+.demanda-medicos-cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 0;
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.demanda-medicos-cabecera .etiqueta-seccion {
+  margin-bottom: 5px;
+}
+
+.demanda-medicos-cabecera h3 {
+  margin-bottom: 4px;
+  font-size: 1.3rem;
+}
+
+.demanda-medicos-periodo {
+  margin-top: 10px;
+  color: var(--gris);
+  font-size: 0.86rem;
+}
+
+.demanda-medicos-periodo strong {
+  color: var(--verde-osc);
+}
+
+.demanda-medicos-origen {
+  display: inline-block;
+  margin-top: 9px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fff3df;
+  color: #815617;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.demanda-medicos-total {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.demanda-medicos-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 24px 0;
+}
+
+.demanda-medicos-filtros label {
+  color: var(--tinta);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.demanda-medicos-filtros select {
+  width: min(100%, 260px);
+  min-width: 0;
+}
+
+.demanda-medicos-filtros span {
+  margin-left: auto;
+  color: var(--gris);
+  font-size: 0.78rem;
+}
+
+.demanda-medicos-vista {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(230px, 1fr);
+  gap: 16px;
+  padding: 18px 24px 0;
+}
+
+.demanda-medicos-grafica {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+>>>>>>> feature/Filestorage-doctors
   background: var(--blanco);
+}
+
+.demanda-medicos-grafica figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-bottom: 17px;
+}
+
+.demanda-medicos-grafica figcaption strong {
+  font-family: 'Sora', 'Inter', sans-serif;
+  font-size: 0.96rem;
+}
+
+.demanda-medicos-grafica figcaption span {
+  color: var(--gris);
+  font-size: 0.76rem;
+}
+
+.demanda-grafica-lista {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+}
+
+.demanda-grafica-fila {
+  display: grid;
+  grid-template-columns: minmax(90px, 130px) minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+}
+
+.demanda-grafica-nombre {
+  overflow: hidden;
+  color: var(--tinta);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demanda-grafica-pista {
+  height: 13px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--menta);
+}
+
+.demanda-grafica-barra {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--verde);
+}
+
+.demanda-grafica-barra-alta {
+  background: #d2933a;
+}
+
+.demanda-grafica-valor {
+  color: var(--tinta);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.demanda-grafica-vacia {
+  color: var(--gris);
+  font-size: 0.84rem;
+}
+
+.demanda-medicos-resumen {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  align-content: start;
+}
+
+.demanda-resumen-item {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.demanda-resumen-item span,
+.demanda-resumen-item small {
+  color: var(--gris);
+  font-size: 0.76rem;
+}
+
+.demanda-resumen-item strong {
+  color: var(--verde-osc);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.demanda-resumen-item small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demanda-resumen-destacado {
+  border-color: #eeddb8;
+  background: #fffaf0;
+}
+
+.demanda-resumen-nota {
+  color: var(--gris);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.demanda-medicos-agrupacion {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 18px 24px 0;
+}
+
+.demanda-medicos-agrupacion-cabecera {
+  grid-column: 1 / -1;
+}
+
+.demanda-medicos-agrupacion-cabecera h4 {
+  color: var(--tinta);
+  font-family: 'Sora', 'Inter', sans-serif;
+  font-size: 0.96rem;
+}
+
+.demanda-medicos-agrupacion-cabecera p {
+  color: var(--gris);
+  font-size: 0.78rem;
+}
+
+.demanda-grupo-item {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  min-width: 0;
+  padding: 15px 17px;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  background: var(--blanco);
+}
+
+.demanda-grupo-item span,
+.demanda-grupo-item p {
+  color: var(--gris);
+  font-size: 0.76rem;
+}
+
+.demanda-grupo-item strong {
+  color: var(--verde-osc);
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.demanda-medicos-tabla-contenedor {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 18px 24px 24px;
+}
+
+.tabla-demanda-medicos {
+  min-width: 820px;
+}
+
+.tabla-demanda-medicos th {
+  white-space: nowrap;
+}
+
+.tabla-demanda-medicos tbody tr {
+  transition: background 0.15s ease;
+}
+
+.tabla-demanda-medicos tbody tr:hover {
+  background: #f7fbfa;
+}
+
+.tabla-demanda-medicos td {
+  vertical-align: middle;
+}
+
+.demanda-medico-nombre {
+  color: var(--tinta);
+  font-size: 0.88rem;
+}
+
+.tabla-demanda-medicos .nivel-demanda {
+  white-space: nowrap;
+}
+
+.disponibilidad-tabla {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 145px;
+}
+
+.disponibilidad-tabla-barra {
+  flex: 1 1 96px;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dcebe7;
+}
+
+.disponibilidad-tabla-barra span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--verde);
+}
+
+.disponibilidad-tabla strong {
+  flex: 0 0 34px;
+  color: var(--verde-osc);
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.demanda-periodo {
+  display: grid;
+  gap: 2px;
+  min-width: 94px;
+  color: var(--tinta);
+  font-size: 0.8rem;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.demanda-periodo small {
+  color: var(--gris);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+/* ---------- Portada ---------- */
+.portada {
+  max-width: 1200px;
+  padding-top: 46px;
+}
+
+.portada-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 56px);
+}
+
+.portada-contenido {
+  min-width: 0;
+}
+
+.portada-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: #e9f7f4;
+  color: var(--verde-osc);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.portada-acciones {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+}
+
+.portada-acciones .boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 50px;
+  padding-inline: 12px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.portada-cta-secundaria {
+  border: 1px solid var(--verde);
+  background: #fff;
+  color: var(--verde-osc);
+}
+
+.portada-cta-secundaria:hover {
+  background: var(--menta);
+}
+
+.portada h1 {
+  max-width: 15ch;
+  margin: 22px 0 20px;
+  font-size: clamp(2.35rem, 4.5vw, 4rem);
+  line-height: 1.12;
+}
+
+.portada h1 em {
+  font-style: normal;
+  color: var(--verde);
+}
+
+.portada-intro {
+  color: var(--gris);
+  max-width: 45ch;
+  margin-bottom: 28px;
+  font-size: 1.02rem;
+}
+
+.portada-mapa-escena {
+  position: relative;
+  min-width: 0;
+  padding: 22px 0;
+}
+
+.portada-mapa-escena::before {
+  content: '';
+  position: absolute;
+  inset: 0 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 45%, #d2f0f3, #e8f8f4 70%);
+}
+
+.portada-mapa {
+  position: relative;
+  height: 350px;
+  overflow: hidden;
+  border: 5px solid #fff;
+  border-radius: 28px;
+  background: #e7f1ef;
+  box-shadow: 0 18px 40px rgba(24, 87, 83, 0.13);
+}
+
+.portada-mapa .leaflet-container {
+  background: #e7f1ef;
+}
+
+.portada-mapa-lugar,
+.portada-mapa-enlace {
+  position: absolute;
+  z-index: 1001;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(16, 50, 43, 0.16);
+  color: var(--tinta);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.portada-mapa-lugar {
+  top: 16px;
+  left: 16px;
+}
+
+.portada-mapa-enlace {
+  bottom: 23px;
+  left: 16px;
+  color: var(--verde-osc);
+}
+
+.portada-mapa-enlace:hover {
+  background: var(--menta);
+}
+
+.pasos {
+  margin-top: 52px;
+}
+
+.paso {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  min-height: 136px;
+  padding: 20px;
+}
+
+.paso-icono {
+  display: grid;
+  flex: 0 0 54px;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #e6f7f1;
+  color: var(--verde);
+}
+
+.paso-icono-azul {
+  background: #e8f2fc;
+  color: #2e6f98;
+}
+
+.paso h3 {
+  margin: 2px 0 7px;
+}
+
+.paso p {
+  color: var(--gris);
+  font-size: 0.9rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -514,9 +1807,363 @@ select:focus {
   }
 }
 
+<<<<<<< HEAD
 @media (max-width: 640px) {
   .nav-links {
     width: 100%;
+=======
+@media (max-width: 900px) {
+  .demanda-medicos-vista {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .demanda-medicos-resumen {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .demanda-resumen-nota {
+    grid-column: 1 / -1;
+  }
+
+  .portada-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .portada-mapa-escena {
+    width: 100%;
+  }
+
+  .navbar-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
+  }
+
+  .boton-menu {
+    display: inline-flex;
+  }
+
+  .nav-links {
+    display: none;
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 0;
+    max-height: calc(100dvh - 76px);
+    overflow-y: auto;
+    padding: 8px 0 4px;
+    border-top: 1px solid var(--borde);
+  }
+
+  .nav-links-abierto {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-links a,
+  .nav-links button {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-links .chip-rol {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .reserva-modal {
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .reserva-modal-barra {
+    padding: 10px 16px;
+  }
+
+  .reserva-contenido-modal {
+    padding: 18px 16px 32px;
+  }
+
+  .reserva-fecha {
+    max-width: none;
+  }
+
+  .reserva-acciones .boton {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .contenedor {
+    padding: 20px 16px 48px;
+  }
+
+  .admin-seccion {
+    padding: 16px;
+  }
+
+  .admin-seccion-cabecera {
+    flex-direction: column;
+  }
+
+  .admin-filtros label {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .admin-tabla-contenedor {
+    overflow: visible;
+  }
+
+  .admin-tabla td select {
+    min-width: 0;
+  }
+
+  .admin-especialidad-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-especialidad-form .boton {
+    justify-self: start;
+  }
+
+  .navbar-inner {
+    padding: 8px 16px;
+  }
+
+  .tarjeta {
+    padding: 16px;
+  }
+
+  .encabezado h1 {
+    font-size: clamp(1.45rem, 6vw, 1.7rem);
+    overflow-wrap: anywhere;
+  }
+
+  input,
+  select {
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .boton,
+  .hora-btn {
+    min-height: 44px;
+  }
+
+  .portada {
+    padding-top: 32px;
+  }
+
+  .portada h1 {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .portada-mapa {
+    height: 300px;
+  }
+
+  .portada-acciones {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .portada-acciones .boton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .pasos {
+    margin-top: 32px;
+  }
+
+  .admin-pestanas {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+  }
+
+  .admin-pestanas .boton {
+    flex: 0 0 auto;
+    min-height: 44px;
+  }
+
+  .tabla-tarjetas,
+  .tabla-tarjetas tbody,
+  .tabla-tarjetas tr {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-tarjetas thead {
+    display: none;
+  }
+
+  .tabla-tarjetas tr {
+    margin-bottom: 12px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .tabla-tarjetas tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .tabla-tarjetas td {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    font-size: 0.87rem;
+  }
+
+  .tabla-tarjetas td:last-child {
+    border-bottom: 0;
+  }
+
+  .tabla-tarjetas td[data-label]::before {
+    content: attr(data-label);
+    flex: 0 0 94px;
+    color: var(--gris);
+    font-weight: 700;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+  }
+
+  .tabla-tarjetas td select {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+  }
+
+  .tabla-tarjetas .acciones-tabla {
+    flex-wrap: wrap;
+  }
+
+  .lista-distancias li {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .lista-distancias .distancia {
+    margin-left: auto;
+  }
+
+  .prediccion-cabecera {
+    flex-wrap: wrap;
+  }
+
+  .panel-demanda-medicos {
+    padding: 0;
+  }
+
+  .demanda-medicos-cabecera {
+    display: grid;
+    gap: 12px;
+    padding: 18px 16px;
+  }
+
+  .demanda-medicos-total {
+    justify-self: start;
+  }
+
+  .demanda-medicos-filtros {
+    display: grid;
+    gap: 7px;
+    padding: 16px 16px 0;
+  }
+
+  .demanda-medicos-filtros select {
+    width: 100%;
+  }
+
+  .demanda-medicos-filtros span {
+    margin-left: 0;
+  }
+
+  .demanda-medicos-vista {
+    gap: 14px;
+    padding: 14px 16px 0;
+  }
+
+  .demanda-medicos-grafica {
+    padding: 14px;
+  }
+
+  .demanda-grafica-fila {
+    grid-template-columns: minmax(80px, 108px) minmax(0, 1fr) 38px;
+    gap: 7px;
+  }
+
+  .demanda-medicos-resumen {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .demanda-medicos-agrupacion {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 16px 16px 0;
+  }
+
+  .demanda-resumen-item {
+    padding: 13px;
+  }
+
+  .demanda-resumen-destacado {
+    grid-column: 1 / -1;
+  }
+
+  .demanda-medicos-tabla-contenedor {
+    overflow: visible;
+    padding: 16px;
+  }
+
+  .tabla-demanda-medicos {
+    min-width: 0;
+  }
+
+  .tabla-demanda-medicos tr {
+    background: #fff;
+    box-shadow: 0 5px 16px rgba(25, 72, 61, 0.06);
+  }
+
+  .tabla-demanda-medicos td {
+    align-items: center;
+  }
+
+  .tabla-demanda-medicos td[data-label]::before {
+    flex-basis: 104px;
+  }
+
+  .tabla-demanda-medicos td> :last-child {
+    min-width: 0;
+  }
+
+  .disponibilidad-tabla {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    max-width: 220px;
+  }
+
+  .demanda-periodo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    white-space: normal;
+>>>>>>> feature/Filestorage-doctors
   }
 }
 
@@ -528,6 +2175,10 @@ select:focus {
   display: flex;
   flex-direction: column;
   gap: 24px;
+<<<<<<< HEAD
+=======
+  min-width: 0;
+>>>>>>> feature/Filestorage-doctors
 }
 
 .panel-titulo {
@@ -551,7 +2202,11 @@ select:focus {
 
 .metricas-grid {
   display: grid;
+<<<<<<< HEAD
   grid-template-columns: repeat(4, 1fr);
+=======
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+>>>>>>> feature/Filestorage-doctors
   gap: 16px;
 }
 
@@ -563,11 +2218,23 @@ select:focus {
   border-radius: 14px;
   background: #fff;
   border: 1px solid #e5e7eb;
+<<<<<<< HEAD
+=======
+  min-width: 0;
+}
+
+.metrica-card>div:last-child {
+  min-width: 0;
+>>>>>>> feature/Filestorage-doctors
 }
 
 .metrica-icono {
   width: 48px;
   height: 48px;
+<<<<<<< HEAD
+=======
+  flex: 0 0 48px;
+>>>>>>> feature/Filestorage-doctors
   display: flex;
   align-items: center;
   justify-content: center;
@@ -594,6 +2261,19 @@ select:focus {
 
 .grafica-card {
   padding: 24px;
+<<<<<<< HEAD
+=======
+  min-width: 0;
+}
+
+.filtros-demanda .filtro {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.tabla-contenedor .tabla {
+  min-width: 640px;
+>>>>>>> feature/Filestorage-doctors
 }
 
 .grafica-header {
@@ -646,7 +2326,11 @@ select:focus {
 
 .especialidades-grid {
   display: grid;
+<<<<<<< HEAD
   grid-template-columns: repeat(2, 1fr);
+=======
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+>>>>>>> feature/Filestorage-doctors
   gap: 18px;
 }
 
@@ -655,6 +2339,10 @@ select:focus {
   border: 1px solid #e5e7eb;
   border-radius: 14px;
   background: #fff;
+<<<<<<< HEAD
+=======
+  min-width: 0;
+>>>>>>> feature/Filestorage-doctors
 }
 
 .especialidad-header {
@@ -681,7 +2369,11 @@ select:focus {
 
 .especialidad-metricas {
   display: grid;
+<<<<<<< HEAD
   grid-template-columns: repeat(3, 1fr);
+=======
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+>>>>>>> feature/Filestorage-doctors
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -767,7 +2459,11 @@ select:focus {
 
 .variables-grid {
   display: grid;
+<<<<<<< HEAD
   grid-template-columns: repeat(4, 1fr);
+=======
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+>>>>>>> feature/Filestorage-doctors
   gap: 12px;
 }
 
@@ -776,6 +2472,11 @@ select:focus {
   border-radius: 10px;
   background: #f8fafc;
   border: 1px solid #e5e7eb;
+<<<<<<< HEAD
+=======
+  min-width: 0;
+  overflow-wrap: anywhere;
+>>>>>>> feature/Filestorage-doctors
 }
 
 .variable-card strong {
@@ -851,11 +2552,19 @@ select:focus {
 
 @media (max-width: 1000px) {
   .metricas-grid {
+<<<<<<< HEAD
     grid-template-columns: repeat(2, 1fr);
   }
 
   .variables-grid {
     grid-template-columns: repeat(2, 1fr);
+=======
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .variables-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+>>>>>>> feature/Filestorage-doctors
   }
 }
 
@@ -871,10 +2580,1030 @@ select:focus {
   }
 
   .especialidad-metricas {
+<<<<<<< HEAD
     grid-template-columns: repeat(3, 1fr);
+=======
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr));
+>>>>>>> feature/Filestorage-doctors
   }
 
   .variables-grid {
     grid-template-columns: 1fr;
   }
+<<<<<<< HEAD
+=======
+
+  .panel-titulo .boton {
+    width: 100%;
+  }
+
+  .grafica-card {
+    padding: 16px;
+  }
+
+  .barra-info {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+}
+
+/* ---------- Inicio de sesión ---------- */
+.login-page {
+  position: relative;
+  display: grid;
+  grid-template-columns: 53.2% 46.8%;
+  min-height: 100dvh;
+  background: #f7fbff;
+}
+
+.login-visual {
+  min-width: 0;
+  overflow: hidden;
+  padding: 46px 48px 26px 60px;
+  background: linear-gradient(113deg, #4d83a5 0%, #4b91a0 48%, #4c9b91 100%);
+  color: #fff;
+}
+
+.login-visual-contenido {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.login-volver-inicio {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1px solid #cfe0de;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(16, 50, 43, 0.1);
+  color: #175e5a;
+  font-size: 0.83rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.login-volver-inicio:hover {
+  background: #eaf4f2;
+}
+
+.login-volver-inicio svg {
+  flex: 0 0 19px;
+}
+
+.login-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #275c62;
+  font-size: 0.83rem;
+  font-weight: 600;
+}
+
+.login-visual h1 {
+  margin: 26px 0 14px;
+  color: #fff;
+  font-size: clamp(2.15rem, 4vw, 2.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+
+.login-visual p {
+  max-width: 410px;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.login-ilustracion {
+  position: relative;
+  height: 310px;
+  margin-top: 16px;
+  isolation: isolate;
+}
+
+.login-ilustracion img {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 50%;
+  width: min(100%, 360px);
+  height: auto;
+  transform: translateX(-50%);
+}
+
+.login-circulo,
+.login-anillo {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.login-circulo-grande {
+  z-index: 0;
+  top: 23px;
+  left: 50%;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: rgba(227, 249, 247, 0.13);
+  transform: translateX(-50%);
+}
+
+.login-circulo-pequeno {
+  top: 35px;
+  right: 12px;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(109, 207, 139, 0.6);
+}
+
+.login-anillo {
+  z-index: 1;
+  left: 50%;
+  border: 2px solid rgba(126, 238, 220, 0.66);
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.login-anillo-uno {
+  bottom: 0;
+  width: 215px;
+  height: 42px;
+  box-shadow: 0 0 20px rgba(126, 238, 220, 0.45);
+}
+
+.login-anillo-dos {
+  bottom: -8px;
+  width: 260px;
+  height: 56px;
+  opacity: 0.45;
+}
+
+.login-flotante {
+  position: absolute;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 9px;
+  background: #fff;
+  color: #3d4a4a;
+  box-shadow: 0 7px 18px rgba(19, 69, 83, 0.18);
+  font-size: 0.79rem;
+  white-space: nowrap;
+}
+
+.login-flotante b {
+  color: #176e69;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.login-flotante-cita {
+  top: 75px;
+  left: 0;
+}
+
+.login-flotante-atencion {
+  top: 172px;
+  right: 0;
+}
+
+.login-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 48px 44px;
+}
+
+.login-contenido {
+  width: min(100%, 366px);
+}
+
+.registro-page .login-contenido {
+  width: min(100%, 420px);
+}
+
+.login-encabezado {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.login-cruz {
+  display: grid;
+  flex: 0 0 45px;
+  place-items: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #208d73, #147e78);
+  color: #fff;
+  box-shadow: 0 5px 14px rgba(23, 127, 109, 0.18);
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.login-encabezado p {
+  color: #266961;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+}
+
+.login-encabezado h2 {
+  margin-top: 1px;
+  font-size: clamp(1.55rem, 3vw, 1.9rem);
+  line-height: 1.18;
+}
+
+.login-descripcion {
+  margin: 24px 0 25px;
+  color: #4d5a5e;
+  font-size: 0.9rem;
+}
+
+.login-formulario {
+  display: grid;
+  gap: 14px;
+}
+
+.login-formulario>label {
+  gap: 6px;
+  color: #253135;
+  font-size: 0.87rem;
+  font-weight: 500;
+}
+
+.login-campo {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  border: 1px solid #d4dce1;
+  border-radius: 9px;
+  background: #fff;
+  color: #175e5a;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.login-campo:focus-within {
+  border-color: #218b78;
+  box-shadow: 0 0 0 3px rgba(33, 139, 120, 0.13);
+}
+
+.login-campo>svg {
+  flex: 0 0 18px;
+  margin-left: 13px;
+}
+
+.login-campo input {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 46px;
+  min-height: 0;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #173b39;
+  font-size: 1rem;
+  outline: none;
+}
+
+.login-campo input:focus-visible {
+  outline: none;
+}
+
+.login-ver-password {
+  display: grid;
+  flex: 0 0 42px;
+  place-items: center;
+  height: 42px;
+  margin-right: 2px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #205b61;
+  cursor: pointer;
+}
+
+.login-ver-password:hover {
+  background: #eaf4f2;
+}
+
+.login-opciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin: 1px 0 2px;
+}
+
+.login-recordar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #5a7275;
+  font-size: 0.83rem;
+  font-weight: 400;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.login-recordar input {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  min-height: 0;
+  accent-color: #238c79;
+  cursor: pointer;
+}
+
+.login-enlace {
+  border: 0;
+  background: transparent;
+  color: #28585b;
+  font: inherit;
+  font-size: 0.83rem;
+  text-align: right;
+  cursor: pointer;
+}
+
+.login-enlace:hover,
+.login-registro a:hover {
+  color: #0e7c66;
+  text-decoration: underline;
+}
+
+.login-enviar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 9px;
+  background: linear-gradient(100deg, #2d9a6e, #4a83a5);
+  box-shadow: 0 7px 13px rgba(40, 95, 110, 0.22);
+  color: #fff;
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.login-enviar:hover {
+  filter: brightness(0.94);
+}
+
+.login-enviar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-registro,
+.login-volver {
+  display: block;
+  margin-top: 17px;
+  color: #33444a;
+  font-size: 0.87rem;
+  text-align: center;
+}
+
+.login-registro a {
+  color: #266f67;
+  font-weight: 600;
+}
+
+.login-privacidad {
+  margin-top: 25px;
+  color: #59666b;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.login-privacidad span {
+  margin-right: 5px;
+  color: #197a71;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 800px) {
+  .login-page {
+    grid-template-columns: 1fr;
+  }
+
+  .login-visual {
+    padding: 84px 24px 30px;
+  }
+
+  .login-visual-contenido {
+    max-width: 440px;
+  }
+
+  .login-visual h1 {
+    margin: 18px 0 10px;
+    font-size: clamp(1.7rem, 6vw, 2.2rem);
+  }
+
+  .login-visual p {
+    font-size: 0.9rem;
+  }
+
+  .login-ilustracion {
+    display: none;
+  }
+
+  .login-panel {
+    align-items: flex-start;
+    padding: 35px 20px 48px;
+  }
+
+  .login-contenido {
+    width: min(100%, 440px);
+  }
+}
+
+@media (max-width: 420px) {
+  .login-visual {
+    padding: 82px 20px 27px;
+  }
+
+  .login-volver-inicio {
+    top: 20px;
+    right: 20px;
+  }
+
+  .login-panel {
+    padding: 30px 20px 45px;
+  }
+
+  .login-opciones {
+    flex-wrap: wrap;
+  }
+
+  .login-enlace {
+    text-align: left;
+  }
+}
+
+
+/* =========================================
+   MEDICITAS — DEMANDA POR ESPECIALIDAD
+========================================= */
+
+.panel-demanda-especialidades {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+  color: var(--tinta);
+}
+
+.panel-demanda-especialidades .detalle {
+  color: var(--gris);
+  font-size: 0.86rem;
+}
+
+.demanda-especialidades-cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.demanda-especialidades-cabecera h2 {
+  margin: 6px 0;
+  font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+  line-height: 1.3;
+}
+
+.demanda-especialidades-cabecera .detalle {
+  max-width: 65ch;
+}
+
+.demanda-actualizar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  gap: 9px;
+  min-height: 44px;
+}
+
+.demanda-especialidades-icono-svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ---------- Filtros ---------- */
+
+.demanda-especialidades-filtros {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.8fr);
+  align-items: end;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--blanco);
+}
+
+.filtro-periodo,
+.filtro-especialidad {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.filtro-titulo {
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.demanda-periodo-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.demanda-periodo-btn {
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 1px solid var(--borde);
+  background: var(--blanco);
+  color: var(--tinta);
+}
+
+.demanda-periodo-btn:hover {
+  border-color: var(--verde);
+  background: var(--menta);
+  color: var(--verde-osc);
+}
+
+.demanda-periodo-btn-activo,
+.demanda-periodo-btn-activo:hover {
+  border-color: var(--verde);
+  background: var(--verde);
+  color: var(--blanco);
+}
+
+.demanda-especialidades-filtros select {
+  width: 100%;
+  min-height: 44px;
+}
+
+.demanda-periodo-descripcion {
+  color: var(--gris);
+  font-size: 0.88rem;
+}
+
+.demanda-periodo-descripcion strong {
+  color: var(--verde-osc);
+}
+
+/* ---------- Métricas ---------- */
+
+.panel-demanda-especialidades .metricas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.panel-demanda-especialidades .metrica-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  padding: 19px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--blanco);
+  box-shadow: var(--sombra);
+}
+
+.panel-demanda-especialidades .metrica-icono {
+  display: grid;
+  flex: 0 0 46px;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: var(--menta);
+  color: var(--verde);
+}
+
+.panel-demanda-especialidades .metrica-contenido {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.panel-demanda-especialidades .metrica-label {
+  color: var(--gris);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.panel-demanda-especialidades .metrica-card strong {
+  display: block;
+  margin: 0;
+  color: var(--tinta);
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-demanda-especialidades .metrica-contenido small {
+  color: var(--gris);
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+/* ---------- Tarjetas de gráficas ---------- */
+
+.panel-demanda-especialidades .grafica-card {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--blanco);
+  box-shadow: var(--sombra);
+}
+
+.panel-demanda-especialidades .grafica-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.panel-demanda-especialidades .grafica-header h3 {
+  margin: 0 0 5px;
+  color: var(--tinta);
+  font-size: 1.05rem;
+}
+
+.panel-demanda-especialidades .grafica-header .detalle {
+  max-width: 65ch;
+}
+
+.demanda-grafica-etiqueta {
+  flex: 0 0 auto;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.demanda-grafica-temporal {
+  width: 100%;
+  height: 320px;
+  min-width: 0;
+}
+
+.demanda-grafica-especialidades {
+  width: 100%;
+  min-width: 0;
+}
+
+.demanda-tooltip {
+  max-width: 260px;
+  padding: 12px 15px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--blanco);
+  box-shadow: 0 6px 20px rgba(16, 50, 43, 0.12);
+  color: var(--tinta);
+}
+
+.demanda-tooltip strong {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 0.86rem;
+}
+
+.demanda-tooltip p {
+  margin-top: 5px;
+  color: var(--verde-osc);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.demanda-grafica-nota {
+  margin-top: 15px;
+  padding-top: 13px;
+  border-top: 1px solid var(--borde);
+  color: var(--gris);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+/* ---------- Estado vacío ---------- */
+
+.demanda-especialidades-vacia {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 42px 22px;
+  border: 1px dashed var(--borde);
+  border-radius: var(--radio);
+  background: var(--blanco);
+  text-align: center;
+}
+
+.demanda-vacia-icono {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  background: var(--menta);
+  color: var(--verde);
+}
+
+.demanda-especialidades-vacia h3 {
+  font-size: 1.05rem;
+}
+
+.demanda-especialidades-vacia p {
+  max-width: 48ch;
+  color: var(--gris);
+  font-size: 0.86rem;
+}
+
+.demanda-especialidades-vacia .boton {
+  margin-top: 5px;
+}
+
+/* ---------- Error ---------- */
+
+.panel-demanda-especialidades>.alerta-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.panel-demanda-especialidades>.alerta-error p {
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+
+.panel-demanda-especialidades>.alerta-error .boton {
+  flex: 0 0 auto;
+}
+
+/* ---------- Tabla ---------- */
+
+.panel-demanda-especialidades .demanda-tabla-card {
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.demanda-tabla-cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 22px 24px 18px;
+}
+
+.demanda-tabla-cabecera h3 {
+  margin-bottom: 5px;
+  font-size: 1.05rem;
+}
+
+.demanda-registros {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.demanda-tabla-contenedor {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 24px;
+  overflow-x: auto;
+}
+
+.panel-demanda-especialidades .demanda-tabla {
+  min-width: 680px;
+}
+
+.demanda-tabla th {
+  white-space: nowrap;
+}
+
+.demanda-tabla tbody tr {
+  transition: background 0.15s ease;
+}
+
+.demanda-tabla tbody tr:hover {
+  background: #f4faf7;
+}
+
+.demanda-tabla td {
+  vertical-align: middle;
+}
+
+.citas-predichas {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font-size: 0.84rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.demanda-tabla-pie {
+  padding: 14px 24px 20px;
+  color: var(--gris);
+  font-size: 0.77rem;
+  line-height: 1.5;
+}
+
+/* ---------- Carga ---------- */
+
+.panel-demanda-especialidades .panel-cargando {
+  padding: 42px 20px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--blanco);
+  text-align: center;
+}
+
+.panel-demanda-especialidades .spinner {
+  border-color: var(--menta);
+  border-top-color: var(--verde);
+}
+
+.panel-demanda-especialidades .panel-cargando h3 {
+  margin-bottom: 6px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1050px) {
+  .panel-demanda-especialidades .metricas-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .demanda-especialidades-cabecera {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .demanda-actualizar {
+    width: 100%;
+  }
+
+  .demanda-especialidades-filtros {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .panel-demanda-especialidades .grafica-card {
+    padding: 18px 14px;
+  }
+
+  .demanda-grafica-temporal {
+    height: 300px;
+  }
+
+  .demanda-tabla-cabecera {
+    padding: 18px 16px;
+  }
+
+  .demanda-tabla-contenedor {
+    padding: 0 16px;
+  }
+
+  .demanda-tabla-pie {
+    padding: 14px 16px 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .panel-demanda-especialidades {
+    gap: 18px;
+  }
+
+  .panel-demanda-especialidades .metricas-grid {
+    gap: 10px;
+  }
+
+  .panel-demanda-especialidades .metrica-card {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .panel-demanda-especialidades .metrica-icono {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .panel-demanda-especialidades .metrica-card strong {
+    font-size: 1.35rem;
+  }
+
+  .panel-demanda-especialidades .metrica-label {
+    font-size: 0.73rem;
+  }
+
+  .demanda-periodo-opciones {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .demanda-periodo-btn {
+    padding-inline: 8px;
+  }
+
+  .demanda-grafica-temporal {
+    height: 280px;
+  }
+
+  .demanda-tabla-contenedor {
+    padding: 0 12px;
+    overflow: visible;
+  }
+
+  .panel-demanda-especialidades .demanda-tabla {
+    min-width: 0;
+  }
+
+  .panel-demanda-especialidades .demanda-tabla th {
+    white-space: normal;
+  }
+
+  .panel-demanda-especialidades .demanda-tabla td {
+    align-items: flex-start;
+  }
+
+  .panel-demanda-especialidades .demanda-tabla td[data-label]::before {
+    flex-basis: 112px;
+  }
+
+  .demanda-tabla-pie {
+    padding-inline: 16px;
+  }
+
+  .demanda-tabla-cabecera {
+    padding-inline: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .panel-demanda-especialidades .metrica-card {
+    padding: 11px;
+  }
+
+  .panel-demanda-especialidades .metrica-card strong {
+    font-size: 1.2rem;
+  }
+
+  .demanda-grafica-temporal {
+    height: 260px;
+  }
+>>>>>>> feature/Filestorage-doctors
 }
