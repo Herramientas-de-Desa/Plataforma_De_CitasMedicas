@@ -5,12 +5,14 @@ import L from 'leaflet';
 import { clinicasService } from '../../services/clinicasService';
 import ReservaModal from '../citas/ReservaModal';
 import FichaClinica from './FichaClinica';
+import clinicaMarcador from '../../assets/clinica-marcador.png';
 import './MapaClinicas.css';
 
 const CENTRO_ICA = [-14.0678, -75.7286];
-const iconoClinica = L.divIcon({
-  className: 'clinica-marcador', html: '<span aria-hidden="true">+</span>',
-  iconSize: [44, 44], iconAnchor: [22, 22],
+const iconoClinica = L.icon({
+  iconUrl: clinicaMarcador,
+  className: 'clinica-marcador',
+  iconSize: [44, 44], iconAnchor: [22, 42],
 });
 const iconoUsuario = L.divIcon({
   className: 'clinica-mi-marcador', html: '<span></span>',
@@ -154,7 +156,7 @@ export default function MapaClinicas() {
       </MapContainer>
     </div>
     <div className="clinicas-leyenda">
-      <span><i className="clinicas-punto" /> Clínica registrada</span>
+      <span><img className="clinicas-leyenda-icono" src={clinicaMarcador} alt="" /> Clínica registrada</span>
       {miPosicion && <span><i className="clinicas-punto clinicas-punto-usuario" /> Tu ubicación{Number.isFinite(miPosicion.precision) ? ` · precisión aproximada de ${Math.round(miPosicion.precision)} m` : ''}</span>}
     </div>
     <section ref={directorio} className="clinicas-directorio" tabIndex={-1} aria-labelledby="clinicas-directorio-titulo">
