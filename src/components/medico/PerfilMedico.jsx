@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/authService';
 import { medicosService } from '../../services/medicosService';
@@ -22,6 +22,7 @@ function Icono({ tipo, ...props }) {
 
 export default function PerfilMedico() {
   const { perfil, setPerfil } = useAuth();
+  const { hash } = useLocation();
   const [medico, setMedico] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [errorProfesional, setErrorProfesional] = useState(false);
@@ -36,6 +37,14 @@ export default function PerfilMedico() {
   const [mensaje, setMensaje] = useState('');
   const [avisoConfiguracion, setAvisoConfiguracion] = useState('');
   const [errorGuardado, setErrorGuardado] = useState('');
+
+  useEffect(() => {
+    if (!hash) { window.scrollTo(0, 0); return; }
+    if (hash !== '#mi-atencion' || cargando || cargandoHorarios) return;
+    const seccion = document.getElementById('mi-atencion');
+    seccion?.scrollIntoView({ block: 'start' });
+    seccion?.focus({ preventScroll: true });
+  }, [hash, cargando, cargandoHorarios]);
 
   useEffect(() => {
     let activo = true;
@@ -123,10 +132,12 @@ export default function PerfilMedico() {
         {medico && <div className={`mp-disponibilidad ${medico.disponible ? 'mp-disponible' : ''}`}><span aria-hidden="true" />{medico.disponible ? 'Disponible para citas' : 'No disponible para citas'}</div>}
       </section>
 
+      <div id="mi-atencion" tabIndex={-1} aria-label="Mi atención médica">
       {!cargando && errorProfesional && <div className="mp-aviso" role="alert"><p>No pudimos consultar tu información profesional.</p><button type="button" className="boton boton-secundario" onClick={reintentar}>Reintentar</button></div>}
       {!cargando && !errorProfesional && !medico && <p className="mp-aviso" role="status">El administrador debe asignarte una clínica, especialidad y horarios antes de que puedas gestionar tu atención.</p>}
       {avisoConfiguracion && <p className="alerta alerta-exito" role="status">{avisoConfiguracion}</p>}
       {!cargando && !cargandoHorarios && !errorProfesional && !errorHorarios && medico && <ConfiguracionMedica key={intento} medico={medico} horarios={horarios} nombreCuenta={perfil.nombres} onGuardado={() => { setAvisoConfiguracion('Tu atención y horarios se guardaron. Ya puedes consultar tu agenda.'); reintentar(); }} />}
+      </div>
 
       <div className="mp-grid">
         <div className="mp-columna">

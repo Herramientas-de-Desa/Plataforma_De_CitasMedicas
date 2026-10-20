@@ -46,14 +46,15 @@ export const authService = {
 
   /** Perfil del usuario autenticado (tabla usuarios) */
   async obtenerPerfil() {
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error: errorSesion } = await supabase.auth.getUser();
+    if (errorSesion && errorSesion.name !== 'AuthSessionMissingError') throw errorSesion;
     if (!user) return null;
     const { data, error } = await supabase
       .from('usuarios')
       .select('*')
       .eq('id_usuario', user.id)
       .single();
-    if (error) return null;
+    if (error) throw new Error(error.message);
     return data;
   },
 

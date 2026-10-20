@@ -1,96 +1,178 @@
-// Componente: geolocalización de clínicas (RF07).
-// Reutiliza: clinicasService (Supabase), API de Geolocalización del
-// navegador, Leaflet + OpenStreetMap para el mapa interactivo.
-import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { MapContainer, TileLayer, Marker, Circle, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { clinicasService } from '../../services/clinicasService';
+import ReservaModal from '../citas/ReservaModal';
+import FichaClinica from './FichaClinica';
+import './MapaClinicas.css';
 
-// Corrige la ruta de los íconos por defecto de Leaflet en bundlers
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+const CENTRO_ICA = [-14.0678, -75.7286];
+const iconoClinica = L.divIcon({
+  className: 'clinica-marcador', html: '<span aria-hidden="true">+</span>',
+  iconSize: [44, 44], iconAnchor: [22, 22],
+});
+const iconoUsuario = L.divIcon({
+  className: 'clinica-mi-marcador', html: '<span></span>',
+  iconSize: [24, 24], iconAnchor: [12, 12],
 });
 
-const CENTRO_ICA = { lat: -14.0678, lng: -75.7286 };
+function coordenadasValidas(clinica) {
+  return clinica.latitud != null && clinica.longitud != null
+    && String(clinica.latitud).trim() !== '' && String(clinica.longitud).trim() !== ''
+    && Number.isFinite(Number(clinica.latitud)) && Number.isFinite(Number(clinica.longitud))
+    && Math.abs(Number(clinica.latitud)) <= 90 && Math.abs(Number(clinica.longitud)) <= 180;
+}
+
+function CentrarUbicacion({ posicion }) {
+  const mapa = useMap();
+  useEffect(() => {
+    if (posicion) mapa.setView([posicion.lat, posicion.lng], 14);
+  }, [mapa, posicion]);
+  return null;
+}
 
 export default function MapaClinicas() {
   const [clinicas, setClinicas] = useState([]);
   const [miPosicion, setMiPosicion] = useState(null);
+  const [cargando, setCargando] = useState(true);
+  const [ubicando, setUbicando] = useState(true);
   const [error, setError] = useState('');
-  const [aviso, setAviso] = useState('');
+  const [avisoUbicacion, setAvisoUbicacion] = useState('');
+  const [intento, setIntento] = useState(0);
+  const [parametros, setParametros] = useSearchParams();
+  const solicitudUbicacion = useRef(null);
+  const montado = useRef(false);
+  const ficha = useRef(null);
+  const directorio = useRef(null);
+  const clinicaId = parametros.get('clinica');
+  const medicoReserva = Number(parametros.get('reservar'));
+  const reservaAbierta = Number.isSafeInteger(medicoReserva) && medicoReserva > 0;
 
   useEffect(() => {
-    clinicasService.listar().then(setClinicas).catch((e) => setError(e.message));
-  }, []);
+    let activo = true;
+    setCargando(true);
+    setError('');
+    clinicasService.listar()
+      .then(filas => { if (activo) setClinicas(filas); })
+      .catch(() => { if (activo) setError('No pudimos cargar las clínicas. Revisa tu conexión y vuelve a intentarlo.'); })
+      .finally(() => { if (activo) setCargando(false); });
+    return () => { activo = false; };
+  }, [intento]);
 
   async function ubicarme() {
-    setAviso(''); setError('');
+    setUbicando(true);
+    setAvisoUbicacion('');
+    // Compartir la petición evita solicitar dos veces en React StrictMode.
+    if (!solicitudUbicacion.current) solicitudUbicacion.current = clinicasService.obtenerUbicacionUsuario();
     try {
-      const pos = await clinicasService.obtenerUbicacionUsuario();
-      setMiPosicion(pos);
-      const cercanas = await clinicasService.clinicasCercanas(pos);
-      setClinicas(cercanas);
-      setAviso('Clínicas ordenadas por cercanía a tu ubicación.');
+      const posicion = await solicitudUbicacion.current;
+      if (montado.current) setMiPosicion(posicion);
     } catch (e) {
-      setError(e.message);
+      if (montado.current) setAvisoUbicacion(e.message);
+    } finally {
+      solicitudUbicacion.current = null;
+      if (montado.current) setUbicando(false);
     }
   }
 
-  const centro = miPosicion || CENTRO_ICA;
+  useEffect(() => {
+    montado.current = true;
+    ubicarme();
+    return () => { montado.current = false; };
+  }, []);
 
-  return (
-    <div className="contenedor">
-      <div className="encabezado">
-        <p className="etiqueta-seccion">Geolocalización</p>
-        <h1>Clínicas cercanas</h1>
-        <p>Ubica los centros médicos en el mapa y calcula la distancia desde tu posición.</p>
-      </div>
+  const ordenadas = useMemo(() => clinicas.map(clinica => ({
+    ...clinica,
+    distancia: miPosicion && coordenadasValidas(clinica)
+      ? clinicasService.distanciaKm(miPosicion, { lat: Number(clinica.latitud), lng: Number(clinica.longitud) })
+      : null,
+  })).sort((a, b) => miPosicion ? (a.distancia ?? Infinity) - (b.distancia ?? Infinity) : 0), [clinicas, miPosicion]);
+  const seleccionada = ordenadas.find(c => String(c.id_clinica) === clinicaId);
 
-      <div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
-        <button className="boton" onClick={ubicarme}>Usar mi ubicación</button>
-      </div>
-      {error && <p className="alerta alerta-error" style={{ marginBottom: 12 }}>{error}</p>}
-      {aviso && <p className="alerta alerta-exito" style={{ marginBottom: 12 }}>{aviso}</p>}
+  useEffect(() => {
+    if (seleccionada) {
+      ficha.current?.scrollIntoView({ block: 'start' });
+      ficha.current?.focus({ preventScroll: true });
+    }
+  }, [seleccionada?.id_clinica]);
 
-      <div className="mapa-contenedor">
-        <MapContainer center={[centro.lat, centro.lng]} zoom={14} style={{ height: '100%', width: '100%' }}>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          {miPosicion && (
-            <Circle center={[miPosicion.lat, miPosicion.lng]} radius={120}
-              pathOptions={{ color: '#0e7c66', fillOpacity: 0.35 }}>
-              <Popup>Estás aquí</Popup>
-            </Circle>
-          )}
-          {clinicas.map((c) => (
-            <Marker key={c.id_clinica} position={[c.latitud, c.longitud]}>
-              <Popup>
-                <strong>{c.nombre}</strong><br />
-                {c.direccion}<br />
-                {c.telefono && <>Tel. {c.telefono}<br /></>}
-                {c.distancia != null && <>A {c.distancia.toFixed(2)} km de ti</>}
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
-      </div>
+  function seleccionar(id) {
+    const siguientes = new URLSearchParams(parametros);
+    siguientes.set('clinica', String(id));
+    siguientes.delete('reservar');
+    siguientes.delete('fecha');
+    setParametros(siguientes);
+  }
 
-      <div className="tarjeta" style={{ marginTop: 20 }}>
-        <h3 style={{ marginBottom: 8 }}>Directorio de clínicas</h3>
-        <ul className="lista-distancias">
-          {clinicas.map((c) => (
-            <li key={c.id_clinica}>
-              <span><strong>{c.nombre}</strong> — {c.direccion}</span>
-              {c.distancia != null && <span className="distancia">{c.distancia.toFixed(2)} km</span>}
-            </li>
-          ))}
-        </ul>
-      </div>
+  function volver() {
+    setParametros({});
+    directorio.current?.scrollIntoView({ block: 'start' });
+    directorio.current?.focus({ preventScroll: true });
+  }
+
+  function abrirReserva(id) {
+    const siguientes = new URLSearchParams(parametros);
+    siguientes.set('reservar', String(id));
+    setParametros(siguientes);
+  }
+
+  function cerrarReserva() {
+    const siguientes = new URLSearchParams(parametros);
+    siguientes.delete('reservar');
+    siguientes.delete('fecha');
+    setParametros(siguientes, { replace: true });
+  }
+
+  return <main className="contenedor clinicas-pagina">
+    <div className="encabezado">
+      <p className="etiqueta-seccion">Elige dónde atenderte</p>
+      <h1>Mapa de clínicas</h1>
+      <p>Explora las clínicas, conoce a sus especialistas y elige dónde reservar tu cita.</p>
     </div>
-  );
+    <div className="clinicas-ubicacion">
+      <div>
+        <strong>{miPosicion ? 'Clínicas ordenadas por cercanía' : 'Encuentra una clínica para ti'}</strong>
+        <p>{miPosicion ? 'Distancias aproximadas en línea recta; no indican tiempo de viaje.' : 'Comparte tu ubicación o explora y elige una clínica manualmente.'}</p>
+      </div>
+      <button className="boton" type="button" onClick={ubicarme} disabled={ubicando}>{ubicando ? 'Buscando ubicación…' : 'Usar mi ubicación'}</button>
+    </div>
+    {avisoUbicacion && <p className="clinicas-aviso" role="status">{avisoUbicacion}</p>}
+    {error && <div className="alerta alerta-error" role="alert"><p>{error}</p><button className="boton boton-secundario" type="button" onClick={() => setIntento(i => i + 1)}>Reintentar</button></div>}
+    <div className="mapa-contenedor">
+      <MapContainer center={CENTRO_ICA} zoom={14} style={{ height: '100%', width: '100%' }} scrollWheelZoom={false}>
+        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <CentrarUbicacion posicion={miPosicion} />
+        {miPosicion && <>
+          {Number.isFinite(miPosicion.precision) && miPosicion.precision > 0 &&
+            <Circle center={[miPosicion.lat, miPosicion.lng]} radius={miPosicion.precision} interactive={false} pathOptions={{ color: '#2663d6', weight: 1, fillOpacity: 0.1 }} />}
+          <Marker position={[miPosicion.lat, miPosicion.lng]} icon={iconoUsuario} title="Tu ubicación aproximada"
+            alt="Tu ubicación aproximada" interactive={false} keyboard={false} zIndexOffset={-1000} />
+        </>}
+        {ordenadas.filter(coordenadasValidas).map(c => <Marker key={c.id_clinica} position={[Number(c.latitud), Number(c.longitud)]}
+          icon={iconoClinica} title={`Ver ${c.nombre}`} alt={`Ver ${c.nombre}`} eventHandlers={{ click: () => seleccionar(c.id_clinica) }} />)}
+      </MapContainer>
+    </div>
+    <div className="clinicas-leyenda">
+      <span><i className="clinicas-punto" /> Clínica registrada</span>
+      {miPosicion && <span><i className="clinicas-punto clinicas-punto-usuario" /> Tu ubicación{Number.isFinite(miPosicion.precision) ? ` · precisión aproximada de ${Math.round(miPosicion.precision)} m` : ''}</span>}
+    </div>
+    <section ref={directorio} className="clinicas-directorio" tabIndex={-1} aria-labelledby="clinicas-directorio-titulo">
+      <div className="clinicas-lista-cabecera"><h2 id="clinicas-directorio-titulo">Elige una clínica</h2>{!cargando && !error && <span>{clinicas.length} clínicas</span>}</div>
+      {cargando ? <p role="status">Cargando clínicas…</p> : !error && clinicas.length === 0 ? <p>No hay clínicas registradas por el momento.</p> :
+        <div className="clinicas-lista">{ordenadas.map(c => <button key={c.id_clinica} type="button"
+          className={`clinica-opcion${String(c.id_clinica) === clinicaId ? ' clinica-seleccionada' : ''}`}
+          aria-pressed={String(c.id_clinica) === clinicaId} onClick={() => seleccionar(c.id_clinica)}>
+          <strong>{c.nombre}</strong><span>{c.direccion}</span>
+          {c.distancia != null && <span className="distancia">Aprox. {c.distancia.toFixed(2)} km</span>}
+          {!coordenadasValidas(c) && <small>Ubicación en mapa no registrada</small>}
+          <small className="clinica-ver">Ver médicos y horarios <span aria-hidden="true">→</span></small>
+        </button>)}</div>}
+    </section>
+    {!cargando && !error && clinicaId && !seleccionada && <p role="status">La clínica seleccionada no está en el directorio. Puedes elegir otra.</p>}
+    {seleccionada && <div ref={ficha} tabIndex={-1} className="clinica-ficha-destino" aria-label={`Ficha de ${seleccionada.nombre}`}>
+      <FichaClinica key={seleccionada.id_clinica} clinica={seleccionada} onReservar={abrirReserva} onCerrar={volver} />
+    </div>}
+    {reservaAbierta && <ReservaModal key={medicoReserva} medicoId={medicoReserva} fechaInicial={parametros.get('fecha') || ''} onClose={cerrarReserva} />}
+  </main>;
 }

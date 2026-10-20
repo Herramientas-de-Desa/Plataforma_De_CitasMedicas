@@ -1,7 +1,7 @@
 // Componente reutilizable: tarjeta de médico con acceso a la reserva.
 import PrediccionDisponibilidad from '../disponibilidad/PrediccionDisponibilidad';
 
-export default function TarjetaMedico({ medico, prediccion, onReservar }) {
+export default function TarjetaMedico({ medico, prediccion, onReservar, mostrarPrediccion = true }) {
   return (
     <article className="tarjeta tarjeta-medico">
       <div className="tarjeta-medico-identidad">
@@ -13,7 +13,7 @@ export default function TarjetaMedico({ medico, prediccion, onReservar }) {
         {medico.clinica?.direccion && <p>{medico.clinica.direccion}</p>}
         {medico.telefono && <p>Tel. {medico.telefono}</p>}
       </div>
-      <PrediccionDisponibilidad prediccion={prediccion} compacto />
+      {mostrarPrediccion && <PrediccionDisponibilidad prediccion={prediccion} compacto />}
       <div className="tarjeta-medico-accion">
         <button className="boton" type="button" onClick={() => onReservar(medico.id_medico)}>
           Ver horarios y reservar

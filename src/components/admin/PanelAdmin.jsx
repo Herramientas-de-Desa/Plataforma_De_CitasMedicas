@@ -1,6 +1,9 @@
 // Componente: panel del administrador (RF08).
 // Gestiona usuarios, médicos, especialidades y supervisa citas.
 import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import AdminNavegacion from '../layout/AdminNavegacion';
+import { seccionAdmin } from '../layout/navegacion';
 import { usuariosService } from '../../services/usuariosService';
 import { medicosService } from '../../services/medicosService';
 import { especialidadesService } from '../../services/especialidadesService';
@@ -20,7 +23,9 @@ function formatearFechaAdmin(fecha) {
 }
 
 export default function PanelAdmin() {
-  const [pestania, setPestania] = useState('usuarios');
+  const ubicacion = useLocation();
+  const pestania = seccionAdmin(ubicacion.search);
+  const [cargando, setCargando] = useState(true);
   const [usuarios, setUsuarios] = useState([]);
   const [medicos, setMedicos] = useState([]);
   const [especialidades, setEspecialidades] = useState([]);
@@ -36,6 +41,7 @@ export default function PanelAdmin() {
 
   async function cargarTodo() {
     setError('');
+    setCargando(true);
     try {
       const [u, m, e, cl, ci] = await Promise.all([
         usuariosService.listar(),
@@ -47,6 +53,8 @@ export default function PanelAdmin() {
       setUsuarios(u); setMedicos(m); setEspecialidades(e); setClinicas(cl); setCitas(ci);
     } catch (e) {
       setError(e.message);
+    } finally {
+      setCargando(false);
     }
   }
 
@@ -60,16 +68,6 @@ export default function PanelAdmin() {
       cargarTodo();
     } catch (e) { setError(e.message); }
   }
-
-const pestanas = [
-  ['usuarios', 'Usuarios'],
-  ['medicos', 'Médicos'],
-  ['especialidades', 'Especialidades'],
-  ['citas', 'Citas'],
-  ['demanda-medicos', 'Demanda por médico'],
-  ['demanda-especialidades', 'Demanda por especialidad'],
-  ['recomendacion-citas', 'Recomendación inteligente'],
-];
 
   const cuentasSinMedico = usuarios.filter(u => u.rol !== 'admin' && !medicos.some(m => m.usuario_id === u.id_usuario));
   const cuentaSeleccionada = cuentasSinMedico.find(u => u.id_usuario === usuarioMedico);
@@ -86,25 +84,26 @@ const pestanas = [
     && (!filtroEstadoCita || cita.estado === filtroEstadoCita));
 
   return (
-    <div className="contenedor">
+    <div className="contenedor mc-admin-layout">
+      <AdminNavegacion />
+      <div className="mc-admin-contenido">
       <div className="encabezado">
         <p className="etiqueta-seccion">Administración</p>
         <h1>Panel de control</h1>
       </div>
 
-      <div className="admin-pestanas" aria-label="Secciones de administración">
-        {pestanas.map(([clave, titulo]) => (
-          <button
-            key={clave}
-            className={`boton boton-mini ${pestania === clave ? '' : 'boton-secundario'}`}
-            onClick={() => setPestania(clave)}
-            aria-pressed={pestania === clave}
-          >
-            {titulo}
-          </button>
-        ))}
-      </div>
       {error && <p className="alerta alerta-error" style={{ marginBottom: 14 }}>{error}</p>}
+      {pestania === 'resumen' && <section aria-label="Resumen de administración">
+        <p style={{ marginBottom: 20 }}>Gestiona las cuentas, los profesionales y las citas desde un solo lugar.</p>
+        {cargando ? <p role="status">Consultando el resumen…</p> : error ? <button type="button" className="boton" onClick={cargarTodo}>Reintentar</button> :
+          <div className="mc-admin-resumen">
+            {[['usuarios', 'Usuarios', usuarios.length], ['medicos', 'Médicos', medicos.length],
+              ['especialidades', 'Especialidades', especialidades.length], ['citas', 'Citas', citas.length]]
+              .map(([id, titulo, total]) => <Link className="tarjeta" to={`/admin?seccion=${id}`} key={id}>
+                <span>{titulo}</span><strong>{total}</strong><small>Ver {titulo.toLocaleLowerCase('es')} <span aria-hidden="true">→</span></small>
+              </Link>)}
+          </div>}
+      </section>}
 
       {pestania === 'usuarios' && (
         <section className="tarjeta admin-seccion" aria-labelledby="admin-usuarios-titulo">
@@ -308,6 +307,7 @@ const pestanas = [
   <PanelDemandaEspecialidades />
 )}
 
+      </div>
     </div>
   );
 }

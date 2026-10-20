@@ -61,7 +61,7 @@ export const medicosService = {
   // RF03: Buscar médicos
   // ==========================================================
 
-  async buscar({ especialidadId = null, texto = '' } = {}) {
+  async buscar({ especialidadId = null, clinicaId = null, texto = '' } = {}) {
 
     let consulta = supabase
       .from('medicos')
@@ -75,6 +75,8 @@ export const medicosService = {
         especialidadId
       );
     }
+
+    if (clinicaId) consulta = consulta.eq('clinica_id', clinicaId);
 
     if (texto.trim()) {
       consulta = consulta.ilike(

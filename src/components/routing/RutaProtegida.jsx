@@ -7,7 +7,7 @@ export default function RutaProtegida({ children, roles }) {
   const ubicacion = useLocation();
 
   if (cargando) return <p className="contenedor">Cargando…</p>;
-  if (!perfil) return <Navigate to="/login" state={{ returnTo: `${ubicacion.pathname}${ubicacion.search}` }} replace />;
+  if (!perfil) return <Navigate to="/login" state={{ returnTo: `${ubicacion.pathname}${ubicacion.search}${ubicacion.hash}` }} replace />;
   if (roles && !roles.includes(perfil.rol)) return <Navigate to="/" replace />;
   return children;
 }
