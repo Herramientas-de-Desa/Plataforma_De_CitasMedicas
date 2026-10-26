@@ -11,68 +11,70 @@ const CLOUDINARY_UPLOAD_URL = CLOUDINARY_CLOUD_NAME
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
 const ALLOWED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
+  'image/jpeg',
+  'image/png',
+  'image/webp',
 ];
 
 const validateImage = (file) => {
   if (!file) {
-    throw new Error("Selecciona una imagen.");
+    throw new Error('Selecciona una imagen.');
   }
 
   if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-    throw new Error("Formato no permitido. Usa JPG, PNG o WEBP.");
+    throw new Error('Formato no permitido. Usa JPG, PNG o WEBP.');
   }
 
   if (file.size > MAX_IMAGE_SIZE) {
-    throw new Error("La imagen no puede superar los 5 MB.");
+    throw new Error('La imagen no puede superar los 5 MB.');
   }
 };
 
-export const uploadDoctorImage = async (file, medicoId) => {
+const subirImagenCloudinary = async (file, usuarioId) => {
   validateImage(file);
 
   if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
     throw new Error(
-      "Configura VITE_CLOUDINARY_CLOUD_NAME y VITE_CLOUDINARY_UPLOAD_PRESET."
+      'Configura VITE_CLOUDINARY_CLOUD_NAME y VITE_CLOUDINARY_UPLOAD_PRESET.',
     );
   }
 
   if (
-    medicoId === null ||
-    medicoId === undefined ||
-    String(medicoId).trim() === ""
+    usuarioId === null ||
+    usuarioId === undefined ||
+    String(usuarioId).trim() === ''
   ) {
-    throw new Error("Se necesita el ID del médico.");
+    throw new Error('Se necesita el ID del usuario.');
   }
 
   const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-  formData.append("folder", `medicos/${medicoId}`);
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  formData.append('folder', `usuarios/${usuarioId}`);
 
   let response;
 
   try {
     response = await fetch(CLOUDINARY_UPLOAD_URL, {
-      method: "POST",
+      method: 'POST',
       body: formData,
     });
   } catch {
-    throw new Error("No se pudo conectar con Cloudinary.");
+    throw new Error('No se pudo conectar con Cloudinary.');
   }
 
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     throw new Error(
-      data?.error?.message || "No se pudo subir la imagen a Cloudinary."
+      data?.error?.message || 'No se pudo subir la imagen a Cloudinary.',
     );
   }
 
   if (!data.secure_url || !data.public_id) {
-    throw new Error("Cloudinary no devolvió los datos esperados de la imagen.");
+    throw new Error(
+      'Cloudinary no devolvió los datos esperados de la imagen.',
+    );
   }
 
   return {
@@ -86,8 +88,20 @@ export const uploadDoctorImage = async (file, medicoId) => {
   };
 };
 
-export const uploadDoctorImageForDatabase = async (file, medicoId) => {
-  const image = await uploadDoctorImage(file, medicoId);
+/**
+ * Sube la imagen a Cloudinary.
+ * No modifica la base de datos.
+ */
+export const uploadUserImage = async (file, usuarioId) => {
+  return subirImagenCloudinary(file, usuarioId);
+};
+
+/**
+ * Devuelve los campos que deben guardarse en public.usuarios.
+ * El llamador debe enviarlos al backend o a Supabase.
+ */
+export const uploadUserImageForDatabase = async (file, usuarioId) => {
+  const image = await subirImagenCloudinary(file, usuarioId);
 
   return {
     foto_url: image.url,
@@ -96,18 +110,14 @@ export const uploadDoctorImageForDatabase = async (file, medicoId) => {
   };
 };
 
+/**
+ * Genera la URL de visualización a partir del public_id.
+ */
+export function getUserProfileImage(publicId) {
+  if (!publicId) return '';
 
-export function getDoctorProfileImage(publicId) {
-  if (!publicId) {
-    return '';
-  }
-
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-
-  if (!cloudName) {
-    console.error(
-      'Falta configurar VITE_CLOUDINARY_CLOUD_NAME'
-    );
+  if (!CLOUDINARY_CLOUD_NAME) {
+    console.error('Falta configurar VITE_CLOUDINARY_CLOUD_NAME');
     return '';
   }
 
@@ -116,5 +126,29 @@ export function getDoctorProfileImage(publicId) {
     .map(encodeURIComponent)
     .join('/');
 
-  return `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto/${encodedPublicId}`;
+  return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto/${encodedPublicId}`;
+}
+
+/**
+ * Compatibilidad con el servicio existente de médicos.
+ * Mantiene la subida en la carpeta medicos/{medicoId}.
+ */
+export const uploadDoctorImage = async (file, medicoId) => {
+  const image = await subirImagenCloudinary(file, medicoId);
+
+  return image;
+};
+
+export const uploadDoctorImageForDatabase = async (file, medicoId) => {
+  const image = await subirImagenCloudinary(file, medicoId);
+
+  return {
+    foto_url: image.url,
+    foto_public_id: image.publicId,
+    foto_version: image.version,
+  };
+};
+
+export function getDoctorProfileImage(publicId) {
+  return getUserProfileImage(publicId);
 }

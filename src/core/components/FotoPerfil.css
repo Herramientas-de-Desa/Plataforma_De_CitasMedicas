@@ -1,0 +1,161 @@
+.foto-perfil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.foto-perfil__marco {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #e8eef7;
+  box-shadow: 0 0 0 4px #fff, 0 0 0 5px #dce4ee;
+}
+
+.foto-perfil__imagen,
+.foto-perfil__iniciales {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.foto-perfil__imagen {
+  object-fit: cover;
+}
+
+.foto-perfil__iniciales {
+  color: #31527a;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.foto-perfil__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.foto-perfil__camara {
+  position: absolute;
+  right: -2px;
+  bottom: 2px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #1769aa;
+  color: #fff;
+  box-shadow: 0 2px 8px rgb(15 35 60 / 22%);
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.foto-perfil__camara:hover {
+  background: #10558c;
+  transform: scale(1.05);
+}
+
+.foto-perfil__camara:focus-visible,
+.foto-perfil__accion:focus-visible {
+  outline: 3px solid #80bfff;
+  outline-offset: 3px;
+}
+
+.foto-perfil__camara:disabled,
+.foto-perfil__accion:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.foto-perfil__camara svg,
+.foto-perfil__accion svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.foto-perfil__acciones {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.foto-perfil__accion {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+}
+
+.foto-perfil__accion--guardar {
+  background: #16834a;
+}
+
+.foto-perfil__accion--guardar:hover {
+  background: #106b3b;
+}
+
+.foto-perfil__accion--cancelar {
+  background: #64748b;
+}
+
+.foto-perfil__accion--cancelar:hover {
+  background: #475569;
+}
+
+.foto-perfil__spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgb(255 255 255 / 45%);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: foto-perfil-girar 700ms linear infinite;
+}
+
+.foto-perfil__error {
+  max-width: 220px;
+  margin: 0;
+  color: #b42318;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
+@keyframes foto-perfil-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .foto-perfil__camara,
+  .foto-perfil__spinner {
+    animation: none;
+    transition: none;
+  }
+}
