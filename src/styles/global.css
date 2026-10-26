@@ -3342,8 +3342,6 @@ select:focus {
   .demanda-grafica-temporal {
     height: 260px;
   }
-<<<<<<< HEAD
-=======
 }
 
 /* Presentación del médico */
@@ -3423,5 +3421,4 @@ select:focus {
   .reserva-medico-datos h1 {
     font-size: 1.25rem;
   }
->>>>>>> 9c544d9 (Guardado temporal)
 }
