@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../core/context/AuthContext';
-import { authService } from '../core/context/AuthContext';
+import { authService } from '../core/services/authService';
 import { enlaceActivo, NAVEGACION_ROL, NOMBRES_ROL } from './navegacion';
 import './Navegacion.css';
 
