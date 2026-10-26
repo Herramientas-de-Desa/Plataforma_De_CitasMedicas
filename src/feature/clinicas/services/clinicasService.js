@@ -32,8 +32,12 @@ export const clinicasService = {
         return reject(new Error('Tu navegador no soporta geolocalización.'));
       }
       navigator.geolocation.getCurrentPosition(
-        (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-        () => reject(new Error('No se pudo obtener tu ubicación. Activa los permisos de ubicación.')),
+        (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude, precision: pos.coords.accuracy }),
+        (error) => reject(new Error(error.code === 1
+          ? 'No compartiste tu ubicación. Puedes explorar las clínicas y elegir una manualmente.'
+          : error.code === 3
+            ? 'La ubicación está tardando demasiado. Puedes explorar el mapa o volver a intentarlo.'
+            : 'Tu ubicación no está disponible. Puedes seguir explorando las clínicas en el mapa.')),
         { enableHighAccuracy: true, timeout: 10000 }
       );
     });

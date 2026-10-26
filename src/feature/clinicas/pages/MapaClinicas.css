@@ -1,0 +1,32 @@
+.clinicas-ubicacion { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 20px; margin-bottom: 18px; border-radius: var(--radio); background: var(--menta); }
+.clinicas-ubicacion p { color: var(--verde-osc); font-size: .88rem; margin-top: 4px; }
+.clinicas-aviso { padding: 12px 16px; border: 1px solid var(--borde); border-radius: 8px; background: var(--blanco); margin-bottom: 16px; }
+.clinicas-pagina .alerta { margin-bottom: 16px; }
+.leaflet-marker-icon.clinica-marcador { display: block; object-fit: contain; background: white; border: 2px solid white; border-radius: 10px; box-shadow: 0 2px 8px #10322b4d; }
+.clinicas-leyenda-icono { width: 22px; height: 22px; object-fit: contain; border-radius: 4px; }
+.clinica-mi-marcador { background: #2663d6; border: 4px solid white; border-radius: 50%; box-shadow: 0 0 0 5px #2663d633; }
+.clinicas-leyenda { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 12px 0 28px; font-size: .8rem; color: var(--gris); }
+.clinicas-leyenda span { display: flex; align-items: center; gap: 7px; }
+.clinicas-punto { display: inline-block; flex-shrink: 0; width: 10px; height: 10px; border-radius: 3px; background: var(--verde); }
+.clinicas-punto-usuario { background: #2663d6; border-radius: 50%; }
+.clinicas-lista-cabecera { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+.clinicas-lista-cabecera h2 { font-size: 1.2rem; }
+.clinicas-lista-cabecera > span { color: var(--gris); font-size: .85rem; }
+.clinicas-lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.clinica-opcion { display: grid; gap: 5px; padding: 18px; background: white; color: var(--tinta); border: 1px solid var(--borde); border-radius: 12px; font: inherit; text-align: left; cursor: pointer; }
+.clinica-opcion:hover, .clinica-opcion.clinica-seleccionada { border-color: var(--verde); background: #f1f8f4; }
+.clinica-opcion > span:not(.distancia), .clinica-opcion > small { font-size: .85rem; color: var(--gris); }
+.clinica-opcion .clinica-ver { margin-top: 6px; color: var(--verde-osc); font-weight: 600; }
+.clinica-ficha-destino, .clinicas-directorio { scroll-margin-top: 110px; }
+.clinica-ficha-destino { margin-top: 24px; }
+.clinica-ficha-cabecera { display: flex; align-items: start; justify-content: space-between; gap: 20px; padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--borde); }
+.clinica-ficha h2 { font-size: 1.35rem; }
+.clinica-ficha h3 { font-size: 1.05rem; }
+.clinica-ficha-cabecera p:not(.etiqueta-seccion), .clinica-ficha-ayuda { color: var(--gris); font-size: .9rem; }
+.clinica-ficha-ayuda { margin: 6px 0 18px; }
+.clinica-ficha-cabecera .boton { flex-shrink: 0; }
+@media (max-width: 640px) {
+  .clinicas-lista { grid-template-columns: minmax(0, 1fr); }
+  .clinica-ficha-cabecera { flex-direction: column; }
+  .clinicas-ubicacion .boton { width: 100%; }
+}
