@@ -1427,10 +1427,14 @@ select:focus {
   overflow-wrap: anywhere;
 }
 
+/* La celda sigue siendo table-cell (con flex se salía de la fila y su borde
+   quedaba desalineado); los botones van en línea con su propio espacio. */
 .acciones-tabla {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  white-space: nowrap;
+}
+
+.acciones-tabla > * + * {
+  margin-left: 8px;
 }
 
 .admin-pestanas {
@@ -2521,6 +2525,11 @@ select:focus {
 
   .tabla-tarjetas .acciones-tabla {
     flex-wrap: wrap;
+    white-space: normal;
+  }
+
+  .tabla-tarjetas .acciones-tabla > * + * {
+    margin-left: 0;
   }
 
   .lista-distancias li {
