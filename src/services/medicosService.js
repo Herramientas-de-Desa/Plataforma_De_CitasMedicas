@@ -140,6 +140,13 @@ export const medicosService = {
   // RF08: Gestión de médicos - administrador
   // ==========================================================
 
+  /** Ids de médicos que tienen al menos un turno registrado. */
+  async idsConHorarios() {
+    const { data, error } = await supabase.from('horarios').select('medico_id');
+    if (error) throw new Error(error.message);
+    return new Set((data || []).map((h) => h.medico_id));
+  },
+
   async listarTodos() {
 
     const { data, error } = await supabase

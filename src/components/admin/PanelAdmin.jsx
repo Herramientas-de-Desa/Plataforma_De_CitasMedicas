@@ -1,26 +1,23 @@
 // Componente: panel del administrador (RF08).
-// Gestiona usuarios, médicos, especialidades y supervisa citas.
+// Gestiona usuarios, médicos, especialidades, clínicas y supervisa citas.
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import AdminNavegacion from '../layout/AdminNavegacion';
-import { seccionAdmin } from '../layout/navegacion';
+import { NOMBRES_ROL, seccionAdmin } from '../layout/navegacion';
 import { usuariosService } from '../../services/usuariosService';
 import { medicosService } from '../../services/medicosService';
 import { especialidadesService } from '../../services/especialidadesService';
 import { clinicasService } from '../../services/clinicasService';
 import { citasService } from '../../services/citasService';
+import { fechaActualEnIca, horaActualEnIca } from '../../services/fechas';
 import PanelDemandaMedicos from './demanda/PanelDemandaMedicos';
 import ConfiguracionMedica from '../medico/ConfiguracionMedica';
 import PanelDemandaEspecialidades from './demanda/PanelDemandaEspecialidades';
+import AdminClinicas from './AdminClinicas';
+import AdminCitas from './AdminCitas';
+import DialogoConfirmacion from '../comun/DialogoConfirmacion';
 
-const formateadorFechaAdmin = new Intl.DateTimeFormat('es-PE', {
-  day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC',
-});
-
-function formatearFechaAdmin(fecha) {
-  if (!fecha) return '—';
-  return formateadorFechaAdmin.format(new Date(`${fecha}T00:00:00Z`)).replace('.', '');
-}
+const ACTIVAS = ['pendiente', 'confirmada'];
 
 export default function PanelAdmin() {
   const ubicacion = useLocation();
@@ -31,26 +28,35 @@ export default function PanelAdmin() {
   const [especialidades, setEspecialidades] = useState([]);
   const [clinicas, setClinicas] = useState([]);
   const [citas, setCitas] = useState([]);
+  const [conHorarios, setConHorarios] = useState(new Set());
   const [error, setError] = useState('');
+  const [aviso, setAviso] = useState('');
   const [usuarioMedico, setUsuarioMedico] = useState('');
   const [nuevaEsp, setNuevaEsp] = useState('');
   const [busquedaUsuario, setBusquedaUsuario] = useState('');
   const [busquedaMedico, setBusquedaMedico] = useState('');
-  const [filtroFechaCita, setFiltroFechaCita] = useState('');
-  const [filtroEstadoCita, setFiltroEstadoCita] = useState('');
+  const [medicoEditado, setMedicoEditado] = useState(null); // { medico, horarios }
+  const [confirmacion, setConfirmacion] = useState(null); // diálogo abierto y su acción
+  const [procesando, setProcesando] = useState(false);
+  const [errorDialogo, setErrorDialogo] = useState('');
+
+  // Cada acción recarga solo los datos que cambió.
+  const recargar = {
+    usuarios: async () => setUsuarios(await usuariosService.listar()),
+    medicos: async () => {
+      const [m, h] = await Promise.all([medicosService.listarTodos(), medicosService.idsConHorarios()]);
+      setMedicos(m); setConHorarios(h);
+    },
+    especialidades: async () => setEspecialidades(await especialidadesService.listar()),
+    clinicas: async () => setClinicas(await clinicasService.listar()),
+    citas: async () => setCitas(await citasService.listarTodas()),
+  };
 
   async function cargarTodo() {
     setError('');
     setCargando(true);
     try {
-      const [u, m, e, cl, ci] = await Promise.all([
-        usuariosService.listar(),
-        medicosService.listarTodos(),
-        especialidadesService.listar(),
-        clinicasService.listar(),
-        citasService.listarTodas(),
-      ]);
-      setUsuarios(u); setMedicos(m); setEspecialidades(e); setClinicas(cl); setCitas(ci);
+      await Promise.all(Object.values(recargar).map((cargar) => cargar()));
     } catch (e) {
       setError(e.message);
     } finally {
@@ -59,15 +65,130 @@ export default function PanelAdmin() {
   }
 
   useEffect(() => { cargarTodo(); }, []);
+  useEffect(() => { setAviso(''); setMedicoEditado(null); }, [pestania]);
+
+  async function ejecutar(accion, mensaje) {
+    setError('');
+    setAviso('');
+    try {
+      await accion();
+      if (mensaje) setAviso(mensaje);
+    } catch (e) {
+      setError(e.message);
+    }
+  }
+
+  function abrirConfirmacion(datos) {
+    setErrorDialogo('');
+    setConfirmacion(datos);
+  }
+
+  async function confirmar() {
+    setProcesando(true);
+    setErrorDialogo('');
+    try {
+      await confirmacion.accion();
+      setAviso(confirmacion.exito);
+      setConfirmacion(null);
+    } catch (e) {
+      setErrorDialogo(e.message);
+    } finally {
+      setProcesando(false);
+    }
+  }
 
   async function crearEspecialidad() {
     if (!nuevaEsp.trim()) return;
-    try {
+    await ejecutar(async () => {
       await especialidadesService.crear(nuevaEsp.trim());
       setNuevaEsp('');
-      cargarTodo();
-    } catch (e) { setError(e.message); }
+      await recargar.especialidades();
+    }, `Agregaste la especialidad ${nuevaEsp.trim()}.`);
   }
+
+  function pedirCambioRol(usuario, rol) {
+    abrirConfirmacion({
+      titulo: rol === 'admin' ? '¿Dar permisos de administrador?' : '¿Cambiar el rol?',
+      cuerpo: <>
+        <p><strong>{usuario.nombres}</strong> ({usuario.correo}) pasará de <strong>{NOMBRES_ROL[usuario.rol]}</strong> a <strong>{NOMBRES_ROL[rol]}</strong>.</p>
+        {rol === 'admin' && <p>Podrá ver todos los datos, cambiar roles y eliminar registros.</p>}
+      </>,
+      textoConfirmar: 'Sí, cambiar rol',
+      peligro: rol === 'admin',
+      exito: `${usuario.nombres} ahora es ${NOMBRES_ROL[rol].toLowerCase()}.`,
+      accion: async () => { await usuariosService.cambiarRol(usuario.id_usuario, rol); await recargar.usuarios(); },
+    });
+  }
+
+  function pedirEliminarMedico(m) {
+    const suyas = citas.filter((c) => c.id_medico === m.id_medico);
+    const ahora = `${fechaActualEnIca()} ${horaActualEnIca()}`;
+    const futuras = suyas.filter((c) => ACTIVAS.includes(c.estado) && `${c.fecha} ${c.hora.slice(0, 5)}` > ahora);
+    if (futuras.length) {
+      abrirConfirmacion({
+        titulo: 'No se puede eliminar todavía',
+        cuerpo: <>
+          <p><strong>{m.nombre}</strong> tiene <strong>{futuras.length}</strong> {futuras.length === 1 ? 'cita futura' : 'citas futuras'} pendientes o confirmadas.</p>
+          <p>Cancélalas desde la sección Citas antes de eliminarlo. Si solo quieres que deje de recibir reservas, márcalo como no disponible.</p>
+        </>,
+        textoConfirmar: m.disponible ? 'Marcar como no disponible' : 'Entendido',
+        exito: m.disponible ? `${m.nombre} ya no recibe nuevas reservas.` : '',
+        accion: async () => {
+          if (!m.disponible) return;
+          await medicosService.cambiarDisponibilidad(m.id_medico, false);
+          await recargar.medicos();
+        },
+      });
+      return;
+    }
+    abrirConfirmacion({
+      titulo: `¿Eliminar a ${m.nombre}?`,
+      cuerpo: <>
+        {suyas.length > 0
+          ? <p>También se borrarán <strong>{suyas.length}</strong> {suyas.length === 1 ? 'cita' : 'citas'} de su historial, sus horarios y sus predicciones. <strong>No se puede deshacer.</strong></p>
+          : <p>Se borrarán sus horarios. Esta acción no se puede deshacer.</p>}
+        <p>Si solo quieres que deje de recibir reservas, usa "No disponible".</p>
+      </>,
+      textoConfirmar: 'Sí, eliminar médico',
+      peligro: true,
+      exito: `Eliminaste a ${m.nombre}.`,
+      accion: async () => {
+        await medicosService.eliminar(m.id_medico);
+        await Promise.all([recargar.medicos(), recargar.citas()]);
+      },
+    });
+  }
+
+  function pedirEliminarEspecialidad(e) {
+    const enUso = medicos.filter((m) => m.especialidad?.id_especialidad === e.id_especialidad).length;
+    abrirConfirmacion({
+      titulo: enUso ? 'Especialidad en uso' : `¿Eliminar ${e.nombre}?`,
+      cuerpo: enUso
+        ? <p><strong>{enUso}</strong> {enUso === 1 ? 'médico tiene' : 'médicos tienen'} esta especialidad. Asígnales otra antes de eliminarla.</p>
+        : <p>Dejará de aparecer en los filtros y formularios.</p>,
+      textoConfirmar: enUso ? 'Entendido' : 'Sí, eliminar',
+      peligro: !enUso,
+      exito: enUso ? '' : `Eliminaste la especialidad ${e.nombre}.`,
+      accion: async () => {
+        if (enUso) return;
+        await especialidadesService.eliminar(e.id_especialidad);
+        await recargar.especialidades();
+      },
+    });
+  }
+
+  async function editarMedico(m) {
+    await ejecutar(async () => {
+      setMedicoEditado({ medico: m, horarios: await medicosService.obtenerHorarios(m.id_medico) });
+    });
+  }
+
+  // --- Datos derivados ---
+  const hoy = fechaActualEnIca();
+  const citasHoy = citas.filter((c) => c.fecha === hoy && c.estado !== 'cancelada');
+  const porConfirmar = citas.filter((c) => c.estado === 'pendiente' && c.fecha >= hoy);
+  const medicosSinHorario = medicos.filter((m) => !conHorarios.has(m.id_medico));
+  const clinicasSinUbicacion = clinicas.filter((c) => c.latitud == null || c.longitud == null);
 
   const cuentasSinMedico = usuarios.filter(u => u.rol !== 'admin' && !medicos.some(m => m.usuario_id === u.id_usuario));
   const cuentaSeleccionada = cuentasSinMedico.find(u => u.id_usuario === usuarioMedico);
@@ -79,9 +200,6 @@ export default function PanelAdmin() {
     const correo = usuarios.find(u => u.id_usuario === m.usuario_id)?.correo || '';
     return `${m.id_medico} ${m.nombre} ${correo}`.toLocaleLowerCase('es').includes(busquedaMedicoNormalizada);
   });
-  const citasVisibles = citas.filter((cita) =>
-    (!filtroFechaCita || cita.fecha === filtroFechaCita)
-    && (!filtroEstadoCita || cita.estado === filtroEstadoCita));
 
   return (
     <div className="contenedor mc-admin-layout">
@@ -92,17 +210,32 @@ export default function PanelAdmin() {
         <h1>Panel de control</h1>
       </div>
 
-      {error && <p className="alerta alerta-error" style={{ marginBottom: 14 }}>{error}</p>}
+      {error && <p className="alerta alerta-error" role="alert" style={{ marginBottom: 14 }}>{error}</p>}
+      {aviso && pestania !== 'clinicas' && pestania !== 'citas' && <p className="alerta alerta-exito" role="status" style={{ marginBottom: 14 }}>{aviso}</p>}
+
       {pestania === 'resumen' && <section aria-label="Resumen de administración">
         <p style={{ marginBottom: 20 }}>Gestiona las cuentas, los profesionales y las citas desde un solo lugar.</p>
-        {cargando ? <p role="status">Consultando el resumen…</p> : error ? <button type="button" className="boton" onClick={cargarTodo}>Reintentar</button> :
+        {cargando ? <p role="status">Consultando el resumen…</p> : error ? <button type="button" className="boton" onClick={cargarTodo}>Reintentar</button> : <>
           <div className="mc-admin-resumen">
-            {[['usuarios', 'Usuarios', usuarios.length], ['medicos', 'Médicos', medicos.length],
-              ['especialidades', 'Especialidades', especialidades.length], ['citas', 'Citas', citas.length]]
-              .map(([id, titulo, total]) => <Link className="tarjeta" to={`/admin?seccion=${id}`} key={id}>
-                <span>{titulo}</span><strong>{total}</strong><small>Ver {titulo.toLocaleLowerCase('es')} <span aria-hidden="true">→</span></small>
+            {[['citas', 'Citas de hoy', citasHoy.length, 'Ver citas'],
+              ['citas', 'Por confirmar', porConfirmar.length, 'Revisar pendientes'],
+              ['medicos', 'Médicos', medicos.length, 'Ver médicos'],
+              ['usuarios', 'Usuarios', usuarios.length, 'Ver usuarios']]
+              .map(([id, titulo, total, enlace]) => <Link className="tarjeta" to={`/admin?seccion=${id}`} key={titulo}>
+                <span>{titulo}</span><strong>{total}</strong><small>{enlace} <span aria-hidden="true">→</span></small>
               </Link>)}
-          </div>}
+          </div>
+          {(medicosSinHorario.length > 0 || clinicasSinUbicacion.length > 0 || porConfirmar.length > 0) && (
+            <div className="tarjeta admin-pendientes">
+              <h2>Requiere atención</h2>
+              <ul>
+                {porConfirmar.length > 0 && <li><strong>{porConfirmar.length}</strong> {porConfirmar.length === 1 ? 'cita espera' : 'citas esperan'} confirmación del médico. <Link to="/admin?seccion=citas">Ver citas</Link></li>}
+                {medicosSinHorario.length > 0 && <li><strong>{medicosSinHorario.length}</strong> {medicosSinHorario.length === 1 ? 'médico no tiene' : 'médicos no tienen'} horarios, así que no reciben reservas: {medicosSinHorario.slice(0, 3).map((m) => m.nombre).join(', ')}{medicosSinHorario.length > 3 ? '…' : ''}. <Link to="/admin?seccion=medicos">Revisar</Link></li>}
+                {clinicasSinUbicacion.length > 0 && <li><strong>{clinicasSinUbicacion.length}</strong> {clinicasSinUbicacion.length === 1 ? 'clínica no aparece' : 'clínicas no aparecen'} en el mapa por falta de ubicación. <Link to="/admin?seccion=clinicas">Revisar</Link></li>}
+              </ul>
+            </div>
+          )}
+        </>}
       </section>}
 
       {pestania === 'usuarios' && (
@@ -133,17 +266,18 @@ export default function PanelAdmin() {
                 <tr key={u.id_usuario}>
                   <td data-label="Nombres"><strong>{u.nombres}</strong></td>
                   <td data-label="Correo">{u.correo}</td>
-                  <td data-label="Rol"><span className={`admin-rol admin-rol-${u.rol}`}>{u.rol === 'medico' ? 'médico' : u.rol}</span></td>
+                  <td data-label="Rol"><span className={`admin-rol admin-rol-${u.rol}`}>{NOMBRES_ROL[u.rol] || u.rol}</span></td>
                   <td data-label="Cambiar rol">
                     <select
                       aria-label={`Cambiar rol de ${u.nombres}`}
                       value={u.rol}
                       disabled={medicos.some(m => m.usuario_id === u.id_usuario)}
-                      onChange={async (e) => { try { await usuariosService.cambiarRol(u.id_usuario, e.target.value); await cargarTodo(); } catch (fallo) { setError(fallo.message); } }}
+                      title={medicos.some(m => m.usuario_id === u.id_usuario) ? 'Tiene un perfil médico: elimínalo antes de cambiar el rol.' : undefined}
+                      onChange={(e) => pedirCambioRol(u, e.target.value)}
                     >
-                      <option value="paciente">paciente</option>
-                      {u.rol === 'medico' && <option value="medico">médico</option>}
-                      <option value="admin">admin</option>
+                      <option value="paciente">Paciente</option>
+                      {u.rol === 'medico' && <option value="medico">Médico</option>}
+                      <option value="admin">Administrador</option>
                     </select>
                   </td>
                 </tr>
@@ -158,6 +292,24 @@ export default function PanelAdmin() {
 
       {pestania === 'medicos' && (
         <div className="grid admin-medicos-layout">
+          {medicoEditado ? (
+            <section className="tarjeta admin-seccion" aria-labelledby="admin-medico-editar-titulo">
+              <div className="admin-seccion-cabecera">
+                <div>
+                  <h2 id="admin-medico-editar-titulo">Editar a {medicoEditado.medico.nombre}</h2>
+                  <p>Cambia su clínica, especialidad, datos de contacto u horarios.</p>
+                </div>
+                <button className="boton boton-secundario" type="button" onClick={() => setMedicoEditado(null)}>Volver a la lista</button>
+              </div>
+              <ConfiguracionMedica key={medicoEditado.medico.id_medico} modoAdmin usuarioId={medicoEditado.medico.usuario_id}
+                medico={medicoEditado.medico} horarios={medicoEditado.horarios} nombreCuenta={medicoEditado.medico.nombre}
+                onGuardado={async () => {
+                  const nombre = medicoEditado.medico.nombre;
+                  setMedicoEditado(null);
+                  await ejecutar(recargar.medicos, `Guardaste los cambios de ${nombre}.`);
+                }} />
+            </section>
+          ) : <>
           <section className="tarjeta admin-seccion" aria-labelledby="admin-medicos-form-titulo">
             <h2 id="admin-medicos-form-titulo">Asignar perfil médico</h2>
             <p>Selecciona una cuenta registrada. La asignación inicial del rol, la clínica, la especialidad y los horarios se guarda junta.</p>
@@ -167,7 +319,12 @@ export default function PanelAdmin() {
                 {cuentasSinMedico.map(u => <option key={u.id_usuario} value={u.id_usuario}>{u.nombres} · {u.correo}</option>)}
               </select>
             </label>
-            {cuentaSeleccionada && <ConfiguracionMedica key={usuarioMedico} modoAdmin usuarioId={usuarioMedico} medico={null} horarios={[]} nombreCuenta={cuentaSeleccionada.nombres} onGuardado={() => { setUsuarioMedico(''); cargarTodo(); }} />}
+            {cuentaSeleccionada && <ConfiguracionMedica key={usuarioMedico} modoAdmin usuarioId={usuarioMedico} medico={null} horarios={[]} nombreCuenta={cuentaSeleccionada.nombres}
+              onGuardado={() => {
+                const nombre = cuentaSeleccionada.nombres;
+                setUsuarioMedico('');
+                ejecutar(() => Promise.all([recargar.medicos(), recargar.usuarios()]), `${nombre} ya es médico.`);
+              }} />}
             {!cuentasSinMedico.length && <p className="admin-ayuda">No hay cuentas pendientes de asignación.</p>}
           </section>
 
@@ -175,7 +332,7 @@ export default function PanelAdmin() {
             <div className="admin-seccion-cabecera">
               <div>
                 <h2 id="admin-medicos-lista-titulo">Médicos registrados</h2>
-                <p>Consulta el ID asignado automáticamente, su clínica y especialidad.</p>
+                <p>Consulta su clínica y especialidad, edítalos o pausa sus reservas.</p>
               </div>
               <span className="admin-seccion-total">{medicosVisibles.length} de {medicos.length} médicos</span>
             </div>
@@ -183,28 +340,34 @@ export default function PanelAdmin() {
               <input id="admin-buscar-medico" type="search" value={busquedaMedico} onChange={e => setBusquedaMedico(e.target.value)} placeholder="Ej. 12, María o correo" />
             </label></div>
             <div className="admin-tabla-contenedor"><table className="tabla tabla-tarjetas admin-tabla">
-              <thead><tr><th>ID</th><th>Nombre</th><th>Especialidad</th><th>Clínica</th><th>Disponible</th><th></th></tr></thead>
+              <thead><tr><th>ID</th><th>Nombre</th><th>Especialidad</th><th>Clínica</th><th>Reservas</th><th></th></tr></thead>
               <tbody>
                 {medicosVisibles.map((m) => (
                   <tr key={m.id_medico}>
                     <td data-label="ID"><strong>#{m.id_medico}</strong></td>
-                    <td data-label="Nombre"><strong>{m.nombre}</strong><p className="admin-ayuda">{m.usuario_id ? `Cuenta: ${usuarios.find((u) => u.id_usuario === m.usuario_id)?.correo || 'vinculada'}` : 'Sin cuenta vinculada'}</p></td>
+                    <td data-label="Nombre">
+                      <strong>{m.nombre}</strong>
+                      <p className="admin-ayuda">{m.usuario_id ? `Cuenta: ${usuarios.find((u) => u.id_usuario === m.usuario_id)?.correo || 'vinculada'}` : 'Sin cuenta vinculada'}</p>
+                      {!conHorarios.has(m.id_medico) && <p className="admin-alerta-texto">Sin horarios</p>}
+                    </td>
                     <td data-label="Especialidad">{m.especialidad?.nombre || '—'}</td>
                     <td data-label="Clínica">{m.clinica?.nombre || '—'}</td>
-                    <td data-label="Disponible">
+                    <td data-label="Reservas">
                       <button
                         className={`boton boton-mini ${m.disponible ? 'boton-secundario' : 'boton-peligro'}`}
                         aria-label={`Cambiar disponibilidad de ${m.nombre}: actualmente ${m.disponible ? 'disponible' : 'no disponible'}`}
-                        onClick={async () => { await medicosService.cambiarDisponibilidad(m.id_medico, !m.disponible); cargarTodo(); }}
+                        onClick={() => ejecutar(async () => {
+                          await medicosService.cambiarDisponibilidad(m.id_medico, !m.disponible);
+                          await recargar.medicos();
+                        }, m.disponible ? `${m.nombre} ya no recibe nuevas reservas.` : `${m.nombre} vuelve a recibir reservas.`)}
                       >
                         {m.disponible ? 'Disponible' : 'No disponible'}
                       </button>
                     </td>
-                    <td data-label="Acciones">
-                      <button className="boton boton-peligro boton-mini"
-                        onClick={async () => { if (confirm('¿Eliminar médico?')) { await medicosService.eliminar(m.id_medico); cargarTodo(); } }}>
-                        Eliminar
-                      </button>
+                    <td data-label="Acciones" className="acciones-tabla">
+                      <button className="boton boton-secundario boton-mini" type="button" disabled={!m.usuario_id}
+                        title={m.usuario_id ? undefined : 'Vincula una cuenta para poder editarlo.'} onClick={() => editarMedico(m)}>Editar</button>
+                      <button className="boton boton-peligro boton-mini" type="button" onClick={() => pedirEliminarMedico(m)}>Eliminar</button>
                     </td>
                   </tr>
                 ))}
@@ -212,6 +375,7 @@ export default function PanelAdmin() {
               </tbody>
             </table></div>
           </section>
+          </>}
         </div>
       )}
 
@@ -224,90 +388,64 @@ export default function PanelAdmin() {
             </div>
             <span className="admin-seccion-total">{especialidades.length} especialidades</span>
           </div>
-          <div className="admin-especialidad-form">
+          <form className="admin-especialidad-form" onSubmit={(e) => { e.preventDefault(); crearEspecialidad(); }}>
             <label htmlFor="admin-nueva-especialidad">Nueva especialidad</label>
             <input id="admin-nueva-especialidad" placeholder="Nombre de la especialidad" value={nuevaEsp} onChange={(e) => setNuevaEsp(e.target.value)} />
-            <button className="boton" onClick={crearEspecialidad}>Agregar</button>
-          </div>
+            <button className="boton" type="submit" disabled={!nuevaEsp.trim()}>Agregar</button>
+          </form>
           <div className="admin-tabla-contenedor"><table className="tabla tabla-tarjetas admin-tabla">
-            <thead><tr><th>ID</th><th>Nombre</th><th></th></tr></thead>
+            <thead><tr><th>ID</th><th>Nombre</th><th>Médicos</th><th></th></tr></thead>
             <tbody>
               {especialidades.map((e) => (
                 <tr key={e.id_especialidad}>
                   <td data-label="ID">{e.id_especialidad}</td>
                   <td data-label="Nombre"><strong>{e.nombre}</strong></td>
+                  <td data-label="Médicos">{medicos.filter((m) => m.especialidad?.id_especialidad === e.id_especialidad).length}</td>
                   <td data-label="Acciones">
-                    <button className="boton boton-peligro boton-mini"
-                      onClick={async () => { if (confirm('¿Eliminar especialidad?')) { await especialidadesService.eliminar(e.id_especialidad); cargarTodo(); } }}>
+                    <button className="boton boton-peligro boton-mini" type="button" onClick={() => pedirEliminarEspecialidad(e)}>
                       Eliminar
                     </button>
                   </td>
                 </tr>
               ))}
-              {especialidades.length === 0 && <tr><td colSpan="3">No hay especialidades registradas.</td></tr>}
+              {especialidades.length === 0 && <tr><td colSpan="4">No hay especialidades registradas.</td></tr>}
             </tbody>
           </table></div>
         </section>
+      )}
+
+      {pestania === 'clinicas' && (
+        <AdminClinicas clinicas={clinicas} medicos={medicos} onCambio={recargar.clinicas} />
       )}
 
       {pestania === 'citas' && (
-        <section className="tarjeta admin-seccion" aria-labelledby="admin-citas-titulo">
-          <div className="admin-seccion-cabecera">
-            <div>
-              <h2 id="admin-citas-titulo">Citas</h2>
-              <p>Consulta las reservas y su estado actual.</p>
-            </div>
-            <span className="admin-seccion-total">{citasVisibles.length} de {citas.length} citas</span>
-          </div>
-          <div className="admin-filtros">
-            <label htmlFor="admin-filtro-fecha-cita">Fecha
-              <input id="admin-filtro-fecha-cita" type="date" value={filtroFechaCita} onChange={(e) => setFiltroFechaCita(e.target.value)} />
-            </label>
-            <label htmlFor="admin-filtro-estado-cita">Estado
-              <select id="admin-filtro-estado-cita" value={filtroEstadoCita} onChange={(e) => setFiltroEstadoCita(e.target.value)}>
-                <option value="">Todos los estados</option>
-                <option value="pendiente">Pendiente</option>
-                <option value="confirmada">Confirmada</option>
-                <option value="atendida">Atendida</option>
-                <option value="cancelada">Cancelada</option>
-              </select>
-            </label>
-            {(filtroFechaCita || filtroEstadoCita) && (
-              <button className="boton boton-secundario boton-mini" onClick={() => { setFiltroFechaCita(''); setFiltroEstadoCita(''); }}>
-                Limpiar filtros
-              </button>
-            )}
-          </div>
-          <div className="admin-tabla-contenedor"><table className="tabla tabla-tarjetas admin-tabla">
-            <thead><tr><th>Fecha</th><th>Hora</th><th>Paciente</th><th>Médico</th><th>Clínica</th><th>Estado</th></tr></thead>
-            <tbody>
-              {citasVisibles.map((c) => (
-                <tr key={c.id_cita}>
-                  <td data-label="Fecha"><strong>{formatearFechaAdmin(c.fecha)}</strong></td>
-                  <td data-label="Hora">{c.hora.slice(0, 5)}</td>
-                  <td data-label="Paciente">{c.paciente}</td>
-                  <td data-label="Médico">{c.medico}</td>
-                  <td data-label="Clínica">{c.clinica}</td>
-                  <td data-label="Estado"><span className={`estado estado-${c.estado}`}>{c.estado}</span></td>
-                </tr>
-              ))}
-              {citasVisibles.length === 0 && (
-                <tr><td colSpan="6">{citas.length ? 'No hay citas que coincidan con los filtros.' : 'No hay citas registradas.'}</td></tr>
-              )}
-            </tbody>
-          </table></div>
-        </section>
+        <AdminCitas citas={citas} onCambio={recargar.citas} />
       )}
 
-{pestania === 'demanda-medicos' && (
-  <PanelDemandaMedicos />
-)}
+      {pestania === 'demanda-medicos' && (
+        <PanelDemandaMedicos />
+      )}
 
-{pestania === 'demanda-especialidades' && (
-  <PanelDemandaEspecialidades />
-)}
+      {pestania === 'demanda-especialidades' && (
+        <PanelDemandaEspecialidades />
+      )}
 
       </div>
+
+      {confirmacion && (
+        <DialogoConfirmacion
+          titulo={confirmacion.titulo}
+          textoConfirmar={confirmacion.textoConfirmar}
+          textoCancelar="Volver"
+          peligro={confirmacion.peligro}
+          procesando={procesando}
+          error={errorDialogo}
+          onConfirmar={confirmar}
+          onCancelar={() => setConfirmacion(null)}
+        >
+          {confirmacion.cuerpo}
+        </DialogoConfirmacion>
+      )}
     </div>
   );
 }

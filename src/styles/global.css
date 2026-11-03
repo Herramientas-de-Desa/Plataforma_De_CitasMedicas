@@ -1080,6 +1080,77 @@ select:focus {
   }
 }
 
+/* ---------- Administración: resumen, clínicas y paginación ---------- */
+.admin-pendientes {
+  margin-top: 16px;
+  padding: 18px 20px;
+  border-left: 4px solid #d99a2b;
+}
+
+.admin-pendientes h2 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.admin-pendientes ul {
+  display: grid;
+  gap: 8px;
+  padding-left: 18px;
+  font-size: 0.9rem;
+}
+
+.admin-pendientes a {
+  color: var(--verde-osc);
+  font-weight: 600;
+}
+
+.admin-alerta-texto {
+  color: #94631d;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.admin-paginacion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  color: var(--gris);
+  font-size: 0.86rem;
+}
+
+.admin-clinica-form {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding: 18px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--marfil);
+}
+
+.admin-clinica-form h3 {
+  font-size: 1rem;
+}
+
+.admin-direccion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-direccion input {
+  flex: 1 1 240px;
+}
+
+.admin-form-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 /* ---------- Diálogo de confirmación ---------- */
 .dialogo-confirmacion {
   width: min(92vw, 440px);

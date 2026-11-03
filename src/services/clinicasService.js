@@ -25,6 +25,17 @@ export const clinicasService = {
     return data;
   },
 
+  async actualizar(idClinica, { nombre, direccion, telefono, latitud, longitud }) {
+    const { data, error } = await supabase
+      .from('clinicas')
+      .update({ nombre, direccion, telefono, latitud, longitud })
+      .eq('id_clinica', idClinica)
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    return data;
+  },
+
   /** API del navegador: posición actual del usuario */
   obtenerUbicacionUsuario() {
     return new Promise((resolve, reject) => {

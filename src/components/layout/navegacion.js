@@ -7,6 +7,7 @@ export const SECCIONES_ADMIN = [
   { id: 'usuarios', titulo: 'Usuarios', grupo: 'Gestión' },
   { id: 'medicos', titulo: 'Médicos', grupo: 'Gestión' },
   { id: 'especialidades', titulo: 'Especialidades', grupo: 'Gestión' },
+  { id: 'clinicas', titulo: 'Clínicas', grupo: 'Gestión' },
   { id: 'citas', titulo: 'Citas', grupo: 'Gestión' },
   { id: 'demanda-medicos', titulo: 'Demanda por médico', grupo: 'Predicciones' },
   { id: 'demanda-especialidades', titulo: 'Demanda por especialidad', grupo: 'Predicciones' },
