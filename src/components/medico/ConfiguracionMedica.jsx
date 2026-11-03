@@ -4,6 +4,13 @@ import { clinicasService } from '../../services/clinicasService';
 import { medicosService } from '../../services/medicosService';
 import { DIAS_ATENCION, validarHorarios } from '../../services/horariosValidacion';
 
+// Destinos para copiar los turnos de un día (1 = lunes … 7 = domingo).
+const DESTINOS_COPIA = {
+  laborables: { texto: 'De lunes a viernes', dias: [1, 2, 3, 4, 5] },
+  sabado: { texto: 'Lunes a sábado', dias: [1, 2, 3, 4, 5, 6] },
+  semana: { texto: 'Toda la semana', dias: [1, 2, 3, 4, 5, 6, 7] },
+};
+
 export default function ConfiguracionMedica({ medico, horarios, nombreCuenta, onGuardado, usuarioId = null, modoAdmin = false }) {
   const inicial = { nombre: medico?.nombre || nombreCuenta || '', telefono: medico?.telefono || '', especialidad_id: String(medico?.especialidad?.id_especialidad || ''), clinica_id: String(medico?.clinica?.id_clinica || '') };
   const turnosIniciales = () => horarios.map(h => ({ dia_semana: h.dia_semana, hora_inicio: h.hora_inicio.slice(0,5), hora_fin: h.hora_fin.slice(0,5) }));
@@ -17,6 +24,29 @@ export default function ConfiguracionMedica({ medico, horarios, nombreCuenta, on
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState('');
   const [editando, setEditando] = useState(!medico);
+  const [origenCopia, setOrigenCopia] = useState('1');
+  const [destinoCopia, setDestinoCopia] = useState('laborables');
+  const [avisoCopia, setAvisoCopia] = useState('');
+
+  const diasConTurnos = DIAS_ATENCION.map((dia, i) => ({ dia, numero: i + 1 }))
+    .filter(({ numero }) => turnos.some((h) => Number(h.dia_semana) === numero));
+  // Si el día elegido se quedó sin turnos, se usa el primer día que sí tiene.
+  const origenEfectivo = diasConTurnos.some(({ numero }) => String(numero) === origenCopia)
+    ? origenCopia : String(diasConTurnos[0]?.numero || '');
+
+  // Reemplaza los turnos de los días destino por una copia de los del día origen.
+  function copiarTurnos() {
+    const origen = Number(origenEfectivo);
+    const modelo = turnos.filter((h) => Number(h.dia_semana) === origen);
+    if (!modelo.length) return;
+    const destinos = DESTINOS_COPIA[destinoCopia].dias.filter((d) => d !== origen);
+    setTurnos((lista) => [
+      ...lista.filter((h) => !destinos.includes(Number(h.dia_semana))),
+      ...destinos.flatMap((d) => modelo.map((h) => ({ ...h, dia_semana: d }))),
+    ]);
+    setError('');
+    setAvisoCopia(`Copiaste los turnos del ${DIAS_ATENCION[origen - 1].toLowerCase()} a ${DESTINOS_COPIA[destinoCopia].texto.toLowerCase()}. Revisa y guarda los cambios.`);
+  }
   useEffect(() => {
     let activo = true;
     setCargando(true); setErrorCatalogo(false);
@@ -55,6 +85,21 @@ export default function ConfiguracionMedica({ medico, horarios, nombreCuenta, on
           {(!especialidades.length || !clinicas.length) && <p className="mp-aviso">Faltan clínicas o especialidades en el catálogo. Solicita al administrador que las registre para continuar.</p>}
         </fieldset>
         <fieldset className="mp-editor-horarios" disabled={guardando}><legend>2. Días y turnos de atención</legend><p>Activa tus días de trabajo y añade los turnos que necesites. Horarios de Perú.</p>
+          {diasConTurnos.length > 0 && <div className="mp-copiar-turnos">
+            <label>Copiar los turnos del
+              <select value={origenEfectivo}
+                onChange={e => { setOrigenCopia(e.target.value); setAvisoCopia(''); }}>
+                {diasConTurnos.map(({ dia, numero }) => <option key={numero} value={numero}>{dia}</option>)}
+              </select>
+            </label>
+            <label>a
+              <select value={destinoCopia} onChange={e => { setDestinoCopia(e.target.value); setAvisoCopia(''); }}>
+                {Object.entries(DESTINOS_COPIA).map(([id, { texto }]) => <option key={id} value={id}>{texto}</option>)}
+              </select>
+            </label>
+            <button type="button" className="boton boton-secundario boton-mini" onClick={copiarTurnos}>Copiar turnos</button>
+            {avisoCopia && <p className="mp-ayuda" role="status">{avisoCopia}</p>}
+          </div>}
           {DIAS_ATENCION.map((dia,indice) => {
             const bloques = turnos.map((h,i) => ({ ...h, indice:i })).filter(h => Number(h.dia_semana) === indice+1);
             return <div className="mp-dia-editor" key={dia}>

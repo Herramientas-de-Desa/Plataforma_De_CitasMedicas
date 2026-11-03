@@ -10,23 +10,27 @@ import { diaSemana, fechaActualEnIca, horaActualEnIca, sumarDias } from './fecha
 const DURACION_CITA_MIN = 30; // minutos por cita
 const DIAS_BUSQUEDA_PROXIMA = 30; // hasta dónde buscar el próximo día con horas libres
 
-/** Turnos libres de un día: horario semanal menos citas activas y, si es hoy, horas ya pasadas. */
-function turnosLibres(horarios, fechaISO, horasOcupadas) {
+/** Todos los turnos (HH:MM) de un día según el horario semanal del médico. */
+export function turnosDelDia(horarios, fechaISO) {
   const dia = diaSemana(fechaISO);
-  const hoy = fechaActualEnIca();
-  const ahora = fechaISO === hoy ? horaActualEnIca() : null;
-  const libres = [];
+  const turnos = [];
   for (const b of horarios.filter((h) => h.dia_semana === dia)) {
     let [h, m] = b.hora_inicio.split(':').map(Number);
     const [hf, mf] = b.hora_fin.split(':').map(Number);
     while (h * 60 + m + DURACION_CITA_MIN <= hf * 60 + mf) {
-      const hora = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-      if (!horasOcupadas.has(hora) && (!ahora || hora > ahora)) libres.push(hora);
+      turnos.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
       m += DURACION_CITA_MIN;
       if (m >= 60) { h += 1; m -= 60; }
     }
   }
-  return libres.sort();
+  return turnos.sort();
+}
+
+/** Turnos libres de un día: horario semanal menos citas activas y, si es hoy, horas ya pasadas. */
+function turnosLibres(horarios, fechaISO, horasOcupadas) {
+  const ahora = fechaISO === fechaActualEnIca() ? horaActualEnIca() : null;
+  return turnosDelDia(horarios, fechaISO)
+    .filter((hora) => !horasOcupadas.has(hora) && (!ahora || hora > ahora));
 }
 
 async function citasActivas(idMedico, desdeISO, hastaISO) {

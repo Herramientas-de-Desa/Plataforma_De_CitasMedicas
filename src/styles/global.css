@@ -955,6 +955,131 @@ select:focus {
   }
 }
 
+/* ---------- Agenda del médico ---------- */
+.agenda-resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.agenda-resumen .tarjeta {
+  display: grid;
+  gap: 4px;
+  padding: 16px 18px;
+}
+
+.agenda-resumen span {
+  color: var(--gris);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.agenda-resumen strong {
+  display: grid;
+  color: var(--tinta);
+  font-size: 1.6rem;
+}
+
+.agenda-siguiente strong {
+  font-size: 1.05rem;
+}
+
+.agenda-siguiente small {
+  color: var(--gris);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.agenda-resumen .agenda-sin-dato {
+  color: var(--gris);
+  font-size: 0.95rem;
+}
+
+.agenda-dia-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.agenda-dia-cabecera h2 {
+  flex: 1 1 auto;
+  min-width: 180px;
+  font-size: 1.05rem;
+}
+
+.agenda-dia-cabecera h2::first-letter {
+  text-transform: uppercase;
+}
+
+.agenda-dia-cabecera input {
+  width: auto;
+}
+
+.agenda-turnos {
+  display: grid;
+  gap: 6px;
+  list-style: none;
+}
+
+.agenda-turnos li {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+}
+
+.agenda-turno-libre {
+  background: var(--marfil);
+}
+
+.agenda-turno-ocupado {
+  background: var(--blanco);
+  border-left: 4px solid var(--verde) !important;
+}
+
+.agenda-hora {
+  color: var(--tinta);
+  font-weight: 700;
+}
+
+.agenda-libre {
+  grid-column: 2 / -1;
+  color: var(--gris);
+  font-size: 0.86rem;
+}
+
+.agenda-paciente {
+  display: grid;
+  min-width: 0;
+}
+
+.agenda-paciente a {
+  color: var(--verde-osc);
+  font-size: 0.82rem;
+}
+
+.agenda-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+@media (max-width: 640px) {
+  .agenda-turnos li {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .agenda-turnos li > :nth-child(n + 3) {
+    grid-column: 2;
+  }
+}
+
 /* ---------- Diálogo de confirmación ---------- */
 .dialogo-confirmacion {
   width: min(92vw, 440px);

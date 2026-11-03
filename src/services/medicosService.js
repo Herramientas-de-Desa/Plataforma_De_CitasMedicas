@@ -244,6 +244,19 @@ export const medicosService = {
   },
 
 
+  /** Foto del propio médico: se sube a Cloudinary y se guarda con una función que solo toca su fila. */
+  async subirMiFoto(idMedico, file) {
+    const image = await uploadDoctorImage(file, idMedico);
+    const { error } = await supabase.rpc('guardar_mi_foto_medico', {
+      p_url: image.url, p_public_id: image.publicId, p_version: image.version,
+    });
+    if (error) {
+      if (error.code === 'PGRST202') throw new Error('La subida de fotos aún no está habilitada. Solicita al administrador que la active.');
+      throw new Error(error.code === 'P0001' ? error.message : 'La imagen se subió, pero no pudimos guardarla en tu perfil. Inténtalo de nuevo.');
+    }
+    return { foto_url: image.url, foto_public_id: image.publicId, foto_version: image.version };
+  },
+
   // ==========================================================
   // Cambiar disponibilidad
   // ==========================================================

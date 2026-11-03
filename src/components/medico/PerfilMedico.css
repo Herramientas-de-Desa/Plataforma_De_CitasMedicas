@@ -6,6 +6,14 @@
 .mp-identidad { display: flex; align-items: center; gap: 24px; padding: 30px; margin-bottom: 26px; border: 1px solid #c9dfd5; border-radius: 18px; background: linear-gradient(115deg, #edf7f1, #f8fbf9); }
 .mp-avatar { flex-shrink: 0; width: 96px; height: 96px; border: 4px solid white; border-radius: 24px; background: #d3e9df; color: var(--verde-osc); box-shadow: 0 4px 12px #10322b0d; display: grid; place-items: center; overflow: hidden; font-size: 2rem; font-weight: 700; }
 .mp-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.mp-avatar { position: relative; }
+.mp-copiar-turnos { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 12px; margin: 12px 0 16px; padding: 12px 14px; border-radius: 12px; background: #f1f8f4; }
+.mp-copiar-turnos label { display: grid; gap: 4px; font-size: .82rem; }
+.mp-copiar-turnos select { width: auto; }
+.mp-copiar-turnos p { flex-basis: 100%; margin: 0; }
+.mp-cambiar-foto { position: absolute; inset: auto 0 0; padding: 4px 2px; border: 0; background: #10322bcc; color: white; font: inherit; font-size: .68rem; font-weight: 700; cursor: pointer; }
+.mp-cambiar-foto:hover:not(:disabled), .mp-cambiar-foto:focus-visible { background: var(--verde-osc); }
+.mp-cambiar-foto:disabled { cursor: wait; }
 .mp-identidad-texto { flex: 1 1 220px; min-width: 0; overflow-wrap: anywhere; }
 .mp-identidad h2 { font-size: 1.55rem; margin: 8px 0 3px; }
 .mp-identidad-texto > p { color: #426056; }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/authService';
@@ -37,6 +37,29 @@ export default function PerfilMedico() {
   const [mensaje, setMensaje] = useState('');
   const [avisoConfiguracion, setAvisoConfiguracion] = useState('');
   const [errorGuardado, setErrorGuardado] = useState('');
+  const [subiendoFoto, setSubiendoFoto] = useState(false);
+  const [avisoFoto, setAvisoFoto] = useState('');
+  const [errorFoto, setErrorFoto] = useState('');
+  const selectorFoto = useRef(null);
+
+  async function cambiarFoto(evento) {
+    const archivo = evento.target.files?.[0];
+    evento.target.value = '';
+    if (!archivo || !medico) return;
+    setSubiendoFoto(true);
+    setAvisoFoto('');
+    setErrorFoto('');
+    try {
+      const foto = await medicosService.subirMiFoto(medico.id_medico, archivo);
+      setMedico((actual) => ({ ...actual, ...foto }));
+      setFotoFallida(false);
+      setAvisoFoto('Tu foto se actualizó. Los pacientes la verán en tu tarjeta.');
+    } catch (e) {
+      setErrorFoto(e.message);
+    } finally {
+      setSubiendoFoto(false);
+    }
+  }
 
   useEffect(() => {
     if (!hash) { window.scrollTo(0, 0); return; }
@@ -122,6 +145,12 @@ export default function PerfilMedico() {
           {medico?.foto_url && !fotoFallida
             ? <img src={medico.foto_url} alt={`Foto de ${nombreProfesional}`} onError={() => setFotoFallida(true)} />
             : <span aria-hidden="true">{iniciales}</span>}
+          {medico && <>
+            <input ref={selectorFoto} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={cambiarFoto} />
+            <button type="button" className="mp-cambiar-foto" disabled={subiendoFoto} onClick={() => selectorFoto.current?.click()}>
+              {subiendoFoto ? 'Subiendo…' : medico.foto_url ? 'Cambiar foto' : 'Subir foto'}
+            </button>
+          </>}
         </div>
         <div className="mp-identidad-texto">
           <span className="mp-insignia"><Icono tipo="persona" width="15" height="15" />Cuenta de médico</span>
@@ -131,6 +160,11 @@ export default function PerfilMedico() {
         </div>
         {medico && <div className={`mp-disponibilidad ${medico.disponible ? 'mp-disponible' : ''}`}><span aria-hidden="true" />{medico.disponible ? 'Disponible para citas' : 'No disponible para citas'}</div>}
       </section>
+
+      <div aria-live="polite">
+        {avisoFoto && <p className="alerta alerta-exito">{avisoFoto}</p>}
+        {errorFoto && <p className="alerta alerta-error" role="alert">{errorFoto} Usa una imagen JPG, PNG o WEBP de hasta 5 MB.</p>}
+      </div>
 
       <div id="mi-atencion" tabIndex={-1} aria-label="Mi atención médica">
       {!cargando && errorProfesional && <div className="mp-aviso" role="alert"><p>No pudimos consultar tu información profesional.</p><button type="button" className="boton boton-secundario" onClick={reintentar}>Reintentar</button></div>}
