@@ -91,25 +91,8 @@ create unique index if not exists citas_horario_activo_unico_idx
 
 -- ------------------------------------------------------------
 -- 7. VISTA: historial_citas  (entidad Historial de Citas)
+--    Se crea en la sección 9, porque depende de rol_actual().
 -- ------------------------------------------------------------
-create or replace view public.historial_citas as
-select
-  c.id_cita,
-  c.paciente_id,
-  u.nombres        as paciente,
-  m.id_medico,
-  m.nombre         as medico,
-  e.nombre         as especialidad,
-  cl.nombre        as clinica,
-  c.fecha,
-  c.hora,
-  c.estado,
-  c.creado_en
-from public.citas c
-join public.usuarios       u  on u.id_usuario = c.paciente_id
-join public.medicos        m  on m.id_medico  = c.medico_id
-join public.especialidades e  on e.id_especialidad = m.especialidad_id
-join public.clinicas       cl on cl.id_clinica = m.clinica_id;
 
 -- ------------------------------------------------------------
 -- 8. TRIGGER: crear perfil automáticamente al registrarse
@@ -157,6 +140,50 @@ create policy "usuarios_select" on public.usuarios
   for select using (auth.uid() = id_usuario or public.rol_actual() = 'admin');
 create policy "usuarios_update" on public.usuarios
   for update using (auth.uid() = id_usuario or public.rol_actual() = 'admin');
+
+-- Nombre del paciente solo para quien ya puede ver sus citas (él mismo, el
+-- admin o un médico que lo atiende). No expone correo ni teléfono.
+create or replace function public.nombre_paciente(p_paciente uuid) returns text
+language sql stable security definer set search_path = public, pg_temp
+as $$
+  select u.nombres
+  from public.usuarios u
+  where u.id_usuario = p_paciente
+    and (
+      p_paciente = auth.uid()
+      or public.rol_actual() = 'admin'
+      or exists (
+        select 1
+        from public.citas c
+        join public.medicos m on m.id_medico = c.medico_id
+        where c.paciente_id = p_paciente and m.usuario_id = auth.uid()
+      )
+    )
+$$;
+revoke all on function public.nombre_paciente(uuid) from public, anon;
+grant execute on function public.nombre_paciente(uuid) to authenticated;
+
+-- historial_citas respeta el RLS de citas de quien consulta (security_invoker).
+create or replace view public.historial_citas
+with (security_invoker = true) as
+select
+  c.id_cita,
+  c.paciente_id,
+  public.nombre_paciente(c.paciente_id) as paciente,
+  m.id_medico,
+  m.nombre         as medico,
+  e.nombre         as especialidad,
+  cl.nombre        as clinica,
+  c.fecha,
+  c.hora,
+  c.estado,
+  c.creado_en
+from public.citas c
+join public.medicos        m  on m.id_medico  = c.medico_id
+join public.especialidades e  on e.id_especialidad = m.especialidad_id
+join public.clinicas       cl on cl.id_clinica = m.clinica_id;
+revoke all on public.historial_citas from anon, authenticated;
+grant select on public.historial_citas to authenticated;
 
 -- catálogos: lectura pública, escritura solo admin
 create policy "especialidades_select" on public.especialidades for select using (true);
