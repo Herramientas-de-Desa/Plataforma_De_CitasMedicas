@@ -498,6 +498,14 @@ select:focus {
   align-items: stretch;
 }
 
+.especialistas-vacio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .tarjeta-medico {
   display: flex;
   flex-direction: column;
@@ -508,6 +516,77 @@ select:focus {
 .tarjeta-medico h3 {
   font-size: 1.12rem;
   line-height: 1.3;
+}
+
+.tarjeta-medico-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.tarjeta-medico-foto {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--menta);
+  color: var(--verde-osc);
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.tarjeta-medico-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tarjeta-medico-identidad {
+  min-width: 0;
+}
+
+/* Tarjetas de carga: mismo tamaño que una tarjeta real para que nada salte. */
+.tarjeta-esqueleto {
+  gap: 12px;
+  min-height: 250px;
+}
+
+.esqueleto {
+  display: block;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #edf3f0 25%, #f7faf8 50%, #edf3f0 75%);
+  background-size: 200% 100%;
+  animation: esqueleto-brillo 1.4s ease-in-out infinite;
+}
+
+.esqueleto-circulo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.esqueleto-linea {
+  height: 14px;
+}
+
+.esqueleto-boton {
+  height: 44px;
+  margin-top: auto;
+}
+
+@keyframes esqueleto-brillo {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .esqueleto {
+    animation: none;
+  }
 }
 
 .tarjeta-medico .especialidad {
@@ -723,6 +802,308 @@ select:focus {
 .reserva-aviso-sesion div {
   display: flex;
   gap: 8px;
+}
+
+.perfil-campo-error {
+  display: block;
+  margin-top: 5px;
+  color: #a13333;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ---------- Mis citas ---------- */
+.mis-citas-encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.mis-citas-pestanias {
+  display: inline-flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--menta);
+}
+
+.mis-citas-pestanias button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--verde-osc);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mis-citas-pestanias button[aria-selected='true'] {
+  background: var(--blanco);
+  box-shadow: var(--sombra);
+}
+
+.mis-citas-pestanias span {
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--blanco);
+  font-size: 0.75rem;
+}
+
+.mis-citas-pestanias button[aria-selected='true'] span {
+  background: var(--menta);
+}
+
+.mis-citas-lista {
+  display: grid;
+  gap: 12px;
+}
+
+.mis-citas-vacio {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+}
+
+.cita-tarjeta {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 20px;
+}
+
+.cita-siguiente {
+  border-color: var(--verde);
+  box-shadow: 0 0 0 1px var(--verde), var(--sombra);
+}
+
+.cita-fecha {
+  display: grid;
+  gap: 2px;
+  padding-right: 18px;
+  border-right: 1px solid var(--borde);
+}
+
+.cita-fecha strong {
+  color: var(--tinta);
+  font-size: 0.92rem;
+}
+
+.cita-fecha span {
+  color: var(--verde-osc);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.cita-datos {
+  min-width: 0;
+}
+
+.cita-datos h2 {
+  font-size: 1.02rem;
+}
+
+.cita-datos p {
+  color: var(--gris);
+  font-size: 0.86rem;
+}
+
+.cita-datos .cita-etiqueta {
+  margin-bottom: 2px;
+  color: var(--verde);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cita-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .cita-tarjeta {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .cita-fecha {
+    grid-auto-flow: column;
+    justify-content: start;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0 0 10px;
+    border-right: 0;
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .cita-acciones {
+    justify-content: flex-start;
+  }
+}
+
+/* ---------- Diálogo de confirmación ---------- */
+.dialogo-confirmacion {
+  width: min(92vw, 440px);
+  margin: auto;
+  padding: 24px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--blanco);
+  color: var(--tinta);
+  font: inherit;
+  box-shadow: 0 24px 70px rgba(16, 50, 43, 0.25);
+}
+
+.dialogo-confirmacion::backdrop {
+  background: rgba(8, 32, 26, 0.58);
+}
+
+.dialogo-confirmacion h2 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+.dialogo-confirmacion-cuerpo {
+  display: grid;
+  gap: 12px;
+  color: var(--gris);
+  font-size: 0.9rem;
+}
+
+.dialogo-confirmacion .alerta {
+  margin-top: 12px;
+}
+
+.dialogo-confirmacion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.dialogo-detalle {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--marfil);
+}
+
+.dialogo-detalle div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dialogo-detalle dd {
+  color: var(--tinta);
+  font-weight: 600;
+  text-align: right;
+}
+
+.boton-peligro-solido {
+  background: #b5452f;
+  border-color: #b5452f;
+}
+
+.boton-peligro-solido:hover:not(:disabled) {
+  background: #963826;
+}
+
+.reserva-sin-horas {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+}
+
+.reserva-confirmada {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.reserva-confirmada-icono {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--menta);
+  color: var(--verde);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.reserva-confirmada h1 {
+  font-size: 1.5rem;
+}
+
+.reserva-confirmada-fecha {
+  color: var(--tinta);
+  font-size: 1.05rem;
+}
+
+.reserva-confirmada-fecha strong:first-child::first-letter {
+  text-transform: uppercase;
+}
+
+.reserva-confirmada-detalle {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  margin: 6px 0;
+  padding: 16px;
+  border-radius: var(--radio);
+  background: var(--marfil);
+  text-align: left;
+}
+
+.reserva-confirmada-detalle div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.reserva-confirmada-detalle dt {
+  color: var(--gris);
+}
+
+.reserva-confirmada-detalle dd {
+  color: var(--tinta);
+  font-weight: 600;
+  text-align: right;
+}
+
+.reserva-confirmada-nota {
+  color: var(--gris);
+  font-size: 0.86rem;
+}
+
+.reserva-confirmada-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 }
 
 .reserva-seleccion .alerta {
@@ -1039,7 +1420,7 @@ select:focus {
 }
 
 .demanda-directorio-alta {
-  color: #a13333;
+  color: #94631d;
 }
 
 .demanda-directorio-sin-datos {

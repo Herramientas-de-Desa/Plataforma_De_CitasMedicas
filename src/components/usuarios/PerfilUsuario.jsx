@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/authService';
 import PerfilMedico from '../medico/PerfilMedico';
+import { NOMBRES_ROL } from '../layout/navegacion';
 
 export default function PerfilUsuario() {
   const { perfil } = useAuth();
@@ -22,15 +23,20 @@ function PerfilCuenta() {
   const nombreMostrado = perfil.nombres?.trim() || 'Mi perfil';
   const iniciales = nombreMostrado.split(/\s+/).slice(0, 2).map((parte) => parte[0]).join('').toUpperCase();
   const hayCambios = nombres !== perfil.nombres || telefono !== (perfil.telefono || '');
+  const nombreVacio = !nombres.trim();
+  const rolLegible = NOMBRES_ROL[perfil.rol] || perfil.rol;
 
   async function guardar(evento) {
     evento.preventDefault();
     if (!hayCambios || guardando) return;
     setMensaje(''); setError('');
+    if (nombreVacio) { setError('Escribe tu nombre para guardar los cambios.'); return; }
     setGuardando(true);
     try {
-      const actualizado = await authService.actualizarPerfil(perfil.id_usuario, { nombres, telefono });
+      const actualizado = await authService.actualizarPerfil(perfil.id_usuario, { nombres: nombres.trim(), telefono: telefono.trim() });
       setPerfil(actualizado);
+      setNombres(actualizado.nombres || '');
+      setTelefono(actualizado.telefono || '');
       setMensaje('Perfil actualizado.');
     } catch (e) {
       setError(e.message);
@@ -53,7 +59,7 @@ function PerfilCuenta() {
           <h2>{nombreMostrado}</h2>
           <p>{perfil.correo}</p>
         </div>
-        <span className="perfil-rol">{perfil.rol}</span>
+        <span className="perfil-rol">{rolLegible}</span>
       </div>
 
       <div className="perfil-grid">
@@ -64,17 +70,20 @@ function PerfilCuenta() {
           </div>
           <div className="formulario perfil-formulario">
             <label>Nombres
-              <input value={nombres} onChange={(e) => { setNombres(e.target.value); setMensaje(''); }} autoComplete="name" />
+              <input value={nombres} onChange={(e) => { setNombres(e.target.value); setMensaje(''); setError(''); }}
+                autoComplete="name" required maxLength={150} aria-invalid={nombreVacio}
+                aria-describedby={nombreVacio ? 'perfil-nombre-error' : undefined} />
+              {nombreVacio && <small id="perfil-nombre-error" className="perfil-campo-error">El nombre no puede quedar vacío.</small>}
             </label>
             <label>Teléfono <span className="perfil-opcional">Opcional</span>
-              <input value={telefono} onChange={(e) => { setTelefono(e.target.value); setMensaje(''); }} placeholder="Ej. 956000111" autoComplete="tel" inputMode="tel" type="tel" />
+              <input value={telefono} maxLength={30} onChange={(e) => { setTelefono(e.target.value); setMensaje(''); }} placeholder="Ej. 956000111" autoComplete="tel" inputMode="tel" type="tel" />
             </label>
             <p className="perfil-ayuda">Puedes dejarlo vacío si no deseas añadir un número.</p>
           </div>
           {mensaje && <p className="alerta alerta-exito" role="status">{mensaje}</p>}
           {error && <p className="alerta alerta-error" role="alert">{error}</p>}
           <div className="perfil-acciones">
-            <button className="boton" type="submit" disabled={!hayCambios || guardando}>
+            <button className="boton" type="submit" disabled={!hayCambios || nombreVacio || guardando}>
               {guardando ? 'Guardando…' : 'Guardar cambios'}
             </button>
           </div>
@@ -92,7 +101,7 @@ function PerfilCuenta() {
             </div>
             <div>
               <dt>Rol de la cuenta</dt>
-              <dd><span className="perfil-rol perfil-rol-detalle">{perfil.rol}</span></dd>
+              <dd><span className="perfil-rol perfil-rol-detalle">{rolLegible}</span></dd>
             </div>
           </dl>
           <p className="perfil-cuenta-nota">Estos datos no se modifican desde el perfil.</p>

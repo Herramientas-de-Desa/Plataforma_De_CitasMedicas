@@ -1,30 +1,25 @@
 // Indicador reutilizable calculado a partir de la demanda estimada.
+// En el directorio el paciente solo ve una pista útil para reservar; la demanda
+// media o sin datos no le aporta nada, así que no se muestra.
+const PISTA_PACIENTE = {
+  baja: { clase: 'baja', texto: 'Buena disponibilidad de horarios' },
+  alta: { clase: 'alta', texto: 'Suele llenarse rápido · reserva con tiempo' },
+  saturada: { clase: 'alta', texto: 'Suele llenarse rápido · reserva con tiempo' },
+};
+
 export default function PrediccionDisponibilidad({ prediccion, mostrarDemanda = false, compacto = false }) {
+  if (compacto) {
+    const pista = PISTA_PACIENTE[prediccion?.nivel_demanda];
+    if (!pista) return null;
+    return <p className={`demanda-directorio demanda-directorio-${pista.clase}`}>{pista.texto}</p>;
+  }
+
   if (!prediccion) {
-    return (
-      <p className="prediccion-vacia">
-        {compacto ? 'Demanda no disponible' : 'Predicción pendiente de generar'}
-      </p>
-    );
+    return <p className="prediccion-vacia">Predicción pendiente de generar</p>;
   }
 
   const disponibilidad = Math.round(prediccion.disponibilidad_estimada);
   const demanda = Math.round(prediccion.demanda_estimada);
-  if (compacto) {
-    const nivel = prediccion.nivel_demanda === 'baja'
-      ? 'baja'
-      : prediccion.nivel_demanda === 'media'
-        ? 'media'
-        : prediccion.nivel_demanda === 'alta' || prediccion.nivel_demanda === 'saturada'
-          ? 'alta'
-          : null;
-
-    return (
-      <p className={`demanda-directorio demanda-directorio-${nivel || 'sin-datos'}`}>
-        {nivel ? `${nivel[0].toUpperCase()}${nivel.slice(1)} demanda` : 'Demanda no disponible'}
-      </p>
-    );
-  }
 
   const origen = prediccion.origen_datos === 'sintetico'
     ? 'Simulación con datos sintéticos'
