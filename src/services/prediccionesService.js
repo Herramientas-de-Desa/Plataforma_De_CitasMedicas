@@ -1,5 +1,6 @@
 // Resultados agregados del modelo entrenado en Kaggle.
 import { supabase } from './supabaseClient';
+import { fechaActualEnIca } from './fechas';
 
 const HORIZONTE_PREDETERMINADO = 14;
 
@@ -16,7 +17,7 @@ function normalizar(prediccion) {
 export const prediccionesService = {
   /** Última predicción vigente de cada médico para el horizonte solicitado. */
   async listarUltimas(horizonteDias = HORIZONTE_PREDETERMINADO) {
-    const hoy = new Date().toISOString().slice(0, 10);
+    const hoy = fechaActualEnIca();
     const { data, error } = await supabase
       .from('predicciones_medicos')
       .select(`
@@ -44,7 +45,7 @@ export const prediccionesService = {
 
   /** Última predicción vigente para un médico. */
   async obtenerUltima(medicoId, horizonteDias = HORIZONTE_PREDETERMINADO) {
-    const hoy = new Date().toISOString().slice(0, 10);
+    const hoy = fechaActualEnIca();
     const { data, error } = await supabase
       .from('predicciones_medicos')
       .select('*')

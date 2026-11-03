@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { medicosService } from '../../services/medicosService';
 import { citasService } from '../../services/citasService';
 import { prediccionesService } from '../../services/prediccionesService';
+import { fechaActualEnIca } from '../../services/fechas';
 import PrediccionDisponibilidad from '../disponibilidad/PrediccionDisponibilidad';
 
 export default function PanelMedico() {
@@ -50,6 +51,8 @@ export default function PanelMedico() {
     finally { setActualizando(null); }
   }
 
+  const hoy = fechaActualEnIca();
+
   return (
     <div className="contenedor">
       <div className="encabezado">
@@ -85,7 +88,7 @@ export default function PanelMedico() {
                     {c.estado === 'pendiente' && (
                       <button className="boton boton-mini" disabled={actualizando !== null} onClick={() => marcar(c.id_cita, 'confirmada')}>Confirmar</button>
                     )}
-                    {c.estado !== 'atendida' && c.estado !== 'cancelada' && (
+                    {c.estado !== 'atendida' && c.estado !== 'cancelada' && c.fecha <= hoy && (
                       <button className="boton boton-secundario boton-mini" disabled={actualizando !== null} onClick={() => marcar(c.id_cita, 'atendida')}>Atendida</button>
                     )}
                   </td>

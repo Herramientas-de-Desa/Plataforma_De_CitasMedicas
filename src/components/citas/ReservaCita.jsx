@@ -5,17 +5,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { medicosService } from '../../services/medicosService';
 import { citasService } from '../../services/citasService';
+import { fechaActualEnIca } from '../../services/fechas';
 
 const DIAS = ['', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-
-function fechaActualEnIca() {
-  const partes = Object.fromEntries(
-    new Intl.DateTimeFormat('en-US', {
-      timeZone: 'America/Lima', year: 'numeric', month: '2-digit', day: '2-digit',
-    }).formatToParts(new Date()).map(({ type, value }) => [type, value]),
-  );
-  return `${partes.year}-${partes.month}-${partes.day}`;
-}
 
 export default function ReservaCita({ medicoIdProp, fechaInicial = '', enModal = false }) {
   const { idMedico: idMedicoRuta } = useParams();
