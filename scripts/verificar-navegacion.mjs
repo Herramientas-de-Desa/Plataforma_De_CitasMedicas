@@ -99,7 +99,7 @@ try {
     const s = await escenario(null, 'denegada', true);
     await s.abrir('/especialistas');
     const nav = await s.page.locator('.mc-navegacion').innerText();
-    assert.match(nav, /Inicio/); assert.match(nav, /Crear cuenta/); assert.doesNotMatch(nav, /Mis citas|Mi agenda|Panel de control/);
+    assert.match(nav, /Inicio/); assert.match(nav, /Mapa de clínicas/); assert.match(nav, /Crear cuenta/); assert.doesNotMatch(nav, /Mis citas|Mi agenda|Panel de control/);
     await s.page.keyboard.press('Escape');
     assert.equal(await s.page.locator('.mc-toggle').getAttribute('aria-expanded'), 'false');
     assert.equal(await s.page.locator('.mc-toggle').evaluate(el => el === document.activeElement), true);
@@ -118,6 +118,8 @@ try {
   await prueba('Paciente: mapa, distancia, ficha, médico, reserva y cierre por Escape', async () => {
     const s = await escenario('paciente');
     await s.abrir('/clinicas');
+    assert.equal(await s.page.locator('.clinicas-aviso').count(), 0, 'No avisar antes de pedir la ubicación');
+    await s.page.getByRole('button', { name: 'Usar mi ubicación' }).click();
     await s.page.getByText('Clínicas ordenadas por cercanía', { exact: true }).waitFor();
     assert.match(await s.page.locator('.mc-enlaces').innerText(), /Mapa de clínicas/);
     assert.equal(await s.page.locator('.clinica-marcador').count(), 2, 'Excluir coordenadas nulas del mapa');
@@ -149,6 +151,7 @@ try {
     for (const ubicacion of ['denegada', 'no-disponible']) {
       const s = await escenario('paciente', ubicacion, true);
       await s.abrir('/clinicas');
+      await s.page.getByRole('button', { name: 'Usar mi ubicación' }).click();
       await s.page.locator('.mc-toggle').click();
       await s.page.locator('.clinicas-aviso').waitFor();
       assert.equal(await s.page.locator('.clinica-mi-marcador').count(), 0);

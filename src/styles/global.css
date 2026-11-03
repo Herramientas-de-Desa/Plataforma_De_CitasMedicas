@@ -705,6 +705,26 @@ select:focus {
   font-size: 0.86rem;
 }
 
+.reserva-aviso-sesion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--menta);
+  color: var(--tinta);
+  font-size: 0.88rem;
+}
+
+.reserva-aviso-sesion div {
+  display: flex;
+  gap: 8px;
+}
+
 .reserva-seleccion .alerta {
   margin-top: 14px;
 }
@@ -1522,6 +1542,24 @@ select:focus {
 
 .portada-mapa .leaflet-container {
   background: #e7f1ef;
+}
+
+/* Marcador de clínica: lo usan el mapa de la portada y el de clínicas. */
+.leaflet-marker-icon.clinica-marcador {
+  display: block;
+  object-fit: contain;
+  background: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #10322b4d;
+}
+
+/* Toda la vista previa lleva al mapa completo; queda bajo la atribución. */
+.portada-mapa-cubierta {
+  position: absolute;
+  inset: 0;
+  z-index: 500;
+  cursor: pointer;
 }
 
 .portada-mapa-lugar,

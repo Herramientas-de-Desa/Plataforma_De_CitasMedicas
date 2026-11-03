@@ -6,14 +6,10 @@ import { clinicasService } from '../../services/clinicasService';
 import ReservaModal from '../citas/ReservaModal';
 import FichaClinica from './FichaClinica';
 import clinicaMarcador from '../../assets/clinica-marcador.png';
+import { iconoClinica } from './iconoClinica';
 import './MapaClinicas.css';
 
 const CENTRO_ICA = [-14.0678, -75.7286];
-const iconoClinica = L.icon({
-  iconUrl: clinicaMarcador,
-  className: 'clinica-marcador',
-  iconSize: [44, 44], iconAnchor: [22, 42],
-});
 const iconoUsuario = L.divIcon({
   className: 'clinica-mi-marcador', html: '<span></span>',
   iconSize: [24, 24], iconAnchor: [12, 12],
@@ -38,7 +34,7 @@ export default function MapaClinicas() {
   const [clinicas, setClinicas] = useState([]);
   const [miPosicion, setMiPosicion] = useState(null);
   const [cargando, setCargando] = useState(true);
-  const [ubicando, setUbicando] = useState(true);
+  const [ubicando, setUbicando] = useState(false);
   const [error, setError] = useState('');
   const [avisoUbicacion, setAvisoUbicacion] = useState('');
   const [intento, setIntento] = useState(0);
@@ -80,7 +76,12 @@ export default function MapaClinicas() {
 
   useEffect(() => {
     montado.current = true;
-    ubicarme();
+    // La ubicación se pide al pulsar "Usar mi ubicación". Solo se usa sola si
+    // el usuario ya la autorizó antes, para no mostrar el permiso ni un aviso
+    // de rechazo nada más entrar.
+    navigator.permissions?.query({ name: 'geolocation' })
+      .then((permiso) => { if (montado.current && permiso.state === 'granted') ubicarme(); })
+      .catch(() => {});
     return () => { montado.current = false; };
   }, []);
 

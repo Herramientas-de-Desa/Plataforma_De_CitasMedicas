@@ -1,7 +1,7 @@
 // Componente: reserva de cita (RF04 + RF05).
 // Reutiliza medicosService y citasService.
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { medicosService } from '../../services/medicosService';
 import { citasService } from '../../services/citasService';
@@ -52,12 +52,14 @@ export default function ReservaCita({ medicoIdProp, fechaInicial = '', enModal =
     return () => { activo = false; };
   }, [idMedico, fecha]);
 
+  // Al volver de iniciar sesión o registrarse, reabre esta reserva con la fecha elegida.
+  const regresoReserva = `/especialistas?${new URLSearchParams({ reservar: String(idMedico), fecha })}`;
+
   async function reservar() {
     setError(''); setExito('');
     if (!horaElegida) return setError('Selecciona una hora disponible.');
     if (!perfil) {
-      const regreso = new URLSearchParams({ reservar: String(idMedico), fecha });
-      navegar('/login', { state: { returnTo: `/especialistas?${regreso}` } });
+      navegar('/login', { state: { returnTo: regresoReserva } });
       return;
     }
     setReservando(true);
@@ -96,6 +98,15 @@ export default function ReservaCita({ medicoIdProp, fechaInicial = '', enModal =
               <p>Elige un horario; su disponibilidad se confirma al guardar la cita.</p>
             </div>
           </div>
+          {!cargandoPerfil && !perfil && (
+            <div className="reserva-aviso-sesion" role="note">
+              <p>Puedes ver los horarios sin una cuenta. Para <strong>confirmar la cita</strong> necesitas iniciar sesión.</p>
+              <div>
+                <Link className="boton boton-mini" to="/login" state={{ returnTo: regresoReserva }}>Iniciar sesión</Link>
+                <Link className="boton boton-secundario boton-mini" to="/registro" state={{ returnTo: regresoReserva }}>Crear cuenta</Link>
+              </div>
+            </div>
+          )}
           <label className="reserva-fecha">Fecha de la cita
             <input type="date" min={hoy} value={fecha} onChange={(e) => {
               setHoraElegida('');

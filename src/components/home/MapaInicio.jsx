@@ -1,8 +1,10 @@
 // Vista previa del mapa de Ica en la portada; no solicita geolocalización.
+// Es fija: tocar cualquier parte lleva al mapa completo de clínicas.
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CircleMarker, MapContainer, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { clinicasService } from '../../services/clinicasService';
+import { iconoClinica } from '../clinicas/iconoClinica';
 
 const CENTRO_ICA = [-14.0678, -75.7286];
 
@@ -37,16 +39,17 @@ export default function MapaInicio() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           {clinicas.map((clinica) => (
-            <CircleMarker key={clinica.id_clinica}
-              center={[Number(clinica.latitud), Number(clinica.longitud)]}
-              radius={9}
-              pathOptions={{ color: '#fff', weight: 3, fillColor: '#0e7c66', fillOpacity: 1 }}>
-              <Popup><strong>{clinica.nombre}</strong></Popup>
-            </CircleMarker>
+            <Marker key={clinica.id_clinica}
+              position={[Number(clinica.latitud), Number(clinica.longitud)]}
+              icon={iconoClinica} interactive={false} keyboard={false} />
           ))}
         </MapContainer>
+        {/* El enlace accesible es "Explorar mapa"; esta capa solo amplía la zona táctil. */}
+        <Link to="/clinicas" className="portada-mapa-cubierta" tabIndex={-1} aria-hidden="true" />
         <span className="portada-mapa-lugar">● Ica, Perú</span>
-        <Link to="/clinicas" className="portada-mapa-enlace">Explorar mapa ↗</Link>
+        <Link to="/clinicas" className="portada-mapa-enlace">
+          {clinicas.length ? `Ver las ${clinicas.length} clínicas` : 'Explorar mapa'} ↗
+        </Link>
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ export const NAVEGACION_ROL = {
   visitante: [
     { to: '/', titulo: 'Inicio' },
     { to: '/especialistas', titulo: 'Especialistas' },
+    { to: '/clinicas', titulo: 'Mapa de clínicas' },
   ],
   paciente: [
     { to: '/especialistas', titulo: 'Especialistas', accion: 'Reservar cita' },
