@@ -5,6 +5,7 @@ import { citasService } from '../../services/citasService';
 import { fechaActualEnIca, formatearFechaCorta, formatearFechaLarga } from '../../services/fechas';
 import EstadoCita, { ETIQUETAS_ESTADO } from '../citas/EstadoCita';
 import DialogoConfirmacion from '../comun/DialogoConfirmacion';
+import { useAvisos } from '../../context/AvisosContext';
 
 const POR_PAGINA = 20;
 
@@ -15,7 +16,7 @@ export default function AdminCitas({ citas, onCambio }) {
   const [pagina, setPagina] = useState(1);
   const [ocupado, setOcupado] = useState(null);
   const [error, setError] = useState('');
-  const [aviso, setAviso] = useState('');
+  const avisar = useAvisos();
   const [porCancelar, setPorCancelar] = useState(null);
   const [errorCancelar, setErrorCancelar] = useState('');
   const hoy = fechaActualEnIca();
@@ -36,11 +37,11 @@ export default function AdminCitas({ citas, onCambio }) {
   async function cambiarEstado(cita, nuevo) {
     setOcupado(cita.id_cita);
     setError('');
-    setAviso('');
+   
     try {
       await citasService.cambiarEstado(cita.id_cita, nuevo);
       await onCambio();
-      setAviso(`La cita de ${cita.paciente} quedó ${ETIQUETAS_ESTADO[nuevo].toLowerCase()}.`);
+      avisar(`La cita de ${cita.paciente} quedó ${ETIQUETAS_ESTADO[nuevo].toLowerCase()}.`);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -54,7 +55,7 @@ export default function AdminCitas({ citas, onCambio }) {
     try {
       await citasService.cambiarEstado(porCancelar.id_cita, 'cancelada');
       await onCambio();
-      setAviso(`Cancelaste la cita de ${porCancelar.paciente} con ${porCancelar.medico}.`);
+      avisar(`Cancelaste la cita de ${porCancelar.paciente} con ${porCancelar.medico}.`);
       setPorCancelar(null);
     } catch (e) {
       setErrorCancelar(e.message);
@@ -92,7 +93,6 @@ export default function AdminCitas({ citas, onCambio }) {
           </button>
         )}
       </div>
-      {aviso && <p className="alerta alerta-exito" role="status">{aviso}</p>}
       {error && <p className="alerta alerta-error" role="alert">{error}</p>}
       <div className="admin-tabla-contenedor"><table className="tabla tabla-tarjetas admin-tabla">
         <thead><tr><th>Fecha</th><th>Hora</th><th>Paciente</th><th>Médico</th><th>Clínica</th><th>Estado</th><th></th></tr></thead>
@@ -113,7 +113,7 @@ export default function AdminCitas({ citas, onCambio }) {
                   )}
                   {activa && (
                     <button className="boton boton-peligro boton-mini" type="button" disabled={ocupado !== null}
-                      onClick={() => { setErrorCancelar(''); setAviso(''); setPorCancelar(c); }}>Cancelar</button>
+                      onClick={() => { setErrorCancelar(''); setPorCancelar(c); }}>Cancelar</button>
                   )}
                 </td>
               </tr>

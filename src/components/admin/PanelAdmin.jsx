@@ -16,6 +16,7 @@ import PanelDemandaEspecialidades from './demanda/PanelDemandaEspecialidades';
 import AdminClinicas from './AdminClinicas';
 import AdminCitas from './AdminCitas';
 import DialogoConfirmacion from '../comun/DialogoConfirmacion';
+import { useAvisos } from '../../context/AvisosContext';
 
 const ACTIVAS = ['pendiente', 'confirmada'];
 
@@ -30,7 +31,7 @@ export default function PanelAdmin() {
   const [citas, setCitas] = useState([]);
   const [conHorarios, setConHorarios] = useState(new Set());
   const [error, setError] = useState('');
-  const [aviso, setAviso] = useState('');
+  const avisar = useAvisos();
   const [usuarioMedico, setUsuarioMedico] = useState('');
   const [nuevaEsp, setNuevaEsp] = useState('');
   const [busquedaUsuario, setBusquedaUsuario] = useState('');
@@ -65,14 +66,14 @@ export default function PanelAdmin() {
   }
 
   useEffect(() => { cargarTodo(); }, []);
-  useEffect(() => { setAviso(''); setMedicoEditado(null); }, [pestania]);
+  useEffect(() => { setMedicoEditado(null); }, [pestania]);
 
   async function ejecutar(accion, mensaje) {
     setError('');
-    setAviso('');
+   
     try {
       await accion();
-      if (mensaje) setAviso(mensaje);
+      if (mensaje) avisar(mensaje);
     } catch (e) {
       setError(e.message);
     }
@@ -88,7 +89,7 @@ export default function PanelAdmin() {
     setErrorDialogo('');
     try {
       await confirmacion.accion();
-      setAviso(confirmacion.exito);
+      avisar(confirmacion.exito);
       setConfirmacion(null);
     } catch (e) {
       setErrorDialogo(e.message);
@@ -211,7 +212,6 @@ export default function PanelAdmin() {
       </div>
 
       {error && <p className="alerta alerta-error" role="alert" style={{ marginBottom: 14 }}>{error}</p>}
-      {aviso && pestania !== 'clinicas' && pestania !== 'citas' && <p className="alerta alerta-exito" role="status" style={{ marginBottom: 14 }}>{aviso}</p>}
 
       {pestania === 'resumen' && <section aria-label="Resumen de administración">
         <p style={{ marginBottom: 20 }}>Gestiona las cuentas, los profesionales y las citas desde un solo lugar.</p>

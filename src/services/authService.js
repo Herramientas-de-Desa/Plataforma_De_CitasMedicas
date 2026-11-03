@@ -4,6 +4,7 @@
 // cumpliendo RF01, RF02 y RNF01.
 // ============================================================
 import { supabase } from './supabaseClient';
+import { errorAmigable } from './errores';
 
 export const authService = {
   /** RF01: Registrar un nuevo usuario (rol por defecto: paciente) */
@@ -41,7 +42,7 @@ export const authService = {
 
   async cerrarSesion() {
     const { error } = await supabase.auth.signOut();
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
   },
 
   /** Perfil del usuario autenticado (tabla usuarios) */
@@ -54,7 +55,7 @@ export const authService = {
       .select('*')
       .eq('id_usuario', user.id)
       .single();
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 
@@ -65,7 +66,7 @@ export const authService = {
       .eq('id_usuario', idUsuario)
       .select()
       .single();
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 
@@ -81,6 +82,14 @@ function traducirError(msg) {
     'User already registered': 'El correo ya está registrado.',
     'Password should be at least 6 characters': 'La contraseña debe tener al menos 6 caracteres.',
     'Email not confirmed': 'Debes confirmar tu correo antes de iniciar sesión.',
+    'New password should be different from the old password.': 'La nueva contraseña debe ser distinta de la anterior.',
+    'Unable to validate email address: invalid format': 'Escribe un correo electrónico válido.',
   };
-  return mapa[msg] || msg;
+  if (mapa[msg]) return mapa[msg];
+  if (/password should|weak password/i.test(msg)) return 'La contraseña no cumple los requisitos de seguridad. Usa al menos 6 caracteres.';
+  if (/rate limit|too many requests/i.test(msg)) return 'Hiciste demasiados intentos. Espera unos minutos y vuelve a intentarlo.';
+  if (/failed to fetch|network/i.test(msg)) return 'No hay conexión con el servidor. Revisa tu internet e inténtalo de nuevo.';
+  // Mensajes no previstos de Supabase Auth (en inglés): se registran y se muestra uno genérico.
+  console.error('[Supabase Auth]', msg);
+  return 'No pudimos completar la operación. Inténtalo de nuevo.';
 }

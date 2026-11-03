@@ -2,6 +2,7 @@
 // obtenidas desde la dirección (Nominatim) o escritas a mano.
 import { useState } from 'react';
 import { clinicasService } from '../../services/clinicasService';
+import { useAvisos } from '../../context/AvisosContext';
 
 const VACIA = { nombre: '', direccion: '', telefono: '', latitud: '', longitud: '' };
 
@@ -19,6 +20,7 @@ export default function AdminClinicas({ clinicas, medicos, onCambio }) {
   const [aviso, setAviso] = useState('');
   const [guardando, setGuardando] = useState(false);
   const [buscando, setBuscando] = useState(false);
+  const avisar = useAvisos();
 
   function abrir(clinica) {
     setEditando(clinica ? clinica.id_clinica : 'nueva');
@@ -65,7 +67,8 @@ export default function AdminClinicas({ clinicas, medicos, onCambio }) {
     try {
       if (editando === 'nueva') await clinicasService.crear(registro);
       else await clinicasService.actualizar(editando, registro);
-      setAviso(editando === 'nueva' ? `Agregaste la clínica ${registro.nombre}.` : `Guardaste los cambios de ${registro.nombre}.`);
+      setAviso('');
+      avisar(editando === 'nueva' ? `Agregaste la clínica ${registro.nombre}.` : `Guardaste los cambios de ${registro.nombre}.`);
       setEditando(null);
       await onCambio();
     } catch (e) {
@@ -84,7 +87,6 @@ export default function AdminClinicas({ clinicas, medicos, onCambio }) {
         </div>
         {editando === null && <button className="boton" type="button" onClick={() => abrir(null)}>Nueva clínica</button>}
       </div>
-      {aviso && editando === null && <p className="alerta alerta-exito" role="status">{aviso}</p>}
 
       {editando !== null && (
         <form className="admin-clinica-form" onSubmit={guardar}>

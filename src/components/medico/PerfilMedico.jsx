@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useAvisos } from '../../context/AvisosContext';
 import { authService } from '../../services/authService';
 import { medicosService } from '../../services/medicosService';
 import './PerfilMedico.css';
@@ -34,11 +35,9 @@ export default function PerfilMedico() {
   const [nombres, setNombres] = useState(perfil.nombres || '');
   const [telefono, setTelefono] = useState(perfil.telefono || '');
   const [guardando, setGuardando] = useState(false);
-  const [mensaje, setMensaje] = useState('');
-  const [avisoConfiguracion, setAvisoConfiguracion] = useState('');
+  const avisar = useAvisos();
   const [errorGuardado, setErrorGuardado] = useState('');
   const [subiendoFoto, setSubiendoFoto] = useState(false);
-  const [avisoFoto, setAvisoFoto] = useState('');
   const [errorFoto, setErrorFoto] = useState('');
   const selectorFoto = useRef(null);
 
@@ -47,13 +46,12 @@ export default function PerfilMedico() {
     evento.target.value = '';
     if (!archivo || !medico) return;
     setSubiendoFoto(true);
-    setAvisoFoto('');
     setErrorFoto('');
     try {
       const foto = await medicosService.subirMiFoto(medico.id_medico, archivo);
       setMedico((actual) => ({ ...actual, ...foto }));
       setFotoFallida(false);
-      setAvisoFoto('Tu foto se actualizó. Los pacientes la verán en tu tarjeta.');
+      avisar('Tu foto se actualizó. Los pacientes la verán en tu tarjeta.');
     } catch (e) {
       setErrorFoto(e.message);
     } finally {
@@ -108,7 +106,7 @@ export default function PerfilMedico() {
   const iniciales = nombreProfesional.trim().split(/\s+/).slice(0, 2).map((parte) => parte[0]).join('').toUpperCase();
   const hayCambios = nombres !== (perfil.nombres || '') || telefono !== (perfil.telefono || '');
 
-  function limpiarAvisos() { setMensaje(''); setErrorGuardado(''); }
+  function limpiarAvisos() { setErrorGuardado(''); }
   function descartar() {
     setNombres(perfil.nombres || '');
     setTelefono(perfil.telefono || '');
@@ -125,7 +123,7 @@ export default function PerfilMedico() {
       setPerfil(actualizado);
       setNombres(actualizado.nombres || '');
       setTelefono(actualizado.telefono || '');
-      setMensaje('Tus datos de cuenta se guardaron correctamente.');
+      avisar('Tus datos de cuenta se guardaron correctamente.');
     } catch {
       setErrorGuardado('No pudimos guardar tus datos. Tus cambios siguen aquí; vuelve a intentarlo.');
     } finally { setGuardando(false); }
@@ -162,15 +160,13 @@ export default function PerfilMedico() {
       </section>
 
       <div aria-live="polite">
-        {avisoFoto && <p className="alerta alerta-exito">{avisoFoto}</p>}
         {errorFoto && <p className="alerta alerta-error" role="alert">{errorFoto} Usa una imagen JPG, PNG o WEBP de hasta 5 MB.</p>}
       </div>
 
       <div id="mi-atencion" tabIndex={-1} aria-label="Mi atención médica">
       {!cargando && errorProfesional && <div className="mp-aviso" role="alert"><p>No pudimos consultar tu información profesional.</p><button type="button" className="boton boton-secundario" onClick={reintentar}>Reintentar</button></div>}
       {!cargando && !errorProfesional && !medico && <p className="mp-aviso" role="status">El administrador debe asignarte una clínica, especialidad y horarios antes de que puedas gestionar tu atención.</p>}
-      {avisoConfiguracion && <p className="alerta alerta-exito" role="status">{avisoConfiguracion}</p>}
-      {!cargando && !cargandoHorarios && !errorProfesional && !errorHorarios && medico && <ConfiguracionMedica key={intento} medico={medico} horarios={horarios} nombreCuenta={perfil.nombres} onGuardado={() => { setAvisoConfiguracion('Tu atención y horarios se guardaron. Ya puedes consultar tu agenda.'); reintentar(); }} />}
+      {!cargando && !cargandoHorarios && !errorProfesional && !errorHorarios && medico && <ConfiguracionMedica key={intento} medico={medico} horarios={horarios} nombreCuenta={perfil.nombres} onGuardado={() => { avisar('Tu atención y horarios se guardaron. Ya puedes consultar tu agenda.'); reintentar(); }} />}
       </div>
 
       <div className="mp-grid">
@@ -209,7 +205,7 @@ export default function PerfilMedico() {
               <label htmlFor="mp-telefono">Teléfono personal <span className="mp-opcional">Opcional</span><input id="mp-telefono" type="tel" inputMode="tel" autoComplete="tel" maxLength={30} placeholder="Ej. 956 000 111" value={telefono} disabled={guardando} aria-describedby="mp-telefono-ayuda" onChange={(e) => { setTelefono(e.target.value); limpiarAvisos(); }} /></label>
               <p id="mp-telefono-ayuda" className="mp-ayuda">Este número pertenece a tu cuenta. El teléfono de atención se muestra en la información profesional.</p>
               <div className="mp-correo"><span>Correo de acceso</span><strong>{perfil.correo}</strong><small>Tu correo y tu rol no se modifican desde esta pantalla.</small></div>
-              <div aria-live="polite">{mensaje && <p className="alerta alerta-exito">{mensaje}</p>}{!mensaje && hayCambios && !errorGuardado && <p className="mp-pendiente">Tienes cambios sin guardar.</p>}</div>
+              <div aria-live="polite">{hayCambios && !errorGuardado && <p className="mp-pendiente">Tienes cambios sin guardar.</p>}</div>
               {errorGuardado && <p className="alerta alerta-error" role="alert">{errorGuardado}</p>}
               <div className="mp-acciones"><button type="submit" className="boton" disabled={!hayCambios || guardando}>{guardando ? 'Guardando…' : 'Guardar cambios'}</button><button type="button" className="boton boton-secundario" disabled={!hayCambios || guardando} onClick={descartar}>Descartar</button></div>
             </form>

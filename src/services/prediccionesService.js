@@ -1,5 +1,6 @@
 // Resultados agregados del modelo entrenado en Kaggle.
 import { supabase } from './supabaseClient';
+import { errorAmigable } from './errores';
 import { fechaActualEnIca } from './fechas';
 
 const HORIZONTE_PREDETERMINADO = 14;
@@ -32,7 +33,7 @@ export const prediccionesService = {
       .gte('fecha_fin', hoy)
       .order('fecha_generacion', { ascending: false });
 
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
 
     const porMedico = new Map();
     for (const fila of data || []) {
@@ -56,7 +57,7 @@ export const prediccionesService = {
       .limit(1)
       .maybeSingle();
 
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return normalizar(data);
   },
 };

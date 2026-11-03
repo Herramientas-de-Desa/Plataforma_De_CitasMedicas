@@ -5,6 +5,7 @@ import { validarHorarios } from './horariosValidacion';
 // ============================================================
 
 import { supabase } from './supabaseClient';
+import { errorAmigable } from './errores';
 import { uploadDoctorImage } from './cloudinaryService';
 
 // Selección reutilizable con relaciones (especialidad y clínica)
@@ -53,7 +54,7 @@ export const medicosService = {
       .select(SELECT_MEDICO)
       .eq('usuario_id', idUsuario)
       .maybeSingle();
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 
@@ -88,7 +89,7 @@ export const medicosService = {
     const { data, error } = await consulta;
 
     if (error) {
-      throw new Error(error.message);
+      throw errorAmigable(error);
     }
 
     return data;
@@ -108,7 +109,7 @@ export const medicosService = {
       .single();
 
     if (error) {
-      throw new Error(error.message);
+      throw errorAmigable(error);
     }
 
     return data;
@@ -129,7 +130,7 @@ export const medicosService = {
       .order('hora_inicio');
 
     if (error) {
-      throw new Error(error.message);
+      throw errorAmigable(error);
     }
 
     return data;
@@ -143,7 +144,7 @@ export const medicosService = {
   /** Ids de médicos que tienen al menos un turno registrado. */
   async idsConHorarios() {
     const { data, error } = await supabase.from('horarios').select('medico_id');
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return new Set((data || []).map((h) => h.medico_id));
   },
 
@@ -155,7 +156,7 @@ export const medicosService = {
       .order('id_medico');
 
     if (error) {
-      throw new Error(error.message);
+      throw errorAmigable(error);
     }
 
     return data;
@@ -186,7 +187,7 @@ export const medicosService = {
       .single();
 
     if (error) {
-      throw new Error(error.message);
+      throw errorAmigable(error);
     }
 
     return data;
@@ -243,7 +244,7 @@ export const medicosService = {
 
     if (error) {
       throw new Error(
-        `La imagen se subió a Cloudinary, pero no se pudo guardar en Supabase: ${error.message}`
+        `La imagen se subió a Cloudinary, pero no se pudo guardar en el perfil: ${errorAmigable(error).message}`
       );
     }
 
@@ -281,7 +282,7 @@ export const medicosService = {
       .eq('id_medico', idMedico);
 
     if (error) {
-      throw new Error(error.message);
+      throw errorAmigable(error);
     }
   },
 
@@ -298,7 +299,7 @@ export const medicosService = {
       .eq('id_medico', idMedico);
 
     if (error) {
-      throw new Error(error.message);
+      throw errorAmigable(error);
     }
   }
 

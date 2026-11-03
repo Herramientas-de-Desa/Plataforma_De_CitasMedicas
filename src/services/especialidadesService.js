@@ -3,6 +3,7 @@
 // (reutiliza la API REST de Supabase vía supabaseClient).
 // ============================================================
 import { supabase } from './supabaseClient';
+import { errorAmigable } from './errores';
 
 export const especialidadesService = {
   async listar() {
@@ -10,7 +11,7 @@ export const especialidadesService = {
       .from('especialidades')
       .select('*')
       .order('nombre');
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 
@@ -20,7 +21,7 @@ export const especialidadesService = {
       .insert({ nombre })
       .select()
       .single();
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 
@@ -29,6 +30,6 @@ export const especialidadesService = {
       .from('especialidades')
       .delete()
       .eq('id_especialidad', id);
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
   },
 };

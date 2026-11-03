@@ -1151,6 +1151,79 @@ select:focus {
   gap: 10px;
 }
 
+/* ---------- Avisos (toasts) ---------- */
+.avisos {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2000;
+  display: grid;
+  gap: 8px;
+  width: min(380px, calc(100vw - 32px));
+  pointer-events: none;
+}
+
+.aviso {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+  padding: 12px 12px 12px 14px;
+  border-radius: 12px;
+  background: var(--tinta);
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(16, 50, 43, 0.28);
+  font-size: 0.88rem;
+  pointer-events: auto;
+  animation: aviso-entrar 0.2s ease-out;
+}
+
+.aviso > span {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #2fa785;
+  font-weight: 700;
+}
+
+.aviso-info > span {
+  background: #4a6f9e;
+}
+
+.aviso p {
+  align-self: center;
+}
+
+.aviso button {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #fff;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.aviso button:hover,
+.aviso button:focus-visible {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+@keyframes aviso-entrar {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aviso {
+    animation: none;
+  }
+}
+
 /* ---------- Diálogo de confirmación ---------- */
 .dialogo-confirmacion {
   width: min(92vw, 440px);

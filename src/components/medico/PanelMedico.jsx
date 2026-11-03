@@ -10,6 +10,7 @@ import { fechaActualEnIca, formatearFechaCorta, formatearFechaLarga, horaActualE
 import PrediccionDisponibilidad from '../disponibilidad/PrediccionDisponibilidad';
 import EstadoCita from '../citas/EstadoCita';
 import DialogoConfirmacion from '../comun/DialogoConfirmacion';
+import { useAvisos } from '../../context/AvisosContext';
 
 const ACTIVAS = ['pendiente', 'confirmada'];
 const momento = (c) => `${c.fecha} ${c.hora.slice(0, 5)}`;
@@ -46,7 +47,7 @@ export default function PanelMedico() {
   const [horarios, setHorarios] = useState([]);
   const [prediccion, setPrediccion] = useState(null);
   const [error, setError] = useState('');
-  const [aviso, setAviso] = useState('');
+  const avisar = useAvisos();
   const [cargando, setCargando] = useState(true);
   const [intento, setIntento] = useState(0);
   const [actualizando, setActualizando] = useState(null);
@@ -108,11 +109,11 @@ export default function PanelMedico() {
     if (actualizando !== null) return;
     setActualizando(cita.id_cita);
     setError('');
-    setAviso('');
+   
     try {
       await citasService.cambiarEstado(cita.id_cita, estado);
       await recargarCitas();
-      setAviso(estado === 'confirmada' ? `Confirmaste la cita de ${cita.paciente}.` : `Marcaste como atendida la cita de ${cita.paciente}.`);
+      avisar(estado === 'confirmada' ? `Confirmaste la cita de ${cita.paciente}.` : `Marcaste como atendida la cita de ${cita.paciente}.`);
     } catch (e) {
       setError(e.message || 'No pudimos completar la actualización. Recarga la agenda para comprobar el estado de la cita.');
     } finally { setActualizando(null); }
@@ -124,7 +125,7 @@ export default function PanelMedico() {
     try {
       await citasService.cambiarEstado(porCancelar.id_cita, 'cancelada');
       await recargarCitas();
-      setAviso(`Cancelaste la cita de ${porCancelar.paciente} del ${formatearFechaLarga(porCancelar.fecha)}.`);
+      avisar(`Cancelaste la cita de ${porCancelar.paciente} del ${formatearFechaLarga(porCancelar.fecha)}.`);
       setPorCancelar(null);
     } catch (e) {
       setErrorCancelar(e.message);
@@ -132,7 +133,7 @@ export default function PanelMedico() {
   }
 
   function abrirCancelacion(cita) {
-    setAviso('');
+   
     setErrorCancelar('');
     setPorCancelar(cita);
   }
@@ -150,7 +151,6 @@ export default function PanelMedico() {
       </div>
       {cargando && <p role="status">Cargando tu agenda…</p>}
       {error && <div className="alerta alerta-error" role="alert"><p>{error}</p><button className="boton boton-secundario boton-mini" type="button" onClick={() => setIntento((valor) => valor + 1)}>Recargar agenda</button></div>}
-      {aviso && <p className="alerta alerta-exito" role="status">{aviso}</p>}
       {!cargando && !error && !medico && <section className="tarjeta">
         <h2>Tu perfil profesional está pendiente de asignación</h2>
         <p>El administrador debe asignarte una clínica, especialidad y horarios iniciales. Luego podrás editarlos desde tu perfil.</p>

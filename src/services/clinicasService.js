@@ -4,6 +4,7 @@
 // navegador y la API pública Nominatim de OpenStreetMap.
 // ============================================================
 import { supabase } from './supabaseClient';
+import { errorAmigable } from './errores';
 
 export const clinicasService = {
   async listar() {
@@ -11,7 +12,7 @@ export const clinicasService = {
       .from('clinicas')
       .select('*')
       .order('nombre');
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 
@@ -21,7 +22,7 @@ export const clinicasService = {
       .insert({ nombre, direccion, telefono, latitud, longitud })
       .select()
       .single();
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 
@@ -32,7 +33,7 @@ export const clinicasService = {
       .eq('id_clinica', idClinica)
       .select()
       .single();
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 

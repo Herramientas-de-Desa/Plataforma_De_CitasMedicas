@@ -2,6 +2,7 @@
 // usuariosService.js — Gestión de usuarios (RF08, administrador).
 // ============================================================
 import { supabase } from './supabaseClient';
+import { errorAmigable } from './errores';
 
 export const usuariosService = {
   async listar() {
@@ -9,7 +10,7 @@ export const usuariosService = {
       .from('usuarios')
       .select('*')
       .order('creado_en', { ascending: false });
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 
@@ -18,6 +19,6 @@ export const usuariosService = {
       .from('usuarios')
       .update({ rol })
       .eq('id_usuario', idUsuario);
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
   },
 };

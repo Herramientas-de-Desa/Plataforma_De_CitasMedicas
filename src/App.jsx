@@ -1,6 +1,7 @@
 // App.jsx — Rutas de la aplicación con protección por rol.
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { AvisosProvider } from './context/AvisosContext';
 import Navbar from './components/layout/Navbar';
 import Portada from './components/home/Portada';
 import FormularioRegistro from './components/auth/FormularioRegistro';
@@ -17,6 +18,7 @@ import RutaProtegida from './components/routing/RutaProtegida';
 export default function App() {
   return (
     <AuthProvider>
+      <AvisosProvider>
       <BrowserRouter>
         <Navbar />
         <Routes>
@@ -43,6 +45,7 @@ export default function App() {
           <Route path="*" element={<Portada />} />
         </Routes>
       </BrowserRouter>
+      </AvisosProvider>
     </AuthProvider>
   );
 }

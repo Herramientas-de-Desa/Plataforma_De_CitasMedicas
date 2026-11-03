@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useAvisos } from '../../context/AvisosContext';
 import { citasService } from '../../services/citasService';
 import { clinicasService } from '../../services/clinicasService';
 import { fechaActualEnIca, formatearFechaCorta, formatearFechaLarga, horaActualEnIca } from '../../services/fechas';
@@ -25,7 +26,7 @@ export default function MisCitas() {
   const [porCancelar, setPorCancelar] = useState(null);
   const [cancelando, setCancelando] = useState(false);
   const [errorCancelar, setErrorCancelar] = useState('');
-  const [aviso, setAviso] = useState('');
+  const avisar = useAvisos();
 
   async function cargar() {
     try {
@@ -60,7 +61,7 @@ export default function MisCitas() {
     setErrorCancelar('');
     try {
       await citasService.cancelar(porCancelar.id_cita);
-      setAviso(`Cancelaste tu cita del ${formatearFechaLarga(porCancelar.fecha)} a las ${porCancelar.hora.slice(0, 5)}.`);
+      avisar(`Cancelaste tu cita del ${formatearFechaLarga(porCancelar.fecha)} a las ${porCancelar.hora.slice(0, 5)}.`);
       setPorCancelar(null);
       await cargar();
     } catch (e) {
@@ -83,7 +84,6 @@ export default function MisCitas() {
         <Link className="boton" to="/especialistas">Reservar una cita</Link>
       </div>
       {error && <p className="alerta alerta-error">{error}</p>}
-      {aviso && <p className="alerta alerta-exito" role="status">{aviso}</p>}
       {cargando ? (
         <p role="status">Cargando citas…</p>
       ) : citas.length === 0 ? (
@@ -130,7 +130,7 @@ export default function MisCitas() {
                         <Link className="boton boton-secundario boton-mini" to={`/clinicas?clinica=${clinicaId}`}>Cómo llegar</Link>
                       )}
                       {ACTIVAS.includes(c.estado) && pestania === 'proximas' && (
-                        <button className="boton boton-peligro boton-mini" type="button" onClick={() => { setAviso(''); setErrorCancelar(''); setPorCancelar(c); }}>
+                        <button className="boton boton-peligro boton-mini" type="button" onClick={() => { setErrorCancelar(''); setPorCancelar(c); }}>
                           Cancelar
                         </button>
                       )}

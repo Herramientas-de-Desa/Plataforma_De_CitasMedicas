@@ -4,6 +4,7 @@
 // del médico con las citas ya reservadas.
 // ============================================================
 import { supabase } from './supabaseClient';
+import { errorAmigable } from './errores';
 import { medicosService } from './medicosService';
 import { diaSemana, fechaActualEnIca, horaActualEnIca, sumarDias } from './fechas';
 
@@ -41,7 +42,7 @@ async function citasActivas(idMedico, desdeISO, hastaISO) {
     .gte('fecha', desdeISO)
     .lte('fecha', hastaISO)
     .neq('estado', 'cancelada');
-  if (error) throw new Error(error.message);
+  if (error) throw errorAmigable(error);
   return data || [];
 }
 
@@ -80,7 +81,7 @@ export const citasService = {
       .single();
     if (error) {
       if (error.code === '23505') throw new Error('Ese horario acaba de ser reservado. Elige otra hora.');
-      throw new Error(error.message);
+      throw errorAmigable(error);
     }
     return data;
   },
@@ -91,7 +92,7 @@ export const citasService = {
       .from('citas')
       .update({ estado: 'cancelada' })
       .eq('id_cita', idCita);
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
   },
 
   /** RF06: Reprogramar (modificar fecha/hora) */
@@ -102,7 +103,7 @@ export const citasService = {
       .eq('id_cita', idCita);
     if (error) {
       if (error.code === '23505') throw new Error('Ese horario ya está reservado.');
-      throw new Error(error.message);
+      throw errorAmigable(error);
     }
   },
 
@@ -114,7 +115,7 @@ export const citasService = {
       .eq('paciente_id', pacienteId)
       .order('fecha', { ascending: false })
       .order('hora', { ascending: false });
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 
@@ -126,7 +127,7 @@ export const citasService = {
       .eq('id_medico', idMedico)
       .order('fecha')
       .order('hora');
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 
@@ -137,7 +138,7 @@ export const citasService = {
       .select('*')
       .order('fecha', { ascending: false })
       .order('hora', { ascending: false });
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
     return data;
   },
 
@@ -146,6 +147,6 @@ export const citasService = {
       .from('citas')
       .update({ estado })
       .eq('id_cita', idCita);
-    if (error) throw new Error(error.message);
+    if (error) throw errorAmigable(error);
   },
 };
