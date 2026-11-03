@@ -91,25 +91,8 @@ create unique index if not exists citas_horario_activo_unico_idx
 
 -- ------------------------------------------------------------
 -- 7. VISTA: historial_citas  (entidad Historial de Citas)
+--    Se crea en la sección 9, porque depende de rol_actual().
 -- ------------------------------------------------------------
-create or replace view public.historial_citas as
-select
-  c.id_cita,
-  c.paciente_id,
-  u.nombres        as paciente,
-  m.id_medico,
-  m.nombre         as medico,
-  e.nombre         as especialidad,
-  cl.nombre        as clinica,
-  c.fecha,
-  c.hora,
-  c.estado,
-  c.creado_en
-from public.citas c
-join public.usuarios       u  on u.id_usuario = c.paciente_id
-join public.medicos        m  on m.id_medico  = c.medico_id
-join public.especialidades e  on e.id_especialidad = m.especialidad_id
-join public.clinicas       cl on cl.id_clinica = m.clinica_id;
 
 -- ------------------------------------------------------------
 -- 8. TRIGGER: crear perfil automáticamente al registrarse
@@ -158,6 +141,50 @@ create policy "usuarios_select" on public.usuarios
 create policy "usuarios_update" on public.usuarios
   for update using (auth.uid() = id_usuario or public.rol_actual() = 'admin');
 
+-- Nombre del paciente solo para quien ya puede ver sus citas (él mismo, el
+-- admin o un médico que lo atiende). No expone correo ni teléfono.
+create or replace function public.nombre_paciente(p_paciente uuid) returns text
+language sql stable security definer set search_path = public, pg_temp
+as $$
+  select u.nombres
+  from public.usuarios u
+  where u.id_usuario = p_paciente
+    and (
+      p_paciente = auth.uid()
+      or public.rol_actual() = 'admin'
+      or exists (
+        select 1
+        from public.citas c
+        join public.medicos m on m.id_medico = c.medico_id
+        where c.paciente_id = p_paciente and m.usuario_id = auth.uid()
+      )
+    )
+$$;
+revoke all on function public.nombre_paciente(uuid) from public, anon;
+grant execute on function public.nombre_paciente(uuid) to authenticated;
+
+-- historial_citas respeta el RLS de citas de quien consulta (security_invoker).
+create or replace view public.historial_citas
+with (security_invoker = true) as
+select
+  c.id_cita,
+  c.paciente_id,
+  public.nombre_paciente(c.paciente_id) as paciente,
+  m.id_medico,
+  m.nombre         as medico,
+  e.nombre         as especialidad,
+  cl.nombre        as clinica,
+  c.fecha,
+  c.hora,
+  c.estado,
+  c.creado_en
+from public.citas c
+join public.medicos        m  on m.id_medico  = c.medico_id
+join public.especialidades e  on e.id_especialidad = m.especialidad_id
+join public.clinicas       cl on cl.id_clinica = m.clinica_id;
+revoke all on public.historial_citas from anon, authenticated;
+grant select on public.historial_citas to authenticated;
+
 -- catálogos: lectura pública, escritura solo admin
 create policy "especialidades_select" on public.especialidades for select using (true);
 create policy "especialidades_admin"  on public.especialidades for all
@@ -195,12 +222,126 @@ create policy "citas_select" on public.citas
 create policy "citas_insert" on public.citas
   for insert with check (paciente_id = auth.uid() or public.rol_actual() = 'admin');
 create policy "citas_update" on public.citas
-  for update using (
+  for update
+  using (
+    paciente_id = auth.uid()
+    or public.rol_actual() = 'admin'
+    or exists (select 1 from public.medicos m
+               where m.id_medico = citas.medico_id and m.usuario_id = auth.uid())
+  )
+  with check (
     paciente_id = auth.uid()
     or public.rol_actual() = 'admin'
     or exists (select 1 from public.medicos m
                where m.id_medico = citas.medico_id and m.usuario_id = auth.uid())
   );
+
+-- RLS no compara el valor anterior con el nuevo: el trigger limita qué cambio
+-- hace cada rol. Paciente: solo cancelar. Médico: confirmar, atender (no en
+-- fechas futuras) o cancelar. El admin conserva el control total.
+create or replace function public.proteger_cambios_cita() returns trigger
+language plpgsql set search_path = public, pg_temp
+as $$
+declare
+  v_es_medico boolean;
+begin
+  if public.rol_actual() = 'admin' then
+    return new;
+  end if;
+
+  if new.paciente_id is distinct from old.paciente_id
+     or new.medico_id is distinct from old.medico_id
+     or new.fecha is distinct from old.fecha
+     or new.hora is distinct from old.hora
+     or new.creado_en is distinct from old.creado_en
+     or new.id_cita is distinct from old.id_cita then
+    raise exception 'Solo puedes cambiar el estado de la cita.';
+  end if;
+
+  if new.estado is not distinct from old.estado then
+    return new;
+  end if;
+
+  if old.estado in ('atendida', 'cancelada') then
+    raise exception 'Esta cita ya está %, no se puede modificar.', old.estado;
+  end if;
+
+  v_es_medico := exists (
+    select 1 from public.medicos m
+    where m.id_medico = old.medico_id and m.usuario_id = auth.uid()
+  );
+
+  if new.estado = 'cancelada' then
+    return new;
+  end if;
+
+  if not v_es_medico then
+    raise exception 'Solo el médico puede confirmar o marcar como atendida la cita.';
+  end if;
+
+  if new.estado = 'pendiente' then
+    raise exception 'Una cita no puede volver a pendiente.';
+  end if;
+
+  if new.estado = 'confirmada' and old.estado <> 'pendiente' then
+    raise exception 'Solo se pueden confirmar citas pendientes.';
+  end if;
+
+  if new.estado = 'atendida'
+     and old.fecha > (now() at time zone 'America/Lima')::date then
+    raise exception 'No puedes marcar como atendida una cita futura.';
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists proteger_cambios_cita on public.citas;
+create trigger proteger_cambios_cita before update on public.citas
+  for each row execute function public.proteger_cambios_cita();
+
+-- Cada reserva nace pendiente, en el futuro, con un médico disponible y en un
+-- turno de 30 minutos dentro de su horario semanal. El admin no se valida.
+create or replace function public.validar_reserva_cita() returns trigger
+language plpgsql set search_path = public, pg_temp
+as $$
+begin
+  if public.rol_actual() = 'admin' then
+    return new;
+  end if;
+
+  new.estado := 'pendiente';
+  new.creado_en := now();
+
+  if (new.fecha + new.hora) <= (now() at time zone 'America/Lima') then
+    raise exception 'No puedes reservar una fecha u hora que ya pasó.';
+  end if;
+
+  if not exists (
+    select 1 from public.medicos m
+    where m.id_medico = new.medico_id and m.disponible
+  ) then
+    raise exception 'Este médico no está disponible para nuevas citas.';
+  end if;
+
+  if not exists (
+    select 1 from public.horarios h
+    where h.medico_id = new.medico_id
+      and h.dia_semana = extract(isodow from new.fecha)
+      and new.hora >= h.hora_inicio
+      and extract(epoch from new.hora) + 1800 <= extract(epoch from h.hora_fin)
+      and (extract(epoch from (new.hora - h.hora_inicio)) / 60)::int % 30 = 0
+  ) then
+    raise exception 'La hora elegida no está dentro del horario de atención del médico.';
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists validar_reserva_cita on public.citas;
+create trigger validar_reserva_cita before insert on public.citas
+  for each row execute function public.validar_reserva_cita();
 create policy "citas_delete" on public.citas
   for delete using (paciente_id = auth.uid() or public.rol_actual() = 'admin');
 
