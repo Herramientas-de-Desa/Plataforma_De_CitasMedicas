@@ -222,12 +222,83 @@ create policy "citas_select" on public.citas
 create policy "citas_insert" on public.citas
   for insert with check (paciente_id = auth.uid() or public.rol_actual() = 'admin');
 create policy "citas_update" on public.citas
-  for update using (
+  for update
+  using (
+    paciente_id = auth.uid()
+    or public.rol_actual() = 'admin'
+    or exists (select 1 from public.medicos m
+               where m.id_medico = citas.medico_id and m.usuario_id = auth.uid())
+  )
+  with check (
     paciente_id = auth.uid()
     or public.rol_actual() = 'admin'
     or exists (select 1 from public.medicos m
                where m.id_medico = citas.medico_id and m.usuario_id = auth.uid())
   );
+
+-- RLS no compara el valor anterior con el nuevo: el trigger limita qué cambio
+-- hace cada rol. Paciente: solo cancelar. Médico: confirmar, atender (no en
+-- fechas futuras) o cancelar. El admin conserva el control total.
+create or replace function public.proteger_cambios_cita() returns trigger
+language plpgsql set search_path = public, pg_temp
+as $$
+declare
+  v_es_medico boolean;
+begin
+  if public.rol_actual() = 'admin' then
+    return new;
+  end if;
+
+  if new.paciente_id is distinct from old.paciente_id
+     or new.medico_id is distinct from old.medico_id
+     or new.fecha is distinct from old.fecha
+     or new.hora is distinct from old.hora
+     or new.creado_en is distinct from old.creado_en
+     or new.id_cita is distinct from old.id_cita then
+    raise exception 'Solo puedes cambiar el estado de la cita.';
+  end if;
+
+  if new.estado is not distinct from old.estado then
+    return new;
+  end if;
+
+  if old.estado in ('atendida', 'cancelada') then
+    raise exception 'Esta cita ya está %, no se puede modificar.', old.estado;
+  end if;
+
+  v_es_medico := exists (
+    select 1 from public.medicos m
+    where m.id_medico = old.medico_id and m.usuario_id = auth.uid()
+  );
+
+  if new.estado = 'cancelada' then
+    return new;
+  end if;
+
+  if not v_es_medico then
+    raise exception 'Solo el médico puede confirmar o marcar como atendida la cita.';
+  end if;
+
+  if new.estado = 'pendiente' then
+    raise exception 'Una cita no puede volver a pendiente.';
+  end if;
+
+  if new.estado = 'confirmada' and old.estado <> 'pendiente' then
+    raise exception 'Solo se pueden confirmar citas pendientes.';
+  end if;
+
+  if new.estado = 'atendida'
+     and old.fecha > (now() at time zone 'America/Lima')::date then
+    raise exception 'No puedes marcar como atendida una cita futura.';
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists proteger_cambios_cita on public.citas;
+create trigger proteger_cambios_cita before update on public.citas
+  for each row execute function public.proteger_cambios_cita();
 create policy "citas_delete" on public.citas
   for delete using (paciente_id = auth.uid() or public.rol_actual() = 'admin');
 
